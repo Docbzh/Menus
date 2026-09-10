@@ -210,7 +210,7 @@ ol.steps li{margin-bottom:6px}
 <!-- SEMAINE -->
 <section class="view on" id="v-week">
   <div class="stats" id="stats"></div>
-  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 40 g de protéines, un féculent, 50 g de glucides nets et 750 kcal maximum.</p>
+  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 60 g de protéines, un féculent, 50 g de glucides nets et 950 kcal maximum.</p>
   <div class="week" id="week"></div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
     <button class="btn primary" id="pdf" style="flex:1">📄 Exporter en PDF</button>
@@ -290,7 +290,7 @@ ol.steps li{margin-bottom:6px}
   </div>
   <div class="field rule">
     <b>Règles fixes du générateur</b><br>
-    · 200 g de légumes, ≈ 40 g de protéines et 750 kcal maximum par personne et par repas<br>
+    · 200 g de légumes, ≈ 60 g de protéines et 950 kcal maximum par personne et par repas<br>
     · Pescétarien : filets de colin et pavés de saumon surgelés, thon / maquereau / sardines en boîte, œufs, tofu, légumineuses<br>
     · Un féculent à chaque repas, parmi les moins riches en glucides et à IG bas ; 50 g de glucides nets maximum par repas<br>
     · Une même source protéique au plus 3 fois dans la semaine<br>
@@ -385,142 +385,142 @@ const ING = {
   herbes:{n:"Herbes fraîches (persil, coriandre, aneth, basilic)",cat:"Légumes",v:[0,0,0,0,0]},
 };
 
-/* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (150 g), v = légume (200 g), x = autre ---------- */
+/* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (~60 g de protéines visées), v = légume (200 g), x = autre ---------- */
 const R = [
 {id:"saumon-brocoli",name:"Saumon rôti, brocoli et poireaux fondants au citron",tag:"poisson",main:"saumon",time:30,starch:"sarrasin",
- ing:[["saumon",180,"p"],["brocoli",120,"v"],["poireau",80,"v"],["huile",6,"x"],["beurre",5,"x"],["citron",15,"x"],["ail",3,"x"],["herbes",3,"x"]],
+ ing:[["saumon",260,"p"],["brocoli",120,"v"],["poireau",80,"v"],["huile",6,"x"],["beurre",5,"x"],["citron",15,"x"],["ail",3,"x"],["herbes",3,"x"]],
  steps:["Four à 200 °C. Émincer les poireaux, les faire fondre 10 min à la poêle avec le beurre demi-sel et un fond d'eau.","Détailler le brocoli en fleurettes, l'étaler sur une plaque avec l'huile, l'ail et du sel. Enfourner 12 min.","Poser les pavés de saumon sur la plaque, zeste et jus de citron, poivre. Cuire 10–12 min de plus.","Servir saumon, brocoli et poireaux avec l'aneth. Réserver la moitié pour le dîner du lendemain."],
  reheat:"Réchauffer doucement (poêle couverte, feu doux, ou four 150 °C 10 min). Le saumon se mange aussi tiède, effeuillé sur les légumes."},
 {id:"curry-corail",name:"Curry de lentilles corail, colin et chou-fleur au lait de coco",tag:"legumineuses",main:"lentcorail",time:30,starch:"quinoa",
- ing:[["lentcorail",130,"p"],["colin",140,"p"],["choufleur",130,"v"],["tomconc",70,"v"],["lcoco",40,"x"],["oignon",30,"x"],["gingembre",5,"x"],["ail",3,"x"],["huile",5,"x"],["epices",4,"x"],["herbes",3,"x"]],
- steps:["Faire revenir l'oignon, l'ail et le gingembre hachés dans l'huile 3 min. Ajouter curry, curcuma, cumin ; 30 s.","Ajouter les lentilles corail sèches (≈ 60 g par portion), les tomates et 1,5 fois leur volume d'eau. Mijoter 12 min.","Ajouter le chou-fleur en petites fleurettes et le lait de coco ; cuire 6 min, puis le colin en gros cubes 6 min de plus, sans remuer trop.","Saler, jus de citron, coriandre. Se bonifie en refroidissant."],
+ ing:[["lentcorail",210,"p"],["colin",200,"p"],["choufleur",130,"v"],["tomconc",70,"v"],["lcoco",40,"x"],["oignon",30,"x"],["gingembre",5,"x"],["ail",3,"x"],["huile",5,"x"],["epices",4,"x"],["herbes",3,"x"]],
+ steps:["Faire revenir l'oignon, l'ail et le gingembre hachés dans l'huile 3 min. Ajouter curry, curcuma, cumin ; 30 s.","Ajouter les lentilles corail sèches (≈ 85 g par portion), les tomates et 1,5 fois leur volume d'eau. Mijoter 12 min.","Ajouter le chou-fleur en petites fleurettes et le lait de coco ; cuire 6 min, puis le colin en gros cubes 6 min de plus, sans remuer trop.","Saler, jus de citron, coriandre. Se bonifie en refroidissant."],
  reheat:"Casserole feu doux avec un filet d'eau, ou micro-ondes 3 min couvert."},
 {id:"colin-papillote",name:"Colin en papillote, poireaux, tomates cerises et olives",tag:"poisson",main:"cabillaud",time:30,starch:"quinoa",
- ing:[["colin",200,"p"],["poireau",120,"v"],["tomcerise",80,"v"],["olives",15,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"]],
+ ing:[["colin",320,"p"],["poireau",120,"v"],["tomcerise",80,"v"],["olives",15,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"]],
  steps:["Four à 200 °C. Émincer finement les poireaux, les faire fondre 8 min à la poêle avec la moitié de l'huile et un fond d'eau.","Sur 4 grandes feuilles de papier cuisson : poireaux, tomates cerises coupées en deux, olives, thym.","Poser le colin, huile, rondelles de citron, sel, poivre. Fermer les papillotes.","Enfourner 15–18 min. Servir 2 papillotes, garder 2 fermées au frais pour le lendemain."],
  reheat:"Réenfourner les papillotes fermées 12 min à 160 °C : le poisson reste moelleux."},
 {id:"chili-sin-carne",name:"Chili aux haricots rouges et thon, poivrons et courgettes",tag:"legumineuses",main:"hrouges",time:35,starch:"quinoa",
- ing:[["hrouges",150,"p"],["thon",90,"p"],["poivron",100,"v"],["courgette",60,"v"],["tomconc",40,"v"],["oignon",30,"x"],["ail",3,"x"],["huile",6,"x"],["epices",4,"x"],["yaourt",30,"x"],["herbes",3,"x"]],
+ ing:[["hrouges",175,"p"],["thon",150,"p"],["poivron",100,"v"],["courgette",60,"v"],["tomconc",40,"v"],["oignon",30,"x"],["ail",3,"x"],["huile",6,"x"],["epices",4,"x"],["yaourt",30,"x"],["herbes",3,"x"]],
  steps:["Faire revenir oignon et ail, puis poivrons et courgettes en dés, 8 min.","Ajouter cumin, paprika fumé, origan, une pointe de piment ; puis tomates et haricots rouges égouttés.","Mijoter 20 min à découvert pour épaissir. Ajouter le thon égoutté émietté, 2 min. Saler.","Servir avec une cuillère de yaourt grec et de la coriandre."],
  reheat:"Casserole feu doux 5 min ou micro-ondes. Encore meilleur le lendemain."},
 {id:"saumon-brocoli-wok",name:"Saumon sauté au gingembre, courgettes et brocoli au sésame",tag:"poisson",main:"saumon",time:20,starch:"sarrasin",
- ing:[["saumon",180,"p"],["courgette",100,"v"],["brocoli",100,"v"],["ail",4,"x"],["gingembre",5,"x"],["huilesesame",5,"x"],["soja",10,"x"],["sesame",5,"x"],["citronvert",10,"x"]],
+ ing:[["saumon",260,"p"],["courgette",100,"v"],["brocoli",100,"v"],["ail",4,"x"],["gingembre",5,"x"],["huilesesame",5,"x"],["soja",10,"x"],["sesame",5,"x"],["citronvert",10,"x"]],
  steps:["Décongeler le saumon (la veille au frais), le couper en gros cubes, l'éponger.","Courgettes en demi-rondelles, brocoli en petites fleurettes (blanchi 3 min à l'eau bouillante, égoutté).","Wok très chaud : huile de sésame, saumon 2 min sans remuer puis 1 min ; réserver. Ail, gingembre, courgettes et brocoli 4 min à feu vif.","Remettre le saumon, sauce soja, jus de citron vert, sésame grillé."],
  reheat:"Poêle chaude 2–3 min, ou tiède/froid en salade avec un trait de citron vert."},
 {id:"tofu-brocoli",name:"Tofu croustillant, brocoli et champignons sauce soja-gingembre",tag:"soja",main:"tofu",time:25,starch:"sarrasin",
- ing:[["tofu",220,"p"],["brocoli",110,"v"],["champignons",90,"v"],["huile",8,"x"],["soja",12,"x"],["gingembre",5,"x"],["ail",3,"x"],["sesame",4,"x"],["vinaigre",5,"x"]],
+ ing:[["tofu",350,"p"],["brocoli",110,"v"],["champignons",90,"v"],["huile",8,"x"],["soja",12,"x"],["gingembre",5,"x"],["ail",3,"x"],["sesame",4,"x"],["vinaigre",5,"x"]],
  steps:["Presser le tofu 10 min dans un torchon, le couper en cubes. Poêler dans l'huile jusqu'à dorure sur toutes les faces ; réserver.","Dans la même poêle : champignons émincés 4 min à feu vif, puis brocoli en fleurettes avec 3 cl d'eau, couvert, 5 min.","Ajouter ail et gingembre râpés, sauce soja, vinaigre ; remettre le tofu, enrober 1 min.","Parsemer de sésame."],
  reheat:"Poêle chaude 3 min pour que le tofu retrouve du croustillant."},
 {id:"frittata-feta",name:"Frittata aux courgettes, poivrons et feta",tag:"oeufs",main:"oeufs",time:30,starch:"patatedouce",
- ing:[["oeufs",180,"p"],["feta",60,"p"],["parmesan",15,"p"],["courgette",120,"v"],["poivron",80,"v"],["oignon",20,"x"],["huile",6,"x"],["herbes",3,"x"]],
- steps:["Four à 180 °C. Faire revenir oignon, courgettes et poivrons en petits dés 8 min dans une poêle allant au four.","Battre les œufs (2 par portion) avec sel, poivre et basilic ; verser sur les légumes.","Émietter la feta dessus. Cuire 2 min sur le feu puis 15 min au four.","Découper en 4 parts."],
+ ing:[["oeufs",260,"p"],["feta",60,"p"],["parmesan",50,"p"],["courgette",120,"v"],["poivron",80,"v"],["oignon",20,"x"],["huile",6,"x"],["herbes",3,"x"]],
+ steps:["Four à 180 °C. Faire revenir oignon, courgettes et poivrons en petits dés 8 min dans une poêle allant au four.","Battre les œufs (4 par portion) avec sel, poivre et basilic ; verser sur les légumes.","Émietter la feta dessus. Cuire 2 min sur le feu puis 15 min au four.","Découper en 4 parts."],
  reheat:"Excellente froide ou tiède ; sinon 10 min au four à 150 °C."},
 {id:"dahl-courgettes",name:"Dahl de lentilles vertes, tofu et courgettes",tag:"legumineuses",main:"lentvertes",time:40,starch:"boulgour",
- ing:[["lentvertes",130,"p"],["tofu",160,"p"],["courgette",120,"v"],["tomconc",80,"v"],["oignon",30,"x"],["ail",3,"x"],["gingembre",4,"x"],["huile",6,"x"],["epices",4,"x"],["citron",10,"x"]],
+ ing:[["lentvertes",130,"p"],["tofu",300,"p"],["courgette",120,"v"],["tomconc",80,"v"],["oignon",30,"x"],["ail",3,"x"],["gingembre",4,"x"],["huile",6,"x"],["epices",4,"x"],["citron",10,"x"]],
  steps:["Égoutter et rincer les lentilles vertes en conserve.","Faire revenir oignon, ail, gingembre, puis cumin, coriandre moulue, garam masala.","Ajouter les courgettes en dés et les tomates, 8 min ; puis les lentilles égouttées et le tofu en dés, 5 min.","Saler, jus de citron."],
  reheat:"Casserole feu doux avec un filet d'eau."},
 {id:"maquereau-poelee",name:"Maquereau en boîte et poêlée de légumes à la moutarde",tag:"poisson",main:"maquereau",time:15,starch:"patatedouce",poelee:true,
- ing:[["maquereau",170,"p"],["poelee",200,"v"],["moutarde",10,"x"],["huile",6,"x"],["vinaigre",5,"x"],["herbes",3,"x"]],
+ ing:[["maquereau",255,"p"],["poelee",200,"v"],["moutarde",10,"x"],["huile",6,"x"],["vinaigre",5,"x"],["herbes",3,"x"]],
  steps:["Cuire la poêlée surgelée à la poêle dans l'huile, 10–12 min à feu vif, sans couvrir.","Égoutter les filets de maquereau, les badigeonner de moutarde.","Les poser sur les légumes, couvrir 2 min pour les tiédir.","Vinaigre de cidre, poivre, persil."],
  reheat:"Poêle 4 min ; maquereau ajouté à la fin."},
 {id:"poischiches-aubergine",name:"Salade tiède de pois chiches et thon, aubergines rôties au tahini",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
- ing:[["poischiches",150,"p"],["thon",90,"p"],["aubergine",130,"v"],["tomate",70,"v"],["tahini",15,"x"],["citron",15,"x"],["huile",8,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",4,"x"]],
+ ing:[["poischiches",150,"p"],["thon",160,"p"],["aubergine",130,"v"],["tomate",70,"v"],["tahini",15,"x"],["citron",15,"x"],["huile",8,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",4,"x"]],
  steps:["Four à 220 °C. Aubergines en cubes, huile, cumin, sel : rôtir 25 min.","Mélanger tahini, jus de citron, ail écrasé et 2 c. à s. d'eau pour une sauce nappante.","Pois chiches égouttés, thon émietté, tomates en dés, aubergines tièdes, sauce tahini, persil.","Poivrer, ajuster le citron."],
  reheat:"Se mange froid ou tiède (2 min au micro-ondes) — pas besoin de recuire."},
 {id:"tofu-laque-hverts",name:"Tofu laqué soja-sésame, haricots verts et champignons",tag:"soja",main:"tofu",time:25,starch:"boulgour",
- ing:[["tofu",220,"p"],["hverts",120,"v"],["champignons",80,"v"],["soja",12,"x"],["balsamique",5,"x"],["huile",8,"x"],["ail",3,"x"],["sesame",4,"x"]],
+ ing:[["tofu",355,"p"],["hverts",120,"v"],["champignons",80,"v"],["soja",12,"x"],["balsamique",5,"x"],["huile",8,"x"],["ail",3,"x"],["sesame",4,"x"]],
  steps:["Cuire les haricots verts 6 min à l'eau bouillante salée ; égoutter.","Presser le tofu, le couper en tranches épaisses, le dorer dans l'huile 3 min par face.","Ajouter ail, sauce soja, balsamique et 2 c. à s. d'eau ; laisser laquer 2 min.","Sauter les champignons à feu vif, réunir le tout, sésame."],
  reheat:"Poêle chaude 3 min."},
 {id:"thon-ratatouille",name:"Thon en boîte et ratatouille express",tag:"poisson",main:"thon",time:30,starch:"quinoa",
- ing:[["thon",150,"p"],["courgette",70,"v"],["aubergine",70,"v"],["poivron",60,"v"],["ail",3,"x"],["huile",10,"x"],["epices",2,"x"]],
+ ing:[["thon",220,"p"],["courgette",70,"v"],["aubergine",70,"v"],["poivron",60,"v"],["ail",3,"x"],["huile",10,"x"],["epices",2,"x"]],
  steps:["Courgettes, aubergines, poivrons en petits dés ; les sauter séparément à feu vif dans un peu d'huile, puis réunir avec l'ail et les herbes de Provence. Mijoter 15 min couvert.","Égoutter le thon, l'émietter grossièrement.","Le mêler à la ratatouille hors du feu avec un filet d'huile d'olive et du basilic.","Servir tiède ou froid."],
  reheat:"Ratatouille réchauffée à la poêle, thon ajouté au dernier moment. Très bon froid aussi."},
 {id:"shakshuka-verte",name:"Shakshuka verte : poireaux, courgettes, œufs et feta",tag:"oeufs",main:"oeufs",time:25,starch:"boulgour",
- ing:[["oeufs",180,"p"],["feta",80,"p"],["poireau",100,"v"],["courgette",100,"v"],["huile",6,"x"],["ail",3,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",4,"x"]],
- steps:["Faire fondre poireaux émincés et ail dans l'huile 8 min ; ajouter les courgettes râpées, cumin, coriandre moulue ; 6 min.","Creuser des nids, casser 2 œufs par portion. Couvrir et cuire 6–8 min : blanc pris, jaune coulant.","Feta émiettée, zeste de citron, persil.","Pour le dîner du lendemain : garder la base de légumes, cuire les œufs à la minute."],
- reheat:"Réchauffer la base à la poêle, y cuire 2 œufs frais couvert 6 min."},
+ ing:[["oeufs",260,"p"],["feta",120,"p"],["poireau",100,"v"],["courgette",100,"v"],["huile",6,"x"],["ail",3,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",4,"x"]],
+ steps:["Faire fondre poireaux émincés et ail dans l'huile 8 min ; ajouter les courgettes râpées, cumin, coriandre moulue ; 6 min.","Creuser des nids, casser 4 œufs par portion. Couvrir et cuire 6–8 min : blanc pris, jaune coulant.","Feta émiettée, zeste de citron, persil.","Pour le dîner du lendemain : garder la base de légumes, cuire les œufs à la minute."],
+ reheat:"Réchauffer la base à la poêle, y cuire 4 œufs frais couvert 6 min."},
 {id:"colin-creme-poireaux",name:"Colin à la crème, poireaux et champignons au vin blanc",tag:"poisson",main:"colin",time:25,starch:"quinoa",
- ing:[["colin",200,"p"],["poireau",110,"v"],["champignons",90,"v"],["creme",30,"x"],["vinblanc",30,"x"],["echalote",15,"x"],["beurre",5,"x"],["herbes",3,"x"]],
+ ing:[["colin",305,"p"],["poireau",110,"v"],["champignons",90,"v"],["creme",30,"x"],["vinblanc",30,"x"],["echalote",15,"x"],["beurre",5,"x"],["herbes",3,"x"]],
  steps:["Faire fondre échalote et poireaux émincés dans le beurre demi-sel 8 min ; ajouter les champignons émincés, 4 min à feu vif.","Verser le vin blanc, réduire 2 min.","Poser les filets de colin sur les légumes, saler, couvrir : 8–10 min à feu doux.","Crème, poivre, persil ou aneth."],
  reheat:"Casserole couverte, feu doux 5 min, sans bouillir."},
 {id:"minestrone-hblancs",name:"Minestrone de haricots blancs, courgettes, poireaux et colin au parmesan",tag:"legumineuses",main:"hblancs",time:35,starch:"patesLent",
- ing:[["hblancs",150,"p"],["colin",120,"p"],["courgette",90,"v"],["poireau",60,"v"],["tomconc",50,"v"],["parmesan",10,"x"],["huile",6,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",2,"x"]],
+ ing:[["hblancs",170,"p"],["colin",220,"p"],["courgette",90,"v"],["poireau",60,"v"],["tomconc",50,"v"],["parmesan",10,"x"],["huile",6,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",2,"x"]],
  steps:["Faire suer oignon, ail et poireau émincé dans l'huile 6 min.","Ajouter tomates, romarin, haricots blancs égouttés et 25 cl d'eau par portion. Mijoter 15 min.","Ajouter les courgettes en dés ; 6 min. Puis le colin en gros cubes, 6 min à frémissement.","Saler, poivrer, servir avec parmesan râpé et un filet d'huile."],
  reheat:"Casserole feu doux. Ajouter un peu d'eau si trop épais."},
 {id:"truite-asperges",name:"Colin au four, asperges et courgettes rôties aux amandes",tag:"poisson",main:"truite",time:25,starch:"quinoa",
- ing:[["colin",200,"p"],["asperges",130,"v"],["courgette",70,"v"],["amandes",8,"x"],["beurre",6,"x"],["citron",15,"x"],["huile",4,"x"]],
+ ing:[["colin",300,"p"],["asperges",130,"v"],["courgette",70,"v"],["amandes",8,"x"],["beurre",6,"x"],["citron",15,"x"],["huile",4,"x"]],
  steps:["Four à 200 °C. Asperges épluchées et courgettes en bâtonnets, huile, sel : 10 min.","Poser les filets de colin, noisettes de beurre demi-sel, zeste de citron ; 12 min de plus.","Griller les amandes effilées à sec 2 min.","Jus de citron, amandes, poivre."],
  reheat:"Four 150 °C 10 min, ou colin froid effeuillé sur légumes tièdes."},
 {id:"tofu-brouille",name:"Tofu brouillé au curcuma, champignons et poivrons",tag:"soja",main:"tofu",time:20,starch:"patatedouce",
- ing:[["tofu",220,"p"],["champignons",110,"v"],["poivron",90,"v"],["huile",8,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",3,"x"],["levure",5,"x"]],
+ ing:[["tofu",355,"p"],["champignons",110,"v"],["poivron",90,"v"],["huile",8,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",3,"x"],["levure",5,"x"]],
  steps:["Émietter le tofu à la fourchette.","Sauter oignon et poivrons en dés 4 min, puis les champignons à feu vif 5 min.","Ajouter le tofu, curcuma, paprika, ail, levure maltée ; 5 min en remuant.","Saler, poivrer généreusement."],
  reheat:"Poêle 3 min ou micro-ondes 2 min."},
 {id:"sardines-roquette",name:"Sardines en boîte, courgettes, tomates et roquette",tag:"poisson",main:"sardines",time:20,starch:"boulgour",
- ing:[["sardines",150,"p"],["courgette",90,"v"],["tomate",70,"v"],["roquette",40,"v"],["huile",8,"x"],["citron",15,"x"],["ail",3,"x"],["capres",5,"x"]],
+ ing:[["sardines",225,"p"],["courgette",90,"v"],["tomate",70,"v"],["roquette",40,"v"],["huile",8,"x"],["citron",15,"x"],["ail",3,"x"],["capres",5,"x"]],
  steps:["Courgettes en rubans à l'économe, grillées 2 min à la poêle ou crues.","Égoutter les sardines ; les passer 2 min sous le gril du four pour les tiédir (facultatif).","Tomates en quartiers, roquette, câpres, ail, huile, jus de citron.","Servir les sardines sur la salade tiède."],
  reheat:"Salade froide ; ouvrir les boîtes de sardines au moment de servir."},
 {id:"curry-vert-colin",name:"Curry vert de colin, aubergine et haricots verts",tag:"poisson",main:"colin",time:25,starch:"quinoa",
- ing:[["colin",200,"p"],["aubergine",100,"v"],["hverts",100,"v"],["lcoco",50,"x"],["currypate",10,"x"],["huile",5,"x"],["citronvert",10,"x"],["herbes",4,"x"]],
+ ing:[["colin",310,"p"],["aubergine",100,"v"],["hverts",100,"v"],["lcoco",50,"x"],["currypate",10,"x"],["huile",5,"x"],["citronvert",10,"x"],["herbes",4,"x"]],
  steps:["Faire revenir la pâte de curry vert dans l'huile 1 min ; ajouter le lait de coco et 10 cl d'eau par portion.","Aubergine en cubes : 10 min dans la sauce. Haricots verts en tronçons : 6 min de plus.","Colin en gros cubes : 6 min à frémissement, sans remuer.","Jus de citron vert, basilic thaï ou coriandre."],
  reheat:"Casserole feu doux jusqu'à frémissement, pas plus."},
 {id:"colin-puree-choufleur",name:"Colin rôti, purée de chou-fleur et brocoli",tag:"poisson",main:"lieu",time:35,starch:"boulgour",
- ing:[["colin",200,"p"],["choufleur",110,"v"],["brocoli",90,"v"],["beurre",8,"x"],["creme",15,"x"],["huile",4,"x"],["epices",1,"x"]],
+ ing:[["colin",305,"p"],["choufleur",110,"v"],["brocoli",90,"v"],["beurre",8,"x"],["creme",15,"x"],["huile",4,"x"],["epices",1,"x"]],
  steps:["Chou-fleur en fleurettes, cuit 15 min à l'eau ; bien égoutter, mixer avec crème, beurre demi-sel, muscade, sel.","Brocoli en fleurettes, rôti 15 min à 210 °C avec l'huile.","Colin salé, poêlé 3–4 min par face dans une noix de beurre.","Dresser sur la purée."],
  reheat:"Purée et brocoli au micro-ondes ; poisson 5 min au four à 150 °C."},
 {id:"wok-tofu",name:"Wok de tofu au gingembre et poêlée de légumes",tag:"soja",main:"tofu",time:20,starch:"sarrasin",poelee:true,
- ing:[["tofu",220,"p"],["poelee",200,"v"],["soja",12,"x"],["huilesesame",6,"x"],["gingembre",5,"x"],["ail",3,"x"],["vinaigre",5,"x"],["sesame",4,"x"]],
+ ing:[["tofu",360,"p"],["poelee",200,"v"],["soja",12,"x"],["huilesesame",6,"x"],["gingembre",5,"x"],["ail",3,"x"],["vinaigre",5,"x"],["sesame",4,"x"]],
  steps:["Tofu en cubes, doré 6 min dans l'huile de sésame ; réserver.","Wok chaud : poêlée surgelée 10 min à feu vif en remuant.","Gingembre et ail râpés, 1 min ; sauce soja, vinaigre, tofu.","Sésame grillé, servir aussitôt."],
  reheat:"Wok ou poêle chaude 3 min."},
 {id:"cabillaud-basquaise",name:"Colin à la basquaise, poivrons et tomates",tag:"poisson",main:"cabillaud",time:30,starch:"patesCompl",
- ing:[["colin",200,"p"],["poivron",120,"v"],["tomate",80,"v"],["oignon",30,"x"],["ail",4,"x"],["huile",8,"x"],["epices",2,"x"]],
+ ing:[["colin",320,"p"],["poivron",120,"v"],["tomate",80,"v"],["oignon",30,"x"],["ail",4,"x"],["huile",8,"x"],["epices",2,"x"]],
  steps:["Faire fondre oignon et poivrons en lanières dans l'huile 12 min ; ajouter ail, tomates concassées au couteau, piment d'Espelette ; 8 min.","Poser les pavés de colin sur la piperade, saler, couvrir.","Cuire 8–10 min à feu doux jusqu'à ce que le poisson se détache en feuillets.","Poivrer, huile d'olive."],
  reheat:"Casserole couverte feu doux 6 min : la piperade protège le poisson."},
 {id:"lentilles-oeuf-mollet",name:"Salade tiède de lentilles, haricots verts, œufs mollets et feta",tag:"legumineuses",main:"lentvertes",time:30,starch:"quinoa",
- ing:[["lentvertes",140,"p"],["oeufs",120,"p"],["feta",50,"p"],["hverts",120,"v"],["concombre",40,"v"],["endives",40,"v"],["moutarde",8,"x"],["huile",8,"x"],["vinaigre",6,"x"],["echalote",15,"x"]],
+ ing:[["lentvertes",175,"p"],["oeufs",260,"p"],["feta",50,"p"],["hverts",120,"v"],["concombre",40,"v"],["endives",40,"v"],["moutarde",8,"x"],["huile",8,"x"],["vinaigre",6,"x"],["echalote",15,"x"]],
  steps:["Égoutter et rincer les lentilles en conserve ; cuire les haricots verts 6 min à l'eau bouillante.","Vinaigrette : moutarde, vinaigre de cidre, huile, échalote ciselée, sel, poivre.","Œufs mollets : 6 min dans l'eau bouillante, puis eau glacée, écaler.","Mélanger lentilles tièdes, haricots, concombre en dés, endives émincées et feta émiettée ; œufs mollets ouverts dessus."],
  reheat:"Se mange froid ou tiède ; refaire les œufs mollets à la minute (6 min)."},
 {id:"tofu-provencale",name:"Tofu à la provençale, courgettes, tomates, olives et feta",tag:"soja",main:"tofu",time:25,starch:"patesCompl",
- ing:[["tofu",220,"p"],["feta",40,"p"],["courgette",110,"v"],["tomate",90,"v"],["olives",12,"x"],["huile",6,"x"],["ail",4,"x"],["epices",2,"x"],["herbes",3,"x"]],
+ ing:[["tofu",345,"p"],["feta",40,"p"],["courgette",110,"v"],["tomate",90,"v"],["olives",12,"x"],["huile",6,"x"],["ail",4,"x"],["epices",2,"x"],["herbes",3,"x"]],
  steps:["Tofu en cubes, doré dans l'huile 6 min.","Ajouter courgettes en dés, 5 min ; puis tomates, ail, olives, herbes de Provence.","Mijoter 10 min à couvert, puis 3 min à découvert.","Feta émiettée et basilic frais au moment de servir."],
  reheat:"Casserole ou micro-ondes 3 min, feta ajoutée après."},
 {id:"gratin-choufleur-oeufs",name:"Gratin de chou-fleur et brocoli aux œufs et parmesan",tag:"oeufs",main:"oeufs",time:35,starch:"patatedouce",
- ing:[["oeufs",150,"p"],["parmesan",45,"p"],["choufleur",120,"v"],["brocoli",80,"v"],["creme",30,"x"],["epices",1,"x"],["beurre",3,"x"]],
+ ing:[["oeufs",260,"p"],["parmesan",65,"p"],["choufleur",120,"v"],["brocoli",80,"v"],["creme",30,"x"],["epices",1,"x"],["beurre",3,"x"]],
  steps:["Four à 190 °C. Chou-fleur et brocoli en fleurettes, blanchis 5 min ; bien égoutter.","Battre les œufs avec la crème, muscade, sel, poivre et la moitié du parmesan.","Légumes dans un plat beurré (demi-sel), verser l'appareil, parmesan restant.","Cuire 25 min jusqu'à dorure."],
  reheat:"Four 160 °C 12 min, ou micro-ondes."},
 {id:"hblancs-poireaux-oeuf",name:"Haricots blancs à la tomate, poireaux, thon et œuf poché",tag:"legumineuses",main:"hblancs",time:30,starch:"boulgour",
- ing:[["hblancs",130,"p"],["thon",80,"p"],["oeufs",60,"p"],["poireau",100,"v"],["tomconc",100,"v"],["huile",6,"x"],["ail",4,"x"],["epices",3,"x"],["herbes",3,"x"]],
- steps:["Poireaux émincés fondus dans l'huile 10 min avec l'ail.","Tomates concassées, paprika fumé, haricots blancs égouttés ; mijoter 12 min. Ajouter le thon émietté en fin de cuisson.","Œufs pochés : 3 min dans une eau frémissante vinaigrée (1 par portion).","Servir les haricots avec l'œuf dessus et le persil."],
+ ing:[["hblancs",130,"p"],["thon",80,"p"],["oeufs",190,"p"],["poireau",100,"v"],["tomconc",100,"v"],["huile",6,"x"],["ail",4,"x"],["epices",3,"x"],["herbes",3,"x"]],
+ steps:["Poireaux émincés fondus dans l'huile 10 min avec l'ail.","Tomates concassées, paprika fumé, haricots blancs égouttés ; mijoter 12 min. Ajouter le thon émietté en fin de cuisson.","Œufs pochés : 3 min dans une eau frémissante vinaigrée (3 par portion).","Servir les haricots avec l'œuf dessus et le persil."],
  reheat:"Haricots à la casserole ; pocher un œuf frais à la minute."},
 {id:"poischiches-choufleur-rotis",name:"Pois chiches et chou-fleur rôtis, œufs durs et yaourt au citron",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
- ing:[["poischiches",140,"p"],["oeufs",120,"p"],["feta",40,"p"],["choufleur",140,"v"],["concombre",60,"v"],["yaourt",30,"x"],["huile",5,"x"],["epices",4,"x"],["citron",15,"x"],["ail",2,"x"],["herbes",3,"x"]],
+ ing:[["poischiches",160,"p"],["oeufs",260,"p"],["feta",40,"p"],["choufleur",140,"v"],["concombre",60,"v"],["yaourt",30,"x"],["huile",5,"x"],["epices",4,"x"],["citron",15,"x"],["ail",2,"x"],["herbes",3,"x"]],
  steps:["Four à 220 °C. Pois chiches bien séchés et chou-fleur en fleurettes, huile, cumin, paprika, coriandre moulue, sel.","Rôtir 25–30 min en remuant à mi-cuisson, jusqu'à ce que les pois chiches croustillent.","Œufs durs : 9 min, écaler, couper en quartiers. Sauce : yaourt grec, jus et zeste de citron, ail, sel.","Concombre en dés, œufs et feta émiettée dessus, menthe ou coriandre."],
  reheat:"Repasser 8 min au four à 200 °C pour retrouver le croustillant ; sauce à part."},
 {id:"maquereau-poivrons",name:"Maquereau en boîte, poivrons et courgettes sautés à l'ail et au citron",tag:"poisson",main:"maquereau",time:20,starch:"quinoa",
- ing:[["maquereau",170,"p"],["poivron",100,"v"],["courgette",100,"v"],["ail",5,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"],["herbes",4,"x"],["capres",5,"x"]],
+ ing:[["maquereau",260,"p"],["poivron",100,"v"],["courgette",100,"v"],["ail",5,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"],["herbes",4,"x"],["capres",5,"x"]],
  steps:["Poivrons et courgettes en lanières, sautés 7 min à feu vif dans l'huile avec l'ail ; piment d'Espelette.","Égoutter les filets de maquereau, les casser en gros morceaux.","Les poser sur les légumes hors du feu, câpres, jus et zeste de citron, persil.","Servir tiède."],
  reheat:"Légumes réchauffés à la poêle, maquereau ajouté au dernier moment ; ou froid en salade."},
 {id:"colin-endives",name:"Colin poêlé, endives braisées et champignons",tag:"poisson",main:"dorade",time:35,starch:"patatedouce",
- ing:[["colin",200,"p"],["endives",120,"v"],["champignons",80,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["epices",1,"x"]],
+ ing:[["colin",315,"p"],["endives",120,"v"],["champignons",80,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["epices",1,"x"]],
  steps:["Endives coupées en deux, dorées dans le beurre demi-sel, puis braisées 15 min couvertes avec un jus de citron et 5 cl d'eau.","Champignons en quartiers, sautés 6 min à feu vif dans une noix de beurre.","Pavés de colin salés, poêlés 3–4 min par face dans un peu d'huile.","Poivre, zeste de citron."],
  reheat:"Légumes à la poêle ; poisson 5 min au four à 150 °C."},
 {id:"chevre-courgettes-oeufs",name:"Œufs cocotte au chèvre frais, courgettes et champignons",tag:"oeufs",main:"oeufs",time:25,starch:"boulgour",
- ing:[["oeufs",180,"p"],["chevre",100,"p"],["courgette",110,"v"],["champignons",90,"v"],["huile",6,"x"],["ail",3,"x"],["herbes",3,"x"],["epices",1,"x"]],
- steps:["Four à 180 °C. Courgettes râpées et champignons émincés sautés 8 min avec l'ail ; bien faire évaporer.","Répartir dans des ramequins (ou un plat), chèvre frais en morceaux.","Casser 2 œufs par portion, sel, poivre, thym. Cuire 12–14 min au bain-marie : blanc pris, jaune coulant.","Pour le lendemain : garder la base, cuire les œufs à la minute."],
- reheat:"Base réchauffée, 2 œufs frais cuits dessus au four ou couvert à la poêle 6 min."},
+ ing:[["oeufs",260,"p"],["chevre",150,"p"],["courgette",110,"v"],["champignons",90,"v"],["huile",6,"x"],["ail",3,"x"],["herbes",3,"x"],["epices",1,"x"]],
+ steps:["Four à 180 °C. Courgettes râpées et champignons émincés sautés 8 min avec l'ail ; bien faire évaporer.","Répartir dans des ramequins (ou un plat), chèvre frais en morceaux.","Casser 4 œufs par portion, sel, poivre, thym. Cuire 12–14 min au bain-marie : blanc pris, jaune coulant.","Pour le lendemain : garder la base, cuire les œufs à la minute."],
+ reheat:"Base réchauffée, 4 œufs frais cuits dessus au four ou couvert à la poêle 6 min."},
 {id:"colin-poelee",name:"Colin au beurre demi-sel, citron et poêlée de légumes",tag:"poisson",main:"colin",time:15,starch:"quinoa",poelee:true,
- ing:[["colin",200,"p"],["poelee",200,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["herbes",3,"x"]],
+ ing:[["colin",310,"p"],["poelee",200,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["herbes",3,"x"]],
  steps:["Poêlée surgelée dans l'huile, 10–12 min à feu vif.","Filets de colin décongelés, épongés, salés : 3–4 min par face dans le beurre demi-sel.","Jus et zeste de citron sur le poisson.","Servir avec les légumes, persil."],
  reheat:"Légumes à la poêle ; poisson 5 min au four à 150 °C."},
 {id:"saumon-poelee",name:"Pavé de saumon, poêlée de légumes et yaourt citron-aneth",tag:"poisson",main:"saumon",time:20,starch:"sarrasin",poelee:true,
- ing:[["saumon",180,"p"],["poelee",200,"v"],["yaourt",40,"x"],["citron",15,"x"],["huile",4,"x"],["herbes",4,"x"]],
+ ing:[["saumon",260,"p"],["poelee",200,"v"],["yaourt",40,"x"],["citron",15,"x"],["huile",4,"x"],["herbes",4,"x"]],
  steps:["Four à 200 °C : pavés de saumon décongelés, salés, 12–14 min.","Poêlée surgelée dans l'huile, 10–12 min à feu vif.","Sauce : yaourt grec, jus et zeste de citron, aneth, sel, poivre.","Dresser saumon et légumes, sauce à part."],
  reheat:"Légumes à la poêle ; saumon tiède ou froid effeuillé, sauce fraîche."},
 {id:"omelette-poelee",name:"Omelette à la feta et poêlée de légumes",tag:"oeufs",main:"oeufs",time:15,starch:"patatedouce",poelee:true,
- ing:[["oeufs",180,"p"],["feta",80,"p"],["poelee",200,"v"],["huile",6,"x"],["herbes",3,"x"]],
- steps:["Poêlée surgelée dans l'huile, 10 min à feu vif.","Battre les œufs (3 par portion) avec sel, poivre, herbes.","Verser sur les légumes, feta émiettée ; cuire 4–5 min à feu moyen, couvert, jusqu'à ce que le dessus soit pris.","Plier ou couper en parts."],
+ ing:[["oeufs",260,"p"],["feta",120,"p"],["poelee",200,"v"],["huile",6,"x"],["herbes",3,"x"]],
+ steps:["Poêlée surgelée dans l'huile, 10 min à feu vif.","Battre les œufs (4 par portion) avec sel, poivre, herbes.","Verser sur les légumes, feta émiettée ; cuire 4–5 min à feu moyen, couvert, jusqu'à ce que le dessus soit pris.","Plier ou couper en parts."],
  reheat:"Tiède ou froid ; ou refaire une omelette minute sur la moitié de légumes gardée."},
 {id:"poischiches-thon-poelee",name:"Pois chiches, thon et poêlée de légumes aux épices",tag:"legumineuses",main:"poischiches",time:15,starch:"boulgour",poelee:true,
- ing:[["poischiches",150,"p"],["thon",90,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
+ ing:[["poischiches",155,"p"],["thon",160,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
  steps:["Poêlée surgelée dans l'huile, 10 min à feu vif, avec cumin et paprika fumé.","Ajouter les pois chiches égouttés, 3 min.","Thon égoutté émietté hors du feu, jus de citron, coriandre ou persil.","Servir tiède ou froid."],
  reheat:"Poêle 3 min ou micro-ondes ; très bon froid."},
 ];
@@ -543,7 +543,7 @@ function starchFor(r){
 function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[0]];const g=st[1];const raw=it.dry>1?Math.round(g/it.dry/5)*5:g;const raw4=it.dry>1?Math.round(g*4/it.dry/5)*5:g*4;return{k:st[0],n:it.n,cooked:g,cooked4:g*4,raw,raw4,same:!(it.dry>1)};}
 function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
 function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}m.net=Math.max(0,m.c-m.fi);return m;}
-R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<36||r.m.p>48||r.m.kcal>750)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
+R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<50||r.m.p>65||r.m.kcal>950)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- état ---------- */
@@ -579,7 +579,7 @@ function generate(){
       if(prev.has(r.id))s-=8;
       s-=(tagCount[r.tag]||0)*(S.set.prio==="variety"?12:6);
       if(S.set.prio==="carbs")s-=r.m.net*1.2;
-      if(M(r).kcal>750)s-=40;if(M(r).net>S.set.carbMax)s-=30;
+      if(M(r).kcal>950)s-=40;if(M(r).net>S.set.carbMax)s-=30;
       return[s,r];}).sort((a,b)=>b[0]-a[0]);
     const r=scored[0][1];
     chosen[idx]=r;used.add(r.id);mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
@@ -640,7 +640,7 @@ function slot(r,i,when,fromPrev){
 function toggleLock(i){S.locked[i]=!S.locked[i];save();render();}
 function macroHtml(r,max){
   const m=M(r);return`<div class="macros">
-  <div${m.kcal>750?' style="color:var(--legume)"':''}><b class="num">${fmt(m.kcal)}</b><span>kcal</span></div>
+  <div${m.kcal>950?' style="color:var(--legume)"':''}><b class="num">${fmt(m.kcal)}</b><span>kcal</span></div>
   <div><b class="num">${fmt(m.p)} g</b><span>prot.</span></div>
   <div class="${m.net<=25?"low":""}"${m.net>S.set.carbMax?' style="color:var(--legume)"':''}><b class="num">${fmt(m.net)} g</b><span>gluc. nets</span></div>
   <div><b class="num">${fmt(m.fi)} g</b><span>fibres</span></div>
@@ -745,7 +745,7 @@ function buildPrint(){
   <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
   for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td><span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}</td></tr>`;}
   const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
-  h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("net"))} g de glucides nets · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 40 g de protéines, un féculent à IG bas, 50 g de glucides nets et 750 kcal maximum par personne et par repas.</p></div>`;
+  h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("net"))} g de glucides nets · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 50 g de glucides nets et 950 kcal maximum par personne et par repas.</p></div>`;
   rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
     h+=`<section class="pd-recipe"><div class="eyebrow">Recette ${i+1} · ${day(i)} midi → ${day(i+1)} soir</div><h2>${esc(r.name)}</h2>
     <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${r.poelee?" · poêlée surgelée":""}</div>
