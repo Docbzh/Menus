@@ -595,7 +595,7 @@ function generate(){
     if(!cands.length)break;
     const scored=cands.map(r=>{let s=Math.random()*10;
       const mc=mainCount[r.main]||0;
-      if(mc>=3)s-=60;else if(S.set.protMode==="eco"){if(mc>0)s+=10;}else if(mc>0)s-=25;
+      if(mc>=3)s-=60;else if(S.set.protMode==="eco"){if(mc>0)s+=4;}else if(mc>0)s-=25;
       if(prev.has(r.id))s-=8;
       s-=(tagCount[r.tag]||0)*(S.set.prio==="variety"?12:6);
       if(S.set.prio==="carbs")s-=r.m.c*1.2;
