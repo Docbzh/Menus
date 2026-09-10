@@ -218,7 +218,7 @@ ol.steps li{margin-bottom:6px}
   </div>
   <p class="note" style="margin-top:10px">Le PDF contient la semaine, les 7 recettes détaillées et la liste de courses. Sur iPhone : l'aperçu d'impression s'ouvre → bouton <b>Partager</b> (ou pincer l'aperçu) → envoyer le PDF par Messages, WhatsApp ou Mail.</p>
   <p class="note">🔒 Verrouillez une recette pour la garder lors de la prochaine génération. Touchez une recette pour la voir en détail.</p>
-  <p class="note">★ Le samedi soir est toujours réservé à une recette spéciale, gourmande, cuisinée fraîche pour 2 — elle ne compte pas dans la rotation des 7 recettes. En contrepartie, les 2 portions du vendredi qui auraient normalement fini en dîner du samedi sont en plus cette semaine-là (à congeler, ou en repas bonus).</p>
+  <p class="note">★ Le samedi soir est toujours réservé à une recette spéciale, gourmande, cuisinée fraîche pour 2 — elle change d'une semaine à l'autre parmi plusieurs options (dont certaines plus riches en glucides, prévu pour rester festif) et ne compte pas dans la rotation des 7 recettes. En contrepartie, les 2 portions du vendredi qui auraient normalement fini en dîner du samedi sont en plus cette semaine-là (à congeler, ou en repas bonus).</p>
 </section>
 
 <!-- RECETTES -->
@@ -387,6 +387,10 @@ const ING = {
   farinesarrasin:{n:"Farine de sarrasin (blé noir)",cat:"Féculents",v:[343,13,71,3,10]},
   saumonfume:{n:"Saumon fumé",cat:"Poisson fumé",v:[117,18,0,4.5,0]},
   emmental:{n:"Emmental râpé",cat:"Crèmerie & œufs",v:[380,28,0,30,0]},
+  cheddar:{n:"Cheddar",cat:"Crèmerie & œufs",v:[404,25,1,33,0]},
+  patefeuilletee:{n:"Pâte feuilletée",cat:"Boulangerie",v:[335,6,30,22,1.5]},
+  painburger:{n:"Pain à burger",cat:"Boulangerie",v:[290,9,48,7,2.5]},
+  chapelure:{n:"Chapelure",cat:"Épicerie",v:[380,12,72,3,4]},
 };
 
 /* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (~60 g de protéines visées), v = légume (200 g), x = autre ---------- */
@@ -598,22 +602,40 @@ function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
 function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}return m;}
 R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<50||r.m.p>65||r.m.kcal>950)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
 
-/* ---------- plat spécial du samedi soir : cuisiné frais pour 2, une seule fois, hors rotation ---------- */
-const SATURDAY_SPECIAL={
-  id:"special-samedi-tagliatelles",
-  name:"Tagliatelles crémeuses au saumon fumé, parmesan et champignons",
-  tag:"poisson",time:30,noStarch:true,
-  ing:[["patesLent",165,"x"],["saumonfume",110,"p"],["parmesan",30,"p"],["creme",50,"x"],["oeufs",60,"p"],["beurre",12,"x"],["champignons",150,"v"],["asperges",50,"v"],["ail",3,"x"],["herbes",3,"x"]],
-  steps:["Porter une grande casserole d'eau salée à ébullition. Cuire les pâtes de lentilles corail 2–3 min de moins que le temps indiqué sur le paquet (elles termineront de cuire dans la sauce) ; réserver une louche d'eau de cuisson avant d'égoutter.","Pendant ce temps, faire dorer les champignons émincés dans le beurre à feu vif 5 min ; ajouter les asperges en tronçons et l'ail, 3 min de plus.","Hors du feu, dans un bol, battre l'œuf avec la crème et le parmesan râpé : c'est la base soyeuse de la sauce, comme pour une vraie carbonara.","Verser les pâtes encore chaudes dans la poêle avec les légumes, hors du feu. Ajouter le mélange crème-parmesan-œuf en remuant vivement pour l'enrober sans qu'il ne graine ; détendre avec un peu d'eau de cuisson pour une sauce bien nappante.","Ajouter le saumon fumé en lanières au tout dernier moment pour qu'il reste tendre et fondant. Poivre généreusement, un peu de parmesan et d'herbes fraîches en plus, et servir aussitôt, bien chaud."],
-  note:"Pensé pour être dégusté ce soir-là uniquement, en portions pour 2 — pas de lendemain, pas de trop : juste un moment plaisir qui reste dans les clous (≈ 60 g de protéines, glucides et calories maîtrisés)."
-};
-SATURDAY_SPECIAL.m=macros(SATURDAY_SPECIAL);
-SATURDAY_SPECIAL.veg=SATURDAY_SPECIAL.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);
-SATURDAY_SPECIAL.prot=SATURDAY_SPECIAL.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);
+/* ---------- plats spéciaux du samedi soir : cuisinés frais pour 2, une seule fois, hors rotation ---------- */
+const SATURDAY_SPECIALS=[
+{id:"special-tagliatelles",name:"Tagliatelles crémeuses au saumon fumé, parmesan et champignons",tag:"poisson",time:30,noStarch:true,
+ ing:[["patesLent",165,"x"],["saumonfume",110,"p"],["parmesan",30,"p"],["creme",50,"x"],["oeufs",60,"p"],["beurre",12,"x"],["champignons",150,"v"],["asperges",50,"v"],["ail",3,"x"],["herbes",3,"x"]],
+ steps:["Porter une grande casserole d'eau salée à ébullition. Cuire les pâtes de lentilles corail 2–3 min de moins que le temps indiqué sur le paquet (elles termineront de cuire dans la sauce) ; réserver une louche d'eau de cuisson avant d'égoutter.","Pendant ce temps, faire dorer les champignons émincés dans le beurre à feu vif 5 min ; ajouter les asperges en tronçons et l'ail, 3 min de plus.","Hors du feu, dans un bol, battre l'œuf avec la crème et le parmesan râpé : c'est la base soyeuse de la sauce, comme pour une vraie carbonara.","Verser les pâtes encore chaudes dans la poêle avec les légumes, hors du feu. Ajouter le mélange crème-parmesan-œuf en remuant vivement pour l'enrober sans qu'il ne graine ; détendre avec un peu d'eau de cuisson pour une sauce bien nappante.","Ajouter le saumon fumé en lanières au tout dernier moment pour qu'il reste tendre et fondant. Poivre généreusement, un peu de parmesan et d'herbes fraîches en plus, et servir aussitôt, bien chaud."],
+ note:"Le plus raisonnable des quatre — ≈ 60 g de protéines, glucides et calories bien maîtrisés."},
+{id:"special-burger",name:"Burger de saumon croustillant, cheddar fondant et frites de patate douce",tag:"poisson",time:40,noStarch:true,
+ ing:[["saumon",170,"p"],["chapelure",20,"x"],["painburger",85,"x"],["cheddar",35,"p"],["patatedouce",190,"x"],["yaourt",30,"x"],["moutarde",6,"x"],["citron",5,"x"],["roquette",40,"v"],["tomate",100,"v"],["concombre",60,"v"],["huile",8,"x"]],
+ steps:["Préparer les frites : couper la patate douce en bâtonnets, huile, sel ; étaler sur une plaque et enfourner à 210 °C 25 min, en retournant à mi-cuisson.","Paner le saumon : le couper en pavés épais, les rouler dans la chapelure en pressant bien pour la faire adhérer.","Poêler le saumon pané dans l'huile 3–4 min par face, jusqu'à ce que la panure soit bien dorée et croustillante ; poser une tranche de cheddar dessus en fin de cuisson pour qu'elle fonde.","Sauce : mélanger le yaourt grec, la moutarde et le jus de citron.","Toaster les pains à burger, tartiner de sauce, garnir de roquette, tomate, concombre et du pavé de saumon pané au cheddar fondu. Servir avec les frites de patate douce."],
+ note:"Le plus gourmand et le plus riche en glucides des quatre (pain + frites + panure) : un vrai plaisir burger-frites, à compenser sur le reste de la journée si vous suivez un quota de glucides quotidien."},
+{id:"special-encroute",name:"Saumon en croûte feuilletée, feta et beurre blanc au citron, asperges rôties",tag:"poisson",time:45,noStarch:true,
+ ing:[["saumon",260,"p"],["feta",40,"p"],["patefeuilletee",70,"x"],["beurre",18,"x"],["creme",20,"x"],["vinblanc",20,"x"],["echalote",15,"x"],["citron",10,"x"],["asperges",150,"v"],["tomcerise",50,"v"]],
+ steps:["Four à 200 °C. Étaler la pâte feuilletée, y déposer le pavé de saumon salé et poivré, la feta émiettée dessus ; refermer en chausson en soudant bien les bords.","Dorer le dessus (jaune d'œuf ou lait), enfourner 20–25 min jusqu'à ce que la pâte soit bien gonflée et dorée.","Pendant ce temps, rôtir les asperges et les tomates cerises au four avec un filet d'huile, 15 min.","Beurre blanc : faire réduire l'échalote ciselée avec le vin blanc et le jus de citron jusqu'à quasi sec ; hors du feu, incorporer le beurre froid en morceaux en fouettant, puis la crème pour lisser la sauce.","Découper le chausson feuilleté en deux, napper de beurre blanc, servir avec les asperges et tomates rôties."],
+ note:"Le plus 'restaurant' des quatre — pâte feuilletée et beurre blanc obligent, c'est le plus riche en matières grasses. À savourer sans culpabiliser, en ajustant le reste de la journée."},
+{id:"special-gratin",name:"Gratin dauphinois au saumon fumé et emmental, haricots verts",tag:"poisson",time:60,noStarch:true,
+ ing:[["pdt",260,"x"],["saumonfume",180,"p"],["emmental",70,"p"],["creme",60,"x"],["ail",3,"x"],["hverts",150,"v"],["roquette",50,"v"]],
+ steps:["Four à 180 °C. Éplucher et couper les pommes de terre en fines rondelles (à la mandoline si possible).","Beurrer un plat à gratin, le frotter d'ail. Disposer une couche de pommes de terre, un peu de crème, une couche de saumon fumé émietté, recommencer ; terminer par de la crème et l'emmental râpé.","Cuire 45–50 min jusqu'à ce que les pommes de terre soient fondantes et le dessus bien gratiné.","Pendant ce temps, cuire les haricots verts 6–8 min à l'eau bouillante salée ; les servir en accompagnement avec un peu de roquette fraîche, à côté du gratin bien chaud."],
+ note:"Le plus 'plat familial réconfortant' des quatre. Toujours pensé pour un seul soir, en portions pour 2."},
+];
+SATURDAY_SPECIALS.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);});
+const bySpecialId=Object.fromEntries(SATURDAY_SPECIALS.map(r=>[r.id,r]));
+function currentSpecial(){return bySpecialId[S.satSpecial]||SATURDAY_SPECIALS[0];}
+function pickSpecial(){
+  const avoid=S.set.avoid.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+  let cands=SATURDAY_SPECIALS.filter(r=>!contains(r,avoid)&&r.id!==S.satSpecial);
+  if(!cands.length)cands=SATURDAY_SPECIALS.filter(r=>!contains(r,avoid));
+  if(!cands.length)cands=SATURDAY_SPECIALS;
+  S.satSpecial=cands[rnd(cands.length)].id;
+}
+function rerollSpecial(){pickSpecial();save();render();closeSheet();toast("Autre recette spéciale");}
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],prev:[],checked:{},set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+const DEF={recipes:[],locked:[],prev:[],checked:{},satSpecial:null,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
 let S;
 try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
@@ -621,6 +643,7 @@ function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch
 /* ---------- génération ---------- */
 function contains(r,words){return words.some(w=>r.ing.some(i=>ING[i[0]].n.toLowerCase().includes(w))||r.name.toLowerCase().includes(w));}
 function generate(){
+  pickSpecial();
   const avoid=S.set.avoid.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
   const pool=R.filter(r=>!contains(r,avoid));
   const chosen=new Array(7).fill(null);
@@ -705,13 +728,13 @@ function slot(r,i,when,fromPrev){
 }
 function toggleLock(i){S.locked[i]=!S.locked[i];save();render();}
 function specialSlot(){
-  const r=SATURDAY_SPECIAL;
+  const r=currentSpecial();
   return`<div class="slot t-${r.tag}"><button class="rn" style="background:var(--accent)" onclick="openSpecialSheet()" aria-label="Voir la recette">★</button>
   <button style="text-align:left" onclick="openSpecialSheet()"><div class="when">Soir · spécial weekend, pour 2</div><div class="name">${r.name}</div></button>
   <span class="lock" style="visibility:hidden">🔒</span></div>`;
 }
 function openSpecialSheet(){
-  const r=SATURDAY_SPECIAL;
+  const r=currentSpecial();
   const ordR={p:0,v:1,x:2};
   const rows=r.ing.filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*2/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*2} g`;
     const note=it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*2/it.dry/5)*5} g secs)</span>`:"";
@@ -727,7 +750,8 @@ function openSpecialSheet(){
   <h4>Préparation (pour 2 portions)</h4>
   <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
   <div class="tip" style="background:var(--accent-soft)">${r.note}</div>
-  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
+  <p class="note" style="margin-top:8px">${SATURDAY_SPECIALS.length} recettes spéciales tournent d'une semaine à l'autre ; touchez « Autre recette » pour choisir une autre option tout de suite.</p>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" onclick="rerollSpecial()">★ Autre recette</button><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
   $("#sbg").classList.add("on");$("#sheet").classList.add("on");
 }
 function macroHtml(r,max){
@@ -752,8 +776,8 @@ function renderCards(){
 }
 function shopData(){
   const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*4/ING[k].dry:g*4);}));
-  SATURDAY_SPECIAL.ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
-  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Crèmerie & œufs","Épicerie"];
+  currentSpecial().ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
+  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Boulangerie","Crèmerie & œufs","Épicerie"];
   return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
 }
 function qty(it){
@@ -821,7 +845,7 @@ $("#sbg").onclick=closeSheet;
 let tt;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800);}
 function copy(txt,msg){if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast(msg),()=>toast("Copie impossible"));}else toast("Copie impossible");}
 $("#copyshop").onclick=()=>{const t=shopData().map(c=>`${c.cat.toUpperCase()}\n`+c.items.map(it=>`☐ ${it.n} — ${qty(it)}${hint(it)?" ("+hint(it)+")":""}`).join("\n")).join("\n\n");copy("Courses de la semaine\n\n"+t,"Liste copiée");};
-$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${isSat?"★ "+SATURDAY_SPECIAL.name+" (spécial, pour 2)":soir?soir.name+sx(soir):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
+$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+sx(soir):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
 $("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
 
 /* ---------- export PDF (impression) & partage ---------- */
@@ -837,7 +861,7 @@ function buildPrint(){
   let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois pour 4 portions : déjeuner du jour, puis dîner du lendemain. Exception le samedi soir : place à la recette spéciale de la page dédiée, cuisinée fraîche pour 2 uniquement — les 2 portions du vendredi qui auraient normalement servi ce soir-là sont donc en plus (à congeler, ou en repas bonus).</p>
   <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
   for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];const isSat=day(d)==="Samedi";
-    h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td>${isSat?`★ ${esc(SATURDAY_SPECIAL.name)} <small>(spécial, pour 2)</small>`:`<span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}`}</td></tr>`;}
+    h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td>${isSat?`★ ${esc(currentSpecial().name)} <small>(spécial, pour 2)</small>`:`<span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}`}</td></tr>`;}
   const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
   h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("c"))} g de glucides · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 60 g de glucides et 950 kcal maximum par personne et par repas.</p></div>`;
   rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
@@ -849,7 +873,7 @@ function buildPrint(){
     h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
     ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit par personne${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
     <div class="pd-tip"><b>Le lendemain soir :</b> ${esc(r.reheat)}</div></section>`;});
-  (()=>{const r=SATURDAY_SPECIAL;const m=M(r);const rows=ingRows(r,2);
+  (()=>{const r=currentSpecial();const m=M(r);const rows=ingRows(r,2);
     h+=`<section class="pd-recipe"><div class="eyebrow">★ Spécial samedi soir · pour 2, usage unique</div><h2>${esc(r.name)}</h2>
     <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 2 portions</div>
     <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.c)} g</b>glucides</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
@@ -868,9 +892,9 @@ function exportPDF(){
   $("#printdoc").innerHTML=buildPrint();closeSheet();
   setTimeout(()=>window.print(),150);
 }
-function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${isSat?"★ "+SATURDAY_SPECIAL.name+" (spécial, pour 2)":soir?soir.name:"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
+function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name:"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
   t+="\n— Recettes —\n";rs.forEach((r,i)=>{t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions)\n`;ingRows(r).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  Lendemain : ${r.reheat}\n`;});
-  t+=`\n★ ${SATURDAY_SPECIAL.name} (${SATURDAY_SPECIAL.time} min, 2 portions — samedi soir uniquement)\n`;ingRows(SATURDAY_SPECIAL,2).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);SATURDAY_SPECIAL.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  ${SATURDAY_SPECIAL.note}\n`;
+  t+=`\n★ ${currentSpecial().name} (${currentSpecial().time} min, 2 portions — samedi soir uniquement)\n`;ingRows(currentSpecial(),2).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);currentSpecial().steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  ${currentSpecial().note}\n`;
   return t;}
 $("#pdf").onclick=exportPDF;
 $("#share").onclick=async()=>{const t=menuText();if(navigator.share){try{await navigator.share({title:"Menu de la semaine",text:t});}catch(e){}}else copy(t,"Menu et recettes copiés");};
@@ -891,6 +915,7 @@ function showView(v){S.view=v;save();document.querySelectorAll(".view").forEach(
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showView(b.dataset.v));
 
 /* ---------- démarrage ---------- */
+if(!S.satSpecial)pickSpecial();
 if(!S.recipes.length||S.recipes.every(x=>!x))generate();else render();
 showView(S.view||"week");
 </script>
