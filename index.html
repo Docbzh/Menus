@@ -391,6 +391,7 @@ const ING = {
   patefeuilletee:{n:"Pâte feuilletée",cat:"Boulangerie",v:[335,6,30,22,1.5]},
   painburger:{n:"Pain à burger",cat:"Boulangerie",v:[290,9,48,7,2.5]},
   chapelure:{n:"Chapelure",cat:"Épicerie",v:[380,12,72,3,4]},
+  poulet:{n:"Filet de poulet (cru)",cat:"Viande",v:[120,23,0,2.6,0]},
 };
 
 /* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (~60 g de protéines visées), v = légume (200 g), x = autre ---------- */
@@ -635,7 +636,7 @@ function rerollSpecial(){pickSpecial();save();render();closeSheet();toast("Autre
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],prev:[],checked:{},satSpecial:null,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
 let S;
 try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
@@ -676,7 +677,7 @@ function generate(){
   /* mélanger les non verrouillées entre elles pour varier l'ordre des familles */
   const order=free.slice();for(let i=order.length-1;i>0;i--){const j=rnd(i+1);[order[i],order[j]]=[order[j],order[i]];}
   const vals=free.map(i=>chosen[i]);order.forEach((slot,k)=>chosen[slot]=vals[k]);
-  S.prev=S.recipes.slice();S.recipes=chosen.map(r=>r?r.id:null);S.checked={};save();render();
+  S.prev=S.recipes.slice();S.recipes=chosen.map(r=>r?r.id:null);S.checked={};S.chicken=[];save();render();
 }
 function reroll(i){
   const avoid=S.set.avoid.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
@@ -721,12 +722,14 @@ function renderWeek(){
 }
 function slot(r,i,when,fromPrev){
   if(!r)return`<div class="slot rest"><span class="rn" style="background:var(--line)">–</span><div><div class="when">${when}</div><div class="name">—</div></div></div>`;
-  const lock=S.locked[i];
+  const lock=S.locked[i];const half=!!S.chicken[i];
   return`<div class="slot t-${r.tag}${fromPrev?" rest":""}"><button class="rn" onclick="openSheet('${r.id}',${i})" aria-label="Voir la recette">${i+1}</button>
-  <button style="text-align:left" onclick="openSheet('${r.id}',${i})"><div class="when">${when}${fromPrev?" · reste de la recette 7 (semaine précédente)":when==="Soir"?" · reste du midi de la veille":""}</div><div class="name">${r.name}</div></button>
+  <button style="text-align:left" onclick="openSheet('${r.id}',${i})"><div class="when">${when}${fromPrev?" · reste de la recette 7 (semaine précédente)":when==="Soir"?" · reste du midi de la veille":""}${half?" · 🍗 poulet pour vous":""}</div><div class="name">${r.name}</div></button>
   <button class="lock${lock?" on":""}" onclick="toggleLock(${i})" aria-label="Verrouiller">${lock?"🔒":"🔓"}</button></div>`;
 }
 function toggleLock(i){S.locked[i]=!S.locked[i];save();render();}
+const CHICKEN_G=260;
+function toggleChicken(i){S.chicken[i]=!S.chicken[i];save();render();}
 function specialSlot(){
   const r=currentSpecial();
   return`<div class="slot t-${r.tag}"><button class="rn" style="background:var(--accent)" onclick="openSpecialSheet()" aria-label="Voir la recette">★</button>
@@ -766,18 +769,23 @@ function renderCards(){
   const rs=recipes();const c=$("#cards");
   if(!rs.length){c.innerHTML=`<p class="note">Générez d'abord une semaine.</p>`;return;}
   c.innerHTML=rs.map((r,i)=>{const d1=DAYS[(i+S.set.start)%7],d2=DAYS[(i+1+S.set.start)%7];
+  const half=!!S.chicken[i];
   return`<div class="card t-${r.tag}"><button class="rn" onclick="openSheet('${r.id}',${i})">${i+1}</button><div>
   <h3><button style="text-align:left" onclick="openSheet('${r.id}',${i})">${r.name}</button></h3>
-  <div class="serves">${d1} midi → ${d2} soir · ${r.time} min · 4 portions</div>
-  <div class="meta"><span class="chip tag">${TAGS[r.tag]}</span><span class="chip">${r.poelee?"poêlée surgelée":r.veg+" g légumes"}</span><span class="chip">${r.prot} g source protéique</span>${(si=>si?`<span class="chip">+ ${si.cooked} g cuit ${si.n.toLowerCase()}${si.same?"":" ("+si.raw+" g cru)"}</span>`:"")(starchInfo(r))}</div>
+  <div class="serves">${d1} midi → ${d2} soir · ${r.time} min · 4 portions${half?" (2 pescétariennes + 2 poulet)":""}</div>
+  <div class="meta"><span class="chip tag">${TAGS[r.tag]}</span><span class="chip">${r.poelee?"poêlée surgelée":r.veg+" g légumes"}</span><span class="chip">${r.prot} g source protéique</span>${(si=>si?`<span class="chip">+ ${si.cooked} g cuit ${si.n.toLowerCase()}${si.same?"":" ("+si.raw+" g cru)"}</span>`:"")(starchInfo(r))}${half?`<span class="chip">🍗 ${CHICKEN_G} g de poulet pour vous</span>`:""}</div>
   ${macroHtml(r)}
-  <div class="actions"><button class="btn small" onclick="openSheet('${r.id}',${i})">Recette</button><button class="btn small" onclick="reroll(${i})">↻ Remplacer</button><button class="btn small" onclick="toggleLock(${i})">${S.locked[i]?"🔒 Verrouillée":"🔓 Verrouiller"}</button></div>
+  <div class="actions"><button class="btn small" onclick="openSheet('${r.id}',${i})">Recette</button><button class="btn small" onclick="reroll(${i})">↻ Remplacer</button><button class="btn small" onclick="toggleLock(${i})">${S.locked[i]?"🔒 Verrouillée":"🔓 Verrouiller"}</button><button class="btn small" onclick="toggleChicken(${i})">${half?"🐟 Tout pescétarien":"🍗 Poulet pour moi"}</button></div>
   </div></div>`;}).join("");
 }
 function shopData(){
-  const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*4/ING[k].dry:g*4);}));
+  const tot={};
+  S.recipes.forEach((id,i)=>{const r=byId[id];if(!r)return;const half=!!S.chicken[i];
+    eff(r).forEach(([k,g,role])=>{if(g<=0)return;const mult=(half&&role==="p")?2:4;tot[k]=(tot[k]||0)+(ING[k].dry?g*mult/ING[k].dry:g*mult);});
+    if(half)tot.poulet=(tot.poulet||0)+CHICKEN_G*2;
+  });
   currentSpecial().ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
-  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Boulangerie","Crèmerie & œufs","Épicerie"];
+  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Viande","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Boulangerie","Crèmerie & œufs","Épicerie"];
   return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
 }
 function qty(it){
@@ -812,15 +820,15 @@ function renderSettings(){
   document.querySelectorAll("#protMode button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.protMode));
   $("#starchLeg").checked=S.set.starchLeg;
   $("#starchList").innerHTML=STARCH.slice().sort((a,b)=>ING[a].v[2]-ING[b].v[2]).map(k=>{const v=ING[k].v;const on=S.set.starchOk.includes(k);return`<label class="item${on?"":" done"}" style="grid-template-columns:24px 1fr auto"><input type="checkbox" ${on?"checked":""} onchange="starchOk('${k}',this.checked)"><div><div class="n">${ING[k].n}</div><div class="h">${ING[k].gi}</div></div><div class="q num" style="font-weight:500;font-size:13px">${fmt(v[2],1)} g glucides / 100 g cuit</div></label>`;}).join("");
-  S.locked=S.locked.slice(0,7);
+  S.locked=S.locked.slice(0,7);S.chicken=(S.chicken||[]).slice(0,7);
 }
 
 /* ---------- fiche recette ---------- */
 function openSheet(id,i){
-  const r=byId[id];const m=r.m;
-  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*4/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+  const r=byId[id];const m=r.m;const half=!!S.chicken[i];const mult=role=>(half&&role==="p")?2:4;
+  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const bm=mult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*bm/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*bm} g`;
     if(role==="s"){const si=starchInfo(r);return`<div><span class="role st"></span>${it.n} <span class="p">— féculent</span><br><span class="p">cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers. · "+si.raw4+" g pour 4"}</span></div><div class="p num">${si.cooked} g cuit</div><div class="b num">${si.cooked4} g cuit</div>`;}
-    const note=it.can?` <span class="p">(${Math.ceil(g*4/it.can)} boîte${Math.ceil(g*4/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*4/it.dry/5)*5} g secs)</span>`:"";
+    const note=(it.can?` <span class="p">(${Math.ceil(g*bm/it.can)} boîte${Math.ceil(g*bm/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*bm/it.dry/5)*5} g secs)</span>`:"")+(half&&role==="p"?` <span class="p">(pour Julia seulement, 2 portions)</span>`:"");
     return`<div><span class="role ${role==="p"?"prot":role==="v"?"veg":"x"}"></span>${it.n}${note}</div><div class="p num">${per}</div><div class="b num">${b}</div>`;}).join("");
   const d1=DAYS[(i+S.set.start)%7],d2=DAYS[(i+1+S.set.start)%7];
   $("#sheet").innerHTML=`<div class="grab"></div>
@@ -831,11 +839,12 @@ function openSheet(id,i){
   <h4>Ingrédients</h4>
   <div class="ingl"><div class="hd">par portion / pour 4</div><div class="hd">1 pers.</div><div class="hd">4 portions</div>${rows}</div>
   <p class="note" style="margin-top:8px"><span class="role prot"></span>sources protéiques ${r.prot} g · <span class="role veg"></span>légumes ${r.veg} g · <span class="role st"></span>féculent · <span class="role x"></span>assaisonnement · sel et poivre</p>
+  ${half?`<div class="tip" style="background:var(--legume-soft)">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité pour 4 (Julia + vous, aux 2 repas). Ne cuisinez la source protéique de la recette qu'en quantité pour 2 (pour Julia), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
   <h4>Préparation (pour 4 portions)</h4>
   <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
   ${(si=>si?`<div class="tip" style="background:var(--oeufs-soft)"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${si.n.toLowerCase()} <b>cuit</b> par personne${si.same?" (poids cru ≈ poids cuit)":` — soit ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
   <div class="tip"><b>Le lendemain soir :</b> ${r.reheat}</div>
-  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" onclick="reroll(${i});closeSheet()">↻ Remplacer</button><button class="btn" onclick="toggleLock(${i});closeSheet()">${S.locked[i]?"🔓 Déverrouiller":"🔒 Verrouiller"}</button><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn" onclick="reroll(${i});closeSheet()">↻ Remplacer</button><button class="btn" onclick="toggleLock(${i});closeSheet()">${S.locked[i]?"🔓 Déverrouiller":"🔒 Verrouiller"}</button><button class="btn" onclick="toggleChicken(${i});closeSheet()">${half?"🐟 Tout pescétarien":"🍗 Poulet pour moi"}</button><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
   $("#sbg").classList.add("on");$("#sheet").classList.add("on");
 }
 function closeSheet(){$("#sbg").classList.remove("on");$("#sheet").classList.remove("on");}
@@ -845,14 +854,14 @@ $("#sbg").onclick=closeSheet;
 let tt;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800);}
 function copy(txt,msg){if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast(msg),()=>toast("Copie impossible"));}else toast("Copie impossible");}
 $("#copyshop").onclick=()=>{const t=shopData().map(c=>`${c.cat.toUpperCase()}\n`+c.items.map(it=>`☐ ${it.n} — ${qty(it)}${hint(it)?" ("+hint(it)+")":""}`).join("\n")).join("\n\n");copy("Courses de la semaine\n\n"+t,"Liste copiée");};
-$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+sx(soir):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
+$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};const ck=i=>S.chicken[i]?" [+ poulet pour vous]":"";t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi)+ck(d):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+sx(soir)+ck((d+6)%7):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
 $("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
 
 /* ---------- export PDF (impression) & partage ---------- */
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
-function ingRows(r,mult=4){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*mult/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*mult} g`;
+function ingRows(r,mult=4){const getMult=typeof mult==="function"?mult:()=>mult;const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const m=getMult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*m/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*m} g`;
   if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.raw4+" g pour 4"}`,per:`${si.cooked} g cuit`,b:`${si.cooked4} g cuit`};}
-  const note=it.can?` (${Math.ceil(g*mult/it.can)} ${it.canName.replace("boîte",Math.ceil(g*mult/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*mult/it.dry/5)*5} g secs)`:"";
+  const note=(it.can?` (${Math.ceil(g*m/it.can)} ${it.canName.replace("boîte",Math.ceil(g*m/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*m/it.dry/5)*5} g secs)`:"")+(role==="p"&&getMult("p")<4?" (pour Julia seulement, 2 portions)":"");
   const lab=role==="p"?"Protéines":role==="v"?"Légumes":"Assaisonnement";
   return{lab,txt:it.n+note,per,b};});}
 function buildPrint(){
@@ -864,14 +873,15 @@ function buildPrint(){
     h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td>${isSat?`★ ${esc(currentSpecial().name)} <small>(spécial, pour 2)</small>`:`<span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}`}</td></tr>`;}
   const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
   h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("c"))} g de glucides · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 60 g de glucides et 950 kcal maximum par personne et par repas.</p></div>`;
-  rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
+  rs.forEach((r,i)=>{const m=M(r);const half=!!S.chicken[i];const rows=ingRows(r,role=>(half&&role==="p")?2:4);
     h+=`<section class="pd-recipe"><div class="eyebrow">Recette ${i+1} · ${day(i)} midi → ${day(i+1)} soir</div><h2>${esc(r.name)}</h2>
-    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${r.poelee?" · poêlée surgelée":""}</div>
+    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${half?" (2 pescétariennes + 2 poulet)":""}${r.poelee?" · poêlée surgelée":""}</div>
     <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.c)} g</b>glucides</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
     <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par portion / pour 4</td><td class="q">1 pers.</td><td class="q">4 portions</td></tr>`;
     let last="";rows.forEach(x=>{h+=`<tr><td>${x.lab!==last?`<small style="color:#777">${x.lab} · </small>`:""}${esc(x.txt)}</td><td class="q">${x.per}</td><td class="q b">${x.b}</td></tr>`;last=x.lab;});
     h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
     ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit par personne${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
+    ${half?`<div class="pd-tip" style="border-color:#B5602E;background:#f6e4d6">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité pour 4. Ne cuisinez la source protéique qu'en quantité pour 2 (Julia), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
     <div class="pd-tip"><b>Le lendemain soir :</b> ${esc(r.reheat)}</div></section>`;});
   (()=>{const r=currentSpecial();const m=M(r);const rows=ingRows(r,2);
     h+=`<section class="pd-recipe"><div class="eyebrow">★ Spécial samedi soir · pour 2, usage unique</div><h2>${esc(r.name)}</h2>
@@ -892,8 +902,8 @@ function exportPDF(){
   $("#printdoc").innerHTML=buildPrint();closeSheet();
   setTimeout(()=>window.print(),150);
 }
-function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name:"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
-  t+="\n— Recettes —\n";rs.forEach((r,i)=>{t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions)\n`;ingRows(r).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  Lendemain : ${r.reheat}\n`;});
+function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const ck=i=>S.chicken[i]?" [+ poulet pour vous]":"";t+=`${dn}\n  Midi : ${midi?midi.name+ck(d):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+ck((d+6)%7):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
+  t+="\n— Recettes —\n";rs.forEach((r,i)=>{const half=!!S.chicken[i];t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions${half?" : 2 pescétariennes + 2 poulet":""})\n`;ingRows(r,role=>(half&&role==="p")?2:4).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);if(half)t+=`  🍗 Poulet pour vous : légumes/féculent restent pour 4 ; ne cuisinez la source protéique que pour 2 (Julia) et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.\n`;t+=`  Lendemain : ${r.reheat}\n`;});
   t+=`\n★ ${currentSpecial().name} (${currentSpecial().time} min, 2 portions — samedi soir uniquement)\n`;ingRows(currentSpecial(),2).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);currentSpecial().steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  ${currentSpecial().note}\n`;
   return t;}
 $("#pdf").onclick=exportPDF;
