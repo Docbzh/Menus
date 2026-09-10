@@ -218,6 +218,7 @@ ol.steps li{margin-bottom:6px}
   </div>
   <p class="note" style="margin-top:10px">Le PDF contient la semaine, les 7 recettes détaillées et la liste de courses. Sur iPhone : l'aperçu d'impression s'ouvre → bouton <b>Partager</b> (ou pincer l'aperçu) → envoyer le PDF par Messages, WhatsApp ou Mail.</p>
   <p class="note">🔒 Verrouillez une recette pour la garder lors de la prochaine génération. Touchez une recette pour la voir en détail.</p>
+  <p class="note">★ Le samedi soir est toujours réservé à une recette spéciale, gourmande, cuisinée fraîche pour 2 — elle ne compte pas dans la rotation des 7 recettes. En contrepartie, les 2 portions du vendredi qui auraient normalement fini en dîner du samedi sont en plus cette semaine-là (à congeler, ou en repas bonus).</p>
 </section>
 
 <!-- RECETTES -->
@@ -596,6 +597,19 @@ function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[
 function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
 function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}return m;}
 R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<50||r.m.p>65||r.m.kcal>950)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
+
+/* ---------- plat spécial du samedi soir : cuisiné frais pour 2, une seule fois, hors rotation ---------- */
+const SATURDAY_SPECIAL={
+  id:"special-samedi-tagliatelles",
+  name:"Tagliatelles crémeuses au saumon fumé, parmesan et champignons",
+  tag:"poisson",time:30,noStarch:true,
+  ing:[["patesLent",165,"x"],["saumonfume",110,"p"],["parmesan",30,"p"],["creme",50,"x"],["oeufs",60,"p"],["beurre",12,"x"],["champignons",150,"v"],["asperges",50,"v"],["ail",3,"x"],["herbes",3,"x"]],
+  steps:["Porter une grande casserole d'eau salée à ébullition. Cuire les pâtes de lentilles corail 2–3 min de moins que le temps indiqué sur le paquet (elles termineront de cuire dans la sauce) ; réserver une louche d'eau de cuisson avant d'égoutter.","Pendant ce temps, faire dorer les champignons émincés dans le beurre à feu vif 5 min ; ajouter les asperges en tronçons et l'ail, 3 min de plus.","Hors du feu, dans un bol, battre l'œuf avec la crème et le parmesan râpé : c'est la base soyeuse de la sauce, comme pour une vraie carbonara.","Verser les pâtes encore chaudes dans la poêle avec les légumes, hors du feu. Ajouter le mélange crème-parmesan-œuf en remuant vivement pour l'enrober sans qu'il ne graine ; détendre avec un peu d'eau de cuisson pour une sauce bien nappante.","Ajouter le saumon fumé en lanières au tout dernier moment pour qu'il reste tendre et fondant. Poivre généreusement, un peu de parmesan et d'herbes fraîches en plus, et servir aussitôt, bien chaud."],
+  note:"Pensé pour être dégusté ce soir-là uniquement, en portions pour 2 — pas de lendemain, pas de trop : juste un moment plaisir qui reste dans les clous (≈ 60 g de protéines, glucides et calories maîtrisés)."
+};
+SATURDAY_SPECIAL.m=macros(SATURDAY_SPECIAL);
+SATURDAY_SPECIAL.veg=SATURDAY_SPECIAL.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);
+SATURDAY_SPECIAL.prot=SATURDAY_SPECIAL.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- état ---------- */
@@ -677,7 +691,7 @@ function renderWeek(){
     const midi=byId[rs[d]];const soirIdx=(d+6)%7;const soir=byId[rs[soirIdx]];
     h+=`<div class="day"><div class="dn">${dayName.slice(0,3)}<small>${d===0?"jour 1":""}</small></div><div class="slots">`;
     h+=slot(midi,d,"Midi",false);
-    h+=slot(soir,soirIdx,"Soir",d===0);
+    h+=dayName==="Samedi"?specialSlot():slot(soir,soirIdx,"Soir",d===0);
     h+=`</div></div>`;
   }
   w.innerHTML=h;
@@ -690,6 +704,32 @@ function slot(r,i,when,fromPrev){
   <button class="lock${lock?" on":""}" onclick="toggleLock(${i})" aria-label="Verrouiller">${lock?"🔒":"🔓"}</button></div>`;
 }
 function toggleLock(i){S.locked[i]=!S.locked[i];save();render();}
+function specialSlot(){
+  const r=SATURDAY_SPECIAL;
+  return`<div class="slot t-${r.tag}"><button class="rn" style="background:var(--accent)" onclick="openSpecialSheet()" aria-label="Voir la recette">★</button>
+  <button style="text-align:left" onclick="openSpecialSheet()"><div class="when">Soir · spécial weekend, pour 2</div><div class="name">${r.name}</div></button>
+  <span class="lock" style="visibility:hidden">🔒</span></div>`;
+}
+function openSpecialSheet(){
+  const r=SATURDAY_SPECIAL;
+  const ordR={p:0,v:1,x:2};
+  const rows=r.ing.filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*2/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*2} g`;
+    const note=it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*2/it.dry/5)*5} g secs)</span>`:"";
+    return`<div><span class="role ${role==="p"?"prot":role==="v"?"veg":"x"}"></span>${it.n}${note}</div><div class="p num">${per}</div><div class="b num">${b}</div>`;}).join("");
+  $("#sheet").innerHTML=`<div class="grab"></div>
+  <div class="eyebrow">★ Spécial samedi soir · pour 2, usage unique</div>
+  <h2>${r.name}</h2>
+  <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px"><span class="chip tag t-${r.tag}">${TAGS[r.tag]}</span><span class="chip">${r.time} min</span><span class="chip">2 portions</span></div>
+  ${macroHtml(r)}
+  <h4>Ingrédients</h4>
+  <div class="ingl"><div class="hd">par personne / pour 2</div><div class="hd">1 pers.</div><div class="hd">2 portions</div>${rows}</div>
+  <p class="note" style="margin-top:8px"><span class="role prot"></span>sources protéiques ${r.prot} g · <span class="role veg"></span>légumes ${r.veg} g · <span class="role x"></span>assaisonnement · sel et poivre</p>
+  <h4>Préparation (pour 2 portions)</h4>
+  <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+  <div class="tip" style="background:var(--accent-soft)">${r.note}</div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
+  $("#sbg").classList.add("on");$("#sheet").classList.add("on");
+}
 function macroHtml(r,max){
   const m=M(r);return`<div class="macros">
   <div${m.kcal>950?' style="color:var(--legume)"':''}><b class="num">${fmt(m.kcal)}</b><span>kcal</span></div>
@@ -712,6 +752,7 @@ function renderCards(){
 }
 function shopData(){
   const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*4/ING[k].dry:g*4);}));
+  SATURDAY_SPECIAL.ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
   const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Crèmerie & œufs","Épicerie"];
   return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
 }
@@ -780,22 +821,23 @@ $("#sbg").onclick=closeSheet;
 let tt;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800);}
 function copy(txt,msg){if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast(msg),()=>toast("Copie impossible"));}else toast("Copie impossible");}
 $("#copyshop").onclick=()=>{const t=shopData().map(c=>`${c.cat.toUpperCase()}\n`+c.items.map(it=>`☐ ${it.n} — ${qty(it)}${hint(it)?" ("+hint(it)+")":""}`).join("\n")).join("\n\n");copy("Courses de la semaine\n\n"+t,"Liste copiée");};
-$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${soir?soir.name+sx(soir):"—"}${d===0?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
+$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${isSat?"★ "+SATURDAY_SPECIAL.name+" (spécial, pour 2)":soir?soir.name+sx(soir):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
 $("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
 
 /* ---------- export PDF (impression) & partage ---------- */
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
-function ingRows(r){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*4/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+function ingRows(r,mult=4){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*mult/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*mult} g`;
   if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.raw4+" g pour 4"}`,per:`${si.cooked} g cuit`,b:`${si.cooked4} g cuit`};}
-  const note=it.can?` (${Math.ceil(g*4/it.can)} ${it.canName.replace("boîte",Math.ceil(g*4/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*4/it.dry/5)*5} g secs)`:"";
+  const note=it.can?` (${Math.ceil(g*mult/it.can)} ${it.canName.replace("boîte",Math.ceil(g*mult/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*mult/it.dry/5)*5} g secs)`:"";
   const lab=role==="p"?"Protéines":role==="v"?"Légumes":"Assaisonnement";
   return{lab,txt:it.n+note,per,b};});}
 function buildPrint(){
   const rs=recipes();if(!rs.length)return"";
   const day=i=>DAYS[(i+S.set.start)%7];
-  let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois pour 4 portions : déjeuner du jour, puis dîner du lendemain.</p>
+  let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois pour 4 portions : déjeuner du jour, puis dîner du lendemain. Exception le samedi soir : place à la recette spéciale de la page dédiée, cuisinée fraîche pour 2 uniquement — les 2 portions du vendredi qui auraient normalement servi ce soir-là sont donc en plus (à congeler, ou en repas bonus).</p>
   <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
-  for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td><span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}</td></tr>`;}
+  for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];const isSat=day(d)==="Samedi";
+    h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td>${isSat?`★ ${esc(SATURDAY_SPECIAL.name)} <small>(spécial, pour 2)</small>`:`<span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}`}</td></tr>`;}
   const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
   h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("c"))} g de glucides · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 60 g de glucides et 950 kcal maximum par personne et par repas.</p></div>`;
   rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
@@ -807,6 +849,15 @@ function buildPrint(){
     h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
     ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit par personne${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
     <div class="pd-tip"><b>Le lendemain soir :</b> ${esc(r.reheat)}</div></section>`;});
+  (()=>{const r=SATURDAY_SPECIAL;const m=M(r);const rows=ingRows(r,2);
+    h+=`<section class="pd-recipe"><div class="eyebrow">★ Spécial samedi soir · pour 2, usage unique</div><h2>${esc(r.name)}</h2>
+    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 2 portions</div>
+    <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.c)} g</b>glucides</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
+    <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par personne / pour 2</td><td class="q">1 pers.</td><td class="q">2 portions</td></tr>`;
+    let last="";rows.forEach(x=>{h+=`<tr><td>${x.lab!==last?`<small style="color:#777">${x.lab} · </small>`:""}${esc(x.txt)}</td><td class="q">${x.per}</td><td class="q b">${x.b}</td></tr>`;last=x.lab;});
+    h+=`</table><h3>Préparation (pour 2 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
+    <div class="pd-tip"><b>À savoir :</b> ${esc(r.note)}</div></section>`;
+  })();
   h+=`<section class="pd-shop"><h2>Liste de courses</h2>`;
   shopData().forEach(c=>{h+=`<h3>${c.cat}</h3><ul>${c.items.map(it=>`<li><span>${esc(it.n)}${hint(it)?`<em>${esc(hint(it))}</em>`:""}</span><span>${qty(it)}</span></li>`).join("")}</ul>`;});
   h+=`</section><p class="pd-foot">Marée basse — menu généré le ${new Date().toLocaleDateString("fr-FR")}. Légumineuses et poissons en boîte : poids égouttés. Féculents : poids sec à acheter, poids cuit dans les recettes.</p>`;
@@ -817,8 +868,10 @@ function exportPDF(){
   $("#printdoc").innerHTML=buildPrint();closeSheet();
   setTimeout(()=>window.print(),150);
 }
-function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${soir?soir.name:"—"}${d===0?" (reste sem. préc.)":""}\n`;}
-  t+="\n— Recettes —\n";rs.forEach((r,i)=>{t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions)\n`;ingRows(r).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  Lendemain : ${r.reheat}\n`;});return t;}
+function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${isSat?"★ "+SATURDAY_SPECIAL.name+" (spécial, pour 2)":soir?soir.name:"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
+  t+="\n— Recettes —\n";rs.forEach((r,i)=>{t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions)\n`;ingRows(r).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  Lendemain : ${r.reheat}\n`;});
+  t+=`\n★ ${SATURDAY_SPECIAL.name} (${SATURDAY_SPECIAL.time} min, 2 portions — samedi soir uniquement)\n`;ingRows(SATURDAY_SPECIAL,2).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);SATURDAY_SPECIAL.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  ${SATURDAY_SPECIAL.note}\n`;
+  return t;}
 $("#pdf").onclick=exportPDF;
 $("#share").onclick=async()=>{const t=menuText();if(navigator.share){try{await navigator.share({title:"Menu de la semaine",text:t});}catch(e){}}else copy(t,"Menu et recettes copiés");};
 
