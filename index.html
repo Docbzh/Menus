@@ -233,7 +233,7 @@ ol.steps li{margin-bottom:6px}
     <button class="btn small" id="uncheck">Tout décocher</button>
   </div>
   <div id="shop"></div>
-  <div class="tip">Légumineuses et poissons en boîte : poids <b>égouttés</b> (légumineuses : 1 boîte de 400 g ≈ 250 g ; thon 160 g ≈ 112 g ; sardines 120 g ≈ 88 g ; maquereau 169 g ≈ 120 g). Seules les lentilles corail sont sèches. Saumon et colin : rayon surgelés, à décongeler la veille au réfrigérateur. Féculents : poids <b>secs</b> à acheter, poids cuits dans les recettes.</div>
+  <div class="tip">Légumineuses et poissons en boîte : poids <b>égouttés</b> (légumineuses : 1 boîte de 400 g ≈ 250 g ; thon 160 g ≈ 112 g ; sardines 120 g ≈ 88 g ; maquereau 169 g ≈ 120 g). Seules les lentilles corail sont sèches. Saumon et colin : rayon surgelés, à décongeler la veille au réfrigérateur. Saumon fumé : rayon frais, pas surgelé. Féculents et farine de sarrasin : poids <b>secs</b> à acheter, poids cuits dans les recettes.</div>
   <div style="display:flex;gap:8px;margin-top:14px">
     <button class="btn" id="copyshop">Copier la liste</button>
     <button class="btn" id="copymenu">Copier le menu</button>
@@ -291,7 +291,7 @@ ol.steps li{margin-bottom:6px}
   <div class="field rule">
     <b>Règles fixes du générateur</b><br>
     · 200 g de légumes, ≈ 60 g de protéines et 950 kcal maximum par personne et par repas<br>
-    · Pescétarien : filets de colin et pavés de saumon surgelés, thon / maquereau / sardines en boîte, œufs, tofu, légumineuses<br>
+    · Pescétarien : filets de colin et pavés de saumon surgelés, saumon fumé, thon / maquereau / sardines en boîte, œufs, tofu, légumineuses<br>
     · Un féculent à chaque repas, parmi les moins riches en glucides et à IG bas ; 50 g de glucides nets maximum par repas<br>
     · Une même source protéique au plus 3 fois dans la semaine<br>
     · Les recettes de la semaine précédente sont évitées quand c'est possible<br>
@@ -383,6 +383,9 @@ const ING = {
   levure:{n:"Levure maltée",cat:"Épicerie",v:[325,45,35,4,20]},
   epices:{n:"Épices & herbes (cumin, paprika, curry, thym…)",cat:"Épicerie",v:[0,0,0,0,0]},
   herbes:{n:"Herbes fraîches (persil, coriandre, aneth, basilic)",cat:"Légumes",v:[0,0,0,0,0]},
+  farinesarrasin:{n:"Farine de sarrasin (blé noir)",cat:"Féculents",v:[343,13,71,3,10]},
+  saumonfume:{n:"Saumon fumé",cat:"Poisson fumé",v:[117,18,0,4.5,0]},
+  emmental:{n:"Emmental râpé",cat:"Crèmerie & œufs",v:[380,28,0,30,0]},
 };
 
 /* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (~60 g de protéines visées), v = légume (200 g), x = autre ---------- */
@@ -523,6 +526,22 @@ const R = [
  ing:[["poischiches",155,"p"],["thon",160,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
  steps:["Poêlée surgelée dans l'huile, 10 min à feu vif, avec cumin et paprika fumé.","Ajouter les pois chiches égouttés, 3 min.","Thon égoutté émietté hors du feu, jus de citron, coriandre ou persil.","Servir tiède ou froid."],
  reheat:"Poêle 3 min ou micro-ondes ; très bon froid."},
+{id:"galette-saumon-fume",name:"Galette de sarrasin au saumon fumé, comté et champignons",tag:"poisson",main:"saumonfume",time:25,noStarch:true,
+ ing:[["farinesarrasin",50,"x"],["saumonfume",150,"p"],["emmental",70,"p"],["champignons",130,"v"],["poireau",70,"v"],["creme",25,"x"],["citron",8,"x"],["beurre",5,"x"],["herbes",3,"x"]],
+ steps:["Préparer la pâte à galettes : mélanger la farine de sarrasin avec de l'eau et une pincée de sel jusqu'à obtenir une pâte fluide ; laisser reposer 30 min. Émincer les poireaux, les faire fondre 10 min dans le beurre demi-sel avec un fond d'eau.","Faire revenir les champignons émincés à feu vif 5 min ; les ajouter aux poireaux avec la crème, poivrer. Réserver au chaud.","Cuire les galettes à la poêle bien chaude (crêpière ou poêle antiadhésive), 2 min par face.","Garnir chaque galette de fondue poireaux-champignons, saumon fumé et emmental râpé ; replier en carré, réchauffer 1 min à couvert. Zeste de citron, aneth."],
+ reheat:"Réchauffer les galettes garnies à la poêle à couvert, feu doux, 5 min, ou au four à 160 °C 8 min."},
+{id:"galette-thon-tomate",name:"Galette de sarrasin au thon, tomate et emmental",tag:"poisson",main:"thon",time:25,noStarch:true,
+ ing:[["farinesarrasin",50,"x"],["thon",140,"p"],["emmental",60,"p"],["tomate",140,"v"],["poivron",60,"v"],["oignon",20,"x"],["ail",3,"x"],["huile",6,"x"],["epices",3,"x"],["herbes",3,"x"]],
+ steps:["Préparer la pâte à galettes (farine de sarrasin, eau, pincée de sel) ; laisser reposer 30 min.","Faire revenir l'oignon et le poivron émincés dans l'huile 8 min ; ajouter l'ail, les tomates en dés et l'origan ; mijoter 8 min pour épaissir.","Égoutter le thon, l'émietter, l'ajouter à la fondue tomate-poivron hors du feu.","Cuire les galettes à la poêle 2 min par face ; garnir de la fondue au thon et d'emmental râpé, replier et réchauffer 1 min à couvert."],
+ reheat:"Réchauffer les galettes garnies à la poêle à couvert, feu doux, 5 min."},
+{id:"galette-forestiere-oeuf",name:"Galette forestière aux œufs, champignons et emmental",tag:"oeufs",main:"oeufs",time:20,noStarch:true,
+ ing:[["farinesarrasin",50,"x"],["oeufs",240,"p"],["emmental",70,"p"],["champignons",140,"v"],["poireau",60,"v"],["beurre",8,"x"],["ail",3,"x"],["herbes",3,"x"]],
+ steps:["Préparer la pâte à galettes (farine de sarrasin, eau, sel) ; laisser reposer 30 min.","Faire fondre les poireaux émincés dans le beurre demi-sel 8 min ; ajouter les champignons et l'ail, feu vif 5 min ; réserver.","Cuire les galettes à la poêle 2 min par face. Casser un œuf au centre de chacune (2 par portion), couvrir 2–3 min : blanc pris, jaune coulant.","Battre les œufs restants (2 par portion) en omelette légère, les ajouter à la fondue poireaux-champignons ; garnir les galettes de cette préparation et d'emmental râpé, persil."],
+ reheat:"Réchauffer les galettes garnies à la poêle à couvert 5 min ; cuire un œuf frais à la minute pour chaque portion."},
+{id:"galette-lentilles-corail",name:"Galette de sarrasin aux lentilles corail épicées, poivrons et feta",tag:"legumineuses",main:"lentcorail",time:30,noStarch:true,
+ ing:[["farinesarrasin",35,"x"],["lentcorail",120,"p"],["feta",110,"p"],["oeufs",190,"p"],["poivron",100,"v"],["champignons",100,"v"],["huile",4,"x"],["citron",8,"x"],["epices",4,"x"],["herbes",3,"x"]],
+ steps:["Cuire les lentilles corail sèches (≈ 48 g par portion) 10 min dans l'eau bouillante avec cumin et curcuma ; égoutter. Préparer la pâte à galettes (farine de sarrasin, eau, sel) ; laisser reposer 30 min.","Faire revenir le poivron et les champignons dans l'huile 8 min ; ajouter les lentilles cuites, jus de citron, coriandre ou persil.","Œufs durs : 9 min dans l'eau bouillante, refroidir, écaler, couper en quartiers (3 par portion).","Cuire les galettes à la poêle 2 min par face ; garnir de la poêlée lentilles-légumes, œufs durs et feta émiettée ; replier."],
+ reheat:"Réchauffer la garniture à la poêle ou au micro-ondes ; galettes réchauffées à sec 1 min par face. Bon aussi tiède."},
 ];
 
 /* ---------- utilitaires ---------- */
@@ -532,6 +551,7 @@ const $=s=>document.querySelector(s);
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
 const STARCH=Object.keys(ING).filter(k=>ING[k].starch);
 function starchFor(r){
+  if(r.noStarch)return null;
   const q=S.set.starchQ;if(!q)return null;
   if(r.tag==="legumineuses"&&!S.set.starchLeg)return null;
   const ok=STARCH.filter(k=>S.set.starchOk.includes(k));if(!ok.length)return null;
@@ -659,8 +679,8 @@ function renderCards(){
   </div></div>`;}).join("");
 }
 function shopData(){
-  const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].starch&&ING[k].dry?g*4/ING[k].dry:g*4);}));
-  const cats=["Poisson surgelé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Crèmerie & œufs","Épicerie"];
+  const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*4/ING[k].dry:g*4);}));
+  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Crèmerie & œufs","Épicerie"];
   return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
 }
 function qty(it){
@@ -701,7 +721,7 @@ function renderSettings(){
 /* ---------- fiche recette ---------- */
 function openSheet(id,i){
   const r=byId[id];const m=r.m;
-  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${g/it.unit} ${it.uname}${g/it.unit>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${g*4/it.unit} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*4/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
     if(role==="s"){const si=starchInfo(r);return`<div><span class="role st"></span>${it.n} <span class="p">— féculent</span><br><span class="p">cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers. · "+si.raw4+" g pour 4"}</span></div><div class="p num">${si.cooked} g cuit</div><div class="b num">${si.cooked4} g cuit</div>`;}
     const note=it.can?` <span class="p">(${Math.ceil(g*4/it.can)} boîte${Math.ceil(g*4/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*4/it.dry/5)*5} g secs)</span>`:"";
     return`<div><span class="role ${role==="p"?"prot":role==="v"?"veg":"x"}"></span>${it.n}${note}</div><div class="p num">${per}</div><div class="b num">${b}</div>`;}).join("");
@@ -733,7 +753,7 @@ $("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
 
 /* ---------- export PDF (impression) & partage ---------- */
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
-function ingRows(r){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${g/it.unit} ${it.uname}${g/it.unit>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${g*4/it.unit} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+function ingRows(r){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*4/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
   if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.raw4+" g pour 4"}`,per:`${si.cooked} g cuit`,b:`${si.cooked4} g cuit`};}
   const note=it.can?` (${Math.ceil(g*4/it.can)} ${it.canName.replace("boîte",Math.ceil(g*4/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*4/it.dry/5)*5} g secs)`:"";
   const lab=role==="p"?"Protéines":role==="v"?"Légumes":"Assaisonnement";
