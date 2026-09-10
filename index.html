@@ -210,7 +210,7 @@ ol.steps li{margin-bottom:6px}
 <!-- SEMAINE -->
 <section class="view on" id="v-week">
   <div class="stats" id="stats"></div>
-  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 60 g de protéines, un féculent, 50 g de glucides nets et 950 kcal maximum.</p>
+  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 60 g de protéines, un féculent, 60 g de glucides et 950 kcal maximum.</p>
   <div class="week" id="week"></div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
     <button class="btn primary" id="pdf" style="flex:1">📄 Exporter en PDF</button>
@@ -222,7 +222,7 @@ ol.steps li{margin-bottom:6px}
 
 <!-- RECETTES -->
 <section class="view" id="v-recipes">
-  <p class="note">Macros <b>par portion</b> (1 personne, 1 repas). Glucides nets = glucides − fibres.</p>
+  <p class="note">Macros <b>par portion</b> (1 personne, 1 repas). Glucides = glucides totaux (comme affiché dans Foodvisor et sur les emballages).</p>
   <div class="cards" id="cards"></div>
 </section>
 
@@ -254,7 +254,7 @@ ol.steps li{margin-bottom:6px}
   </div>
   <div class="field">
     <label>Féculent à chaque repas</label>
-    <p>Portion cuite par personne, choisie parmi les féculents les moins riches en glucides. Elle est réduite automatiquement (jusqu'à 40 g) quand le repas dépasserait <b>50 g de glucides nets</b> — typiquement sur les recettes aux légumineuses.</p>
+    <p>Portion cuite par personne, choisie parmi les féculents les moins riches en glucides. Elle est réduite automatiquement (jusqu'à 40 g) quand le repas dépasserait <b>60 g de glucides</b> — typiquement sur les recettes aux légumineuses.</p>
     <div class="seg" id="starchQ">
       <button data-v="50">50 g</button><button data-v="80">80 g</button><button data-v="100">100 g</button><button data-v="120">120 g</button>
     </div>
@@ -292,7 +292,7 @@ ol.steps li{margin-bottom:6px}
     <b>Règles fixes du générateur</b><br>
     · 200 g de légumes, ≈ 60 g de protéines et 950 kcal maximum par personne et par repas<br>
     · Pescétarien : filets de colin et pavés de saumon surgelés, saumon fumé, thon / maquereau / sardines en boîte, œufs, tofu, légumineuses<br>
-    · Un féculent à chaque repas, parmi les moins riches en glucides et à IG bas ; 50 g de glucides nets maximum par repas<br>
+    · Un féculent à chaque repas, parmi les moins riches en glucides et à IG bas ; 60 g de glucides maximum par repas<br>
     · Une même source protéique au plus 3 fois dans la semaine<br>
     · Les recettes de la semaine précédente sont évitées quand c'est possible<br>
     · Sans épinards
@@ -395,15 +395,15 @@ const R = [
  steps:["Four à 200 °C. Émincer les poireaux, les faire fondre 10 min à la poêle avec le beurre demi-sel et un fond d'eau.","Détailler le brocoli en fleurettes, l'étaler sur une plaque avec l'huile, l'ail et du sel. Enfourner 12 min.","Poser les pavés de saumon sur la plaque, zeste et jus de citron, poivre. Cuire 10–12 min de plus.","Servir saumon, brocoli et poireaux avec l'aneth. Réserver la moitié pour le dîner du lendemain."],
  reheat:"Réchauffer doucement (poêle couverte, feu doux, ou four 150 °C 10 min). Le saumon se mange aussi tiède, effeuillé sur les légumes."},
 {id:"curry-corail",name:"Curry de lentilles corail, colin et chou-fleur au lait de coco",tag:"legumineuses",main:"lentcorail",time:30,starch:"quinoa",
- ing:[["lentcorail",210,"p"],["colin",200,"p"],["choufleur",130,"v"],["tomconc",70,"v"],["lcoco",40,"x"],["oignon",30,"x"],["gingembre",5,"x"],["ail",3,"x"],["huile",5,"x"],["epices",4,"x"],["herbes",3,"x"]],
- steps:["Faire revenir l'oignon, l'ail et le gingembre hachés dans l'huile 3 min. Ajouter curry, curcuma, cumin ; 30 s.","Ajouter les lentilles corail sèches (≈ 85 g par portion), les tomates et 1,5 fois leur volume d'eau. Mijoter 12 min.","Ajouter le chou-fleur en petites fleurettes et le lait de coco ; cuire 6 min, puis le colin en gros cubes 6 min de plus, sans remuer trop.","Saler, jus de citron, coriandre. Se bonifie en refroidissant."],
+ ing:[["lentcorail",180,"p"],["colin",205,"p"],["choufleur",130,"v"],["tomconc",70,"v"],["lcoco",40,"x"],["oignon",30,"x"],["gingembre",5,"x"],["ail",3,"x"],["huile",5,"x"],["epices",4,"x"],["herbes",3,"x"]],
+ steps:["Faire revenir l'oignon, l'ail et le gingembre hachés dans l'huile 3 min. Ajouter curry, curcuma, cumin ; 30 s.","Ajouter les lentilles corail sèches (≈ 70 g par portion), les tomates et 1,5 fois leur volume d'eau. Mijoter 12 min.","Ajouter le chou-fleur en petites fleurettes et le lait de coco ; cuire 6 min, puis le colin en gros cubes 6 min de plus, sans remuer trop.","Saler, jus de citron, coriandre. Se bonifie en refroidissant."],
  reheat:"Casserole feu doux avec un filet d'eau, ou micro-ondes 3 min couvert."},
 {id:"colin-papillote",name:"Colin en papillote, poireaux, tomates cerises et olives",tag:"poisson",main:"cabillaud",time:30,starch:"quinoa",
  ing:[["colin",320,"p"],["poireau",120,"v"],["tomcerise",80,"v"],["olives",15,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"]],
  steps:["Four à 200 °C. Émincer finement les poireaux, les faire fondre 8 min à la poêle avec la moitié de l'huile et un fond d'eau.","Sur 4 grandes feuilles de papier cuisson : poireaux, tomates cerises coupées en deux, olives, thym.","Poser le colin, huile, rondelles de citron, sel, poivre. Fermer les papillotes.","Enfourner 15–18 min. Servir 2 papillotes, garder 2 fermées au frais pour le lendemain."],
  reheat:"Réenfourner les papillotes fermées 12 min à 160 °C : le poisson reste moelleux."},
 {id:"chili-sin-carne",name:"Chili aux haricots rouges et thon, poivrons et courgettes",tag:"legumineuses",main:"hrouges",time:35,starch:"quinoa",
- ing:[["hrouges",175,"p"],["thon",150,"p"],["poivron",100,"v"],["courgette",60,"v"],["tomconc",40,"v"],["oignon",30,"x"],["ail",3,"x"],["huile",6,"x"],["epices",4,"x"],["yaourt",30,"x"],["herbes",3,"x"]],
+ ing:[["hrouges",145,"p"],["thon",150,"p"],["poivron",100,"v"],["courgette",60,"v"],["tomconc",40,"v"],["oignon",30,"x"],["ail",3,"x"],["huile",6,"x"],["epices",4,"x"],["yaourt",30,"x"],["herbes",3,"x"]],
  steps:["Faire revenir oignon et ail, puis poivrons et courgettes en dés, 8 min.","Ajouter cumin, paprika fumé, origan, une pointe de piment ; puis tomates et haricots rouges égouttés.","Mijoter 20 min à découvert pour épaissir. Ajouter le thon égoutté émietté, 2 min. Saler.","Servir avec une cuillère de yaourt grec et de la coriandre."],
  reheat:"Casserole feu doux 5 min ou micro-ondes. Encore meilleur le lendemain."},
 {id:"saumon-brocoli-wok",name:"Saumon sauté au gingembre, courgettes et brocoli au sésame",tag:"poisson",main:"saumon",time:20,starch:"sarrasin",
@@ -427,7 +427,7 @@ const R = [
  steps:["Cuire la poêlée surgelée à la poêle dans l'huile, 10–12 min à feu vif, sans couvrir.","Égoutter les filets de maquereau, les badigeonner de moutarde.","Les poser sur les légumes, couvrir 2 min pour les tiédir.","Vinaigre de cidre, poivre, persil."],
  reheat:"Poêle 4 min ; maquereau ajouté à la fin."},
 {id:"poischiches-aubergine",name:"Salade tiède de pois chiches et thon, aubergines rôties au tahini",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
- ing:[["poischiches",150,"p"],["thon",160,"p"],["aubergine",130,"v"],["tomate",70,"v"],["tahini",15,"x"],["citron",15,"x"],["huile",8,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",4,"x"]],
+ ing:[["poischiches",100,"p"],["thon",165,"p"],["aubergine",130,"v"],["tomate",70,"v"],["tahini",15,"x"],["citron",15,"x"],["huile",8,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",4,"x"]],
  steps:["Four à 220 °C. Aubergines en cubes, huile, cumin, sel : rôtir 25 min.","Mélanger tahini, jus de citron, ail écrasé et 2 c. à s. d'eau pour une sauce nappante.","Pois chiches égouttés, thon émietté, tomates en dés, aubergines tièdes, sauce tahini, persil.","Poivrer, ajuster le citron."],
  reheat:"Se mange froid ou tiède (2 min au micro-ondes) — pas besoin de recuire."},
 {id:"tofu-laque-hverts",name:"Tofu laqué soja-sésame, haricots verts et champignons",tag:"soja",main:"tofu",time:25,starch:"boulgour",
@@ -447,7 +447,7 @@ const R = [
  steps:["Faire fondre échalote et poireaux émincés dans le beurre demi-sel 8 min ; ajouter les champignons émincés, 4 min à feu vif.","Verser le vin blanc, réduire 2 min.","Poser les filets de colin sur les légumes, saler, couvrir : 8–10 min à feu doux.","Crème, poivre, persil ou aneth."],
  reheat:"Casserole couverte, feu doux 5 min, sans bouillir."},
 {id:"minestrone-hblancs",name:"Minestrone de haricots blancs, courgettes, poireaux et colin au parmesan",tag:"legumineuses",main:"hblancs",time:35,starch:"patesLent",
- ing:[["hblancs",170,"p"],["colin",220,"p"],["courgette",90,"v"],["poireau",60,"v"],["tomconc",50,"v"],["parmesan",10,"x"],["huile",6,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",2,"x"]],
+ ing:[["hblancs",145,"p"],["colin",220,"p"],["courgette",90,"v"],["poireau",60,"v"],["tomconc",50,"v"],["parmesan",10,"x"],["huile",6,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",2,"x"]],
  steps:["Faire suer oignon, ail et poireau émincé dans l'huile 6 min.","Ajouter tomates, romarin, haricots blancs égouttés et 25 cl d'eau par portion. Mijoter 15 min.","Ajouter les courgettes en dés ; 6 min. Puis le colin en gros cubes, 6 min à frémissement.","Saler, poivrer, servir avec parmesan râpé et un filet d'huile."],
  reheat:"Casserole feu doux. Ajouter un peu d'eau si trop épais."},
 {id:"truite-asperges",name:"Colin au four, asperges et courgettes rôties aux amandes",tag:"poisson",main:"truite",time:25,starch:"quinoa",
@@ -479,7 +479,7 @@ const R = [
  steps:["Faire fondre oignon et poivrons en lanières dans l'huile 12 min ; ajouter ail, tomates concassées au couteau, piment d'Espelette ; 8 min.","Poser les pavés de colin sur la piperade, saler, couvrir.","Cuire 8–10 min à feu doux jusqu'à ce que le poisson se détache en feuillets.","Poivrer, huile d'olive."],
  reheat:"Casserole couverte feu doux 6 min : la piperade protège le poisson."},
 {id:"lentilles-oeuf-mollet",name:"Salade tiède de lentilles, haricots verts, œufs mollets et feta",tag:"legumineuses",main:"lentvertes",time:30,starch:"quinoa",
- ing:[["lentvertes",175,"p"],["oeufs",260,"p"],["feta",50,"p"],["hverts",120,"v"],["concombre",40,"v"],["endives",40,"v"],["moutarde",8,"x"],["huile",8,"x"],["vinaigre",6,"x"],["echalote",15,"x"]],
+ ing:[["lentvertes",110,"p"],["oeufs",260,"p"],["feta",60,"p"],["hverts",120,"v"],["concombre",40,"v"],["endives",40,"v"],["moutarde",8,"x"],["huile",8,"x"],["vinaigre",6,"x"],["echalote",15,"x"]],
  steps:["Égoutter et rincer les lentilles en conserve ; cuire les haricots verts 6 min à l'eau bouillante.","Vinaigrette : moutarde, vinaigre de cidre, huile, échalote ciselée, sel, poivre.","Œufs mollets : 6 min dans l'eau bouillante, puis eau glacée, écaler.","Mélanger lentilles tièdes, haricots, concombre en dés, endives émincées et feta émiettée ; œufs mollets ouverts dessus."],
  reheat:"Se mange froid ou tiède ; refaire les œufs mollets à la minute (6 min)."},
 {id:"tofu-provencale",name:"Tofu à la provençale, courgettes, tomates, olives et feta",tag:"soja",main:"tofu",time:25,starch:"patesCompl",
@@ -495,7 +495,7 @@ const R = [
  steps:["Poireaux émincés fondus dans l'huile 10 min avec l'ail.","Tomates concassées, paprika fumé, haricots blancs égouttés ; mijoter 12 min. Ajouter le thon émietté en fin de cuisson.","Œufs pochés : 3 min dans une eau frémissante vinaigrée (3 par portion).","Servir les haricots avec l'œuf dessus et le persil."],
  reheat:"Haricots à la casserole ; pocher un œuf frais à la minute."},
 {id:"poischiches-choufleur-rotis",name:"Pois chiches et chou-fleur rôtis, œufs durs et yaourt au citron",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
- ing:[["poischiches",160,"p"],["oeufs",260,"p"],["feta",40,"p"],["choufleur",140,"v"],["concombre",60,"v"],["yaourt",30,"x"],["huile",5,"x"],["epices",4,"x"],["citron",15,"x"],["ail",2,"x"],["herbes",3,"x"]],
+ ing:[["poischiches",95,"p"],["oeufs",260,"p"],["feta",60,"p"],["choufleur",140,"v"],["concombre",60,"v"],["yaourt",30,"x"],["huile",5,"x"],["epices",4,"x"],["citron",15,"x"],["ail",2,"x"],["herbes",3,"x"]],
  steps:["Four à 220 °C. Pois chiches bien séchés et chou-fleur en fleurettes, huile, cumin, paprika, coriandre moulue, sel.","Rôtir 25–30 min en remuant à mi-cuisson, jusqu'à ce que les pois chiches croustillent.","Œufs durs : 9 min, écaler, couper en quartiers. Sauce : yaourt grec, jus et zeste de citron, ail, sel.","Concombre en dés, œufs et feta émiettée dessus, menthe ou coriandre."],
  reheat:"Repasser 8 min au four à 200 °C pour retrouver le croustillant ; sauce à part."},
 {id:"maquereau-poivrons",name:"Maquereau en boîte, poivrons et courgettes sautés à l'ail et au citron",tag:"poisson",main:"maquereau",time:20,starch:"quinoa",
@@ -523,7 +523,7 @@ const R = [
  steps:["Poêlée surgelée dans l'huile, 10 min à feu vif.","Battre les œufs (4 par portion) avec sel, poivre, herbes.","Verser sur les légumes, feta émiettée ; cuire 4–5 min à feu moyen, couvert, jusqu'à ce que le dessus soit pris.","Plier ou couper en parts."],
  reheat:"Tiède ou froid ; ou refaire une omelette minute sur la moitié de légumes gardée."},
 {id:"poischiches-thon-poelee",name:"Pois chiches, thon et poêlée de légumes aux épices",tag:"legumineuses",main:"poischiches",time:15,starch:"boulgour",poelee:true,
- ing:[["poischiches",155,"p"],["thon",160,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
+ ing:[["poischiches",105,"p"],["thon",170,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
  steps:["Poêlée surgelée dans l'huile, 10 min à feu vif, avec cumin et paprika fumé.","Ajouter les pois chiches égouttés, 3 min.","Thon égoutté émietté hors du feu, jus de citron, coriandre ou persil.","Servir tiède ou froid."],
  reheat:"Poêle 3 min ou micro-ondes ; très bon froid."},
 {id:"galette-saumon-fume",name:"Galette de sarrasin au saumon fumé, comté et champignons",tag:"poisson",main:"saumonfume",time:25,noStarch:true,
@@ -539,8 +539,8 @@ const R = [
  steps:["Préparer la pâte à galettes (farine de sarrasin, eau, sel) ; laisser reposer 30 min.","Faire fondre les poireaux émincés dans le beurre demi-sel 8 min ; ajouter les champignons et l'ail, feu vif 5 min ; réserver.","Cuire les galettes à la poêle 2 min par face. Casser un œuf au centre de chacune (2 par portion), couvrir 2–3 min : blanc pris, jaune coulant.","Battre les œufs restants (2 par portion) en omelette légère, les ajouter à la fondue poireaux-champignons ; garnir les galettes de cette préparation et d'emmental râpé, persil."],
  reheat:"Réchauffer les galettes garnies à la poêle à couvert 5 min ; cuire un œuf frais à la minute pour chaque portion."},
 {id:"galette-lentilles-corail",name:"Galette de sarrasin aux lentilles corail épicées, poivrons et feta",tag:"legumineuses",main:"lentcorail",time:30,noStarch:true,
- ing:[["farinesarrasin",35,"x"],["lentcorail",120,"p"],["feta",110,"p"],["oeufs",190,"p"],["poivron",100,"v"],["champignons",100,"v"],["huile",4,"x"],["citron",8,"x"],["epices",4,"x"],["herbes",3,"x"]],
- steps:["Cuire les lentilles corail sèches (≈ 48 g par portion) 10 min dans l'eau bouillante avec cumin et curcuma ; égoutter. Préparer la pâte à galettes (farine de sarrasin, eau, sel) ; laisser reposer 30 min.","Faire revenir le poivron et les champignons dans l'huile 8 min ; ajouter les lentilles cuites, jus de citron, coriandre ou persil.","Œufs durs : 9 min dans l'eau bouillante, refroidir, écaler, couper en quartiers (3 par portion).","Cuire les galettes à la poêle 2 min par face ; garnir de la poêlée lentilles-légumes, œufs durs et feta émiettée ; replier."],
+ ing:[["farinesarrasin",35,"x"],["lentcorail",95,"p"],["feta",125,"p"],["oeufs",190,"p"],["poivron",100,"v"],["champignons",100,"v"],["huile",4,"x"],["citron",8,"x"],["epices",4,"x"],["herbes",3,"x"]],
+ steps:["Cuire les lentilles corail sèches (≈ 38 g par portion) 10 min dans l'eau bouillante avec cumin et curcuma ; égoutter. Préparer la pâte à galettes (farine de sarrasin, eau, sel) ; laisser reposer 30 min.","Faire revenir le poivron et les champignons dans l'huile 8 min ; ajouter les lentilles cuites, jus de citron, coriandre ou persil.","Œufs durs : 9 min dans l'eau bouillante, refroidir, écaler, couper en quartiers (3 par portion).","Cuire les galettes à la poêle 2 min par face ; garnir de la poêlée lentilles-légumes, œufs durs et feta émiettée ; replier."],
  reheat:"Réchauffer la garniture à la poêle ou au micro-ondes ; galettes réchauffées à sec 1 min par face. Bon aussi tiède."},
 ];
 
@@ -555,21 +555,21 @@ function starchFor(r){
   const q=S.set.starchQ;if(!q)return null;
   if(r.tag==="legumineuses"&&!S.set.starchLeg)return null;
   const ok=STARCH.filter(k=>S.set.starchOk.includes(k));if(!ok.length)return null;
-  let k=ok.includes(r.starch)?r.starch:ok.slice().sort((a,b)=>(ING[a].v[2]-ING[a].v[4])-(ING[b].v[2]-ING[b].v[4]))[0];
-  const per=(ING[k].v[2]-ING[k].v[4])/100;const room=S.set.carbMax-r.m.net;
+  let k=ok.includes(r.starch)?r.starch:ok.slice().sort((a,b)=>ING[a].v[2]-ING[b].v[2])[0];
+  const per=ING[k].v[2]/100;const room=S.set.carbMax-r.m.c;
   let g=per>0?Math.floor(Math.min(q,room/per)/10)*10:q;g=Math.max(40,Math.min(q,g));
   return [k,g,"s"];
 }
 function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[0]];const g=st[1];const raw=it.dry>1?Math.round(g/it.dry/5)*5:g;const raw4=it.dry>1?Math.round(g*4/it.dry/5)*5:g*4;return{k:st[0],n:it.n,cooked:g,cooked4:g*4,raw,raw4,same:!(it.dry>1)};}
 function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
-function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}m.net=Math.max(0,m.c-m.fi);return m;}
+function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}return m;}
 R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<50||r.m.p>65||r.m.kcal>950)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
 const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],prev:[],checked:{},set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:50,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+const DEF={recipes:[],locked:[],prev:[],checked:{},set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
 let S;
-try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
+try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
 
 /* ---------- génération ---------- */
@@ -598,8 +598,8 @@ function generate(){
       if(mc>=3)s-=60;else if(S.set.protMode==="eco"){if(mc>0)s+=10;}else if(mc>0)s-=25;
       if(prev.has(r.id))s-=8;
       s-=(tagCount[r.tag]||0)*(S.set.prio==="variety"?12:6);
-      if(S.set.prio==="carbs")s-=r.m.net*1.2;
-      if(M(r).kcal>950)s-=40;if(M(r).net>S.set.carbMax)s-=30;
+      if(S.set.prio==="carbs")s-=r.m.c*1.2;
+      if(M(r).kcal>950)s-=40;if(M(r).c>S.set.carbMax)s-=30;
       return[s,r];}).sort((a,b)=>b[0]-a[0]);
     const r=scored[0][1];
     chosen[idx]=r;used.add(r.id);mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
@@ -632,7 +632,7 @@ function renderStats(){
   const leg=rs.filter(r=>r.tag==="legumineuses").length;
   el.innerHTML=`<div class="stat"><b class="num">${fmt(avg("kcal"))}</b><span>kcal / repas</span></div>
   <div class="stat"><b class="num">${fmt(avg("p"))} g</b><span>protéines</span></div>
-  <div class="stat g"><b class="num">${fmt(avg("net"))} g</b><span>gluc. nets</span></div>
+  <div class="stat g"><b class="num">${fmt(avg("c"))} g</b><span>glucides</span></div>
   <div class="stat"><b class="num">${fmt(avg("fi"))} g</b><span>fibres</span></div>`;
   $("#stats").insertAdjacentHTML("beforeend","");
 }
@@ -662,7 +662,7 @@ function macroHtml(r,max){
   const m=M(r);return`<div class="macros">
   <div${m.kcal>950?' style="color:var(--legume)"':''}><b class="num">${fmt(m.kcal)}</b><span>kcal</span></div>
   <div><b class="num">${fmt(m.p)} g</b><span>prot.</span></div>
-  <div class="${m.net<=25?"low":""}"${m.net>S.set.carbMax?' style="color:var(--legume)"':''}><b class="num">${fmt(m.net)} g</b><span>gluc. nets</span></div>
+  <div class="${m.c<=30?"low":""}"${m.c>S.set.carbMax?' style="color:var(--legume)"':''}><b class="num">${fmt(m.c)} g</b><span>glucides</span></div>
   <div><b class="num">${fmt(m.fi)} g</b><span>fibres</span></div>
   <div><b class="num">${fmt(m.f)} g</b><span>lipides</span></div></div>`;
 }
@@ -714,7 +714,7 @@ function renderSettings(){
   document.querySelectorAll("#starchQ button").forEach(b=>b.classList.toggle("on",+b.dataset.v===S.set.starchQ));
   document.querySelectorAll("#protMode button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.protMode));
   $("#starchLeg").checked=S.set.starchLeg;
-  $("#starchList").innerHTML=STARCH.slice().sort((a,b)=>(ING[a].v[2]-ING[a].v[4])-(ING[b].v[2]-ING[b].v[4])).map(k=>{const v=ING[k].v;const on=S.set.starchOk.includes(k);return`<label class="item${on?"":" done"}" style="grid-template-columns:24px 1fr auto"><input type="checkbox" ${on?"checked":""} onchange="starchOk('${k}',this.checked)"><div><div class="n">${ING[k].n}</div><div class="h">${ING[k].gi}</div></div><div class="q num" style="font-weight:500;font-size:13px">${fmt(v[2]-v[4],1)} g gluc. nets / 100 g cuit</div></label>`;}).join("");
+  $("#starchList").innerHTML=STARCH.slice().sort((a,b)=>ING[a].v[2]-ING[b].v[2]).map(k=>{const v=ING[k].v;const on=S.set.starchOk.includes(k);return`<label class="item${on?"":" done"}" style="grid-template-columns:24px 1fr auto"><input type="checkbox" ${on?"checked":""} onchange="starchOk('${k}',this.checked)"><div><div class="n">${ING[k].n}</div><div class="h">${ING[k].gi}</div></div><div class="q num" style="font-weight:500;font-size:13px">${fmt(v[2],1)} g glucides / 100 g cuit</div></label>`;}).join("");
   S.locked=S.locked.slice(0,7);
 }
 
@@ -765,11 +765,11 @@ function buildPrint(){
   <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
   for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td><span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}</td></tr>`;}
   const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
-  h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("net"))} g de glucides nets · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 50 g de glucides nets et 950 kcal maximum par personne et par repas.</p></div>`;
+  h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("c"))} g de glucides · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 60 g de protéines, un féculent à IG bas, 60 g de glucides et 950 kcal maximum par personne et par repas.</p></div>`;
   rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
     h+=`<section class="pd-recipe"><div class="eyebrow">Recette ${i+1} · ${day(i)} midi → ${day(i+1)} soir</div><h2>${esc(r.name)}</h2>
     <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${r.poelee?" · poêlée surgelée":""}</div>
-    <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.net)} g</b>gluc. nets</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
+    <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.c)} g</b>glucides</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
     <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par portion / pour 4</td><td class="q">1 pers.</td><td class="q">4 portions</td></tr>`;
     let last="";rows.forEach(x=>{h+=`<tr><td>${x.lab!==last?`<small style="color:#777">${x.lab} · </small>`:""}${esc(x.txt)}</td><td class="q">${x.per}</td><td class="q b">${x.b}</td></tr>`;last=x.lab;});
     h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
