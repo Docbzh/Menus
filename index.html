@@ -1,0 +1,793 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Marée Basse</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0E6E5C">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,50&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F2F5F3; --surface:#FFFFFF; --surface2:#E9EFEC; --line:#D3DDD9;
+  --ink:#16302C; --ink2:#5B6E6A; --ink3:#8A9B97;
+  --accent:#0E6E5C; --accent-ink:#FFFFFF; --accent-soft:#D8EDE6;
+  --legume:#B5602E; --legume-soft:#F6E4D6;
+  --poisson:#2E6C9E; --poisson-soft:#DCE9F4;
+  --mer:#8A4B7A; --mer-soft:#EFDDEB;
+  --oeufs:#B08A1E; --oeufs-soft:#F6ECC9;
+  --soja:#4F7A2E; --soja-soft:#E2EED6;
+  --bar:#D3DDD9; --shadow:0 8px 28px rgba(22,48,44,.12);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A19; --surface:#182524; --surface2:#213130; --line:#2E403E;
+    --ink:#E4ECE9; --ink2:#A2B3AF; --ink3:#6F817D;
+    --accent:#4FBFA3; --accent-ink:#0B1D19; --accent-soft:#1B3A34;
+    --legume:#E4905E; --legume-soft:#3D2A1D;
+    --poisson:#6FA9DA; --poisson-soft:#1C2E3E;
+    --mer:#C68AB6; --mer-soft:#35223A;
+    --oeufs:#D9B54A; --oeufs-soft:#3A3116;
+    --soja:#8DBB63; --soja-soft:#22301A;
+    --bar:#2E403E; --shadow:0 8px 28px rgba(0,0,0,.4);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A19; --surface:#182524; --surface2:#213130; --line:#2E403E;
+  --ink:#E4ECE9; --ink2:#A2B3AF; --ink3:#6F817D;
+  --accent:#4FBFA3; --accent-ink:#0B1D19; --accent-soft:#1B3A34;
+  --legume:#E4905E; --legume-soft:#3D2A1D;
+  --poisson:#6FA9DA; --poisson-soft:#1C2E3E;
+  --mer:#C68AB6; --mer-soft:#35223A;
+  --oeufs:#D9B54A; --oeufs-soft:#3A3116;
+  --soja:#8DBB63; --soja-soft:#22301A;
+  --bar:#2E403E; --shadow:0 8px 28px rgba(0,0,0,.4);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",-apple-system,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.45;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+h1,h2,h3,.display{font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:500;letter-spacing:-.01em;text-wrap:balance;margin:0}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+
+/* header */
+header{padding:calc(14px + env(safe-area-inset-top)) 0 10px}
+header .row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+header h1{font-size:30px;line-height:1.05}
+header h1 em{font-style:italic;font-weight:400;color:var(--accent)}
+.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink2);font-weight:600}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border-radius:999px;padding:10px 16px;font-weight:600;font-size:14px;background:var(--surface2);color:var(--ink);border:1px solid var(--line);white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.small{padding:6px 11px;font-size:13px}
+.btn:active{transform:scale(.97)}
+
+/* summary tiles */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center}
+.stat b{display:block;font-family:Fraunces,Georgia,serif;font-size:22px;font-weight:500;line-height:1.1}
+.stat span{font-size:11px;color:var(--ink2);text-transform:uppercase;letter-spacing:.06em}
+.stat.g b{color:var(--accent)}
+.note{font-size:13px;color:var(--ink2);margin:0 0 12px}
+
+/* week */
+.week{display:flex;flex-direction:column;gap:8px}
+.day{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:stretch}
+.day .dn{font-family:Fraunces,Georgia,serif;font-size:17px;padding-top:6px;color:var(--ink)}
+.day .dn small{display:block;font-family:"Instrument Sans",sans-serif;font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{display:grid;grid-template-columns:44px 1fr auto;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px 8px 8px;text-align:left;width:100%}
+.slot .when{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);font-weight:600}
+.slot .name{font-size:14px;font-weight:500;line-height:1.25}
+.slot .sub{font-size:12px;color:var(--ink2)}
+.slot.rest{opacity:.75}
+.rn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;font-family:Fraunces,Georgia,serif;font-size:15px;font-weight:600;color:#fff}
+.t-legumineuses .rn{background:var(--legume)} .t-poisson .rn{background:var(--poisson)} .t-mer .rn{background:var(--mer)} .t-oeufs .rn{background:var(--oeufs)} .t-soja .rn{background:var(--soja)}
+.lock{font-size:16px;color:var(--ink3);padding:4px}
+.lock.on{color:var(--accent)}
+
+/* recipe cards */
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;grid-template-columns:auto 1fr;gap:12px}
+.card .rn{width:34px;height:34px;font-size:17px;border-radius:10px}
+.card h3{font-size:17px;line-height:1.2;margin-bottom:4px}
+.card .meta{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 8px}
+.chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px;background:var(--surface2);color:var(--ink2);letter-spacing:.02em}
+.chip.tag{color:var(--ink)}
+.t-legumineuses .chip.tag{background:var(--legume-soft);color:var(--legume)} .t-poisson .chip.tag{background:var(--poisson-soft);color:var(--poisson)} .t-mer .chip.tag{background:var(--mer-soft);color:var(--mer)} .t-oeufs .chip.tag{background:var(--oeufs-soft);color:var(--oeufs)} .t-soja .chip.tag{background:var(--soja-soft);color:var(--soja)}
+.macros{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;font-size:12px}
+.macros div{background:var(--surface2);border-radius:8px;padding:5px 4px;text-align:center}
+.macros b{display:block;font-size:14px;font-weight:600}
+.macros span{color:var(--ink2);font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+.macros .low b{color:var(--accent)}
+.card .actions{display:flex;gap:6px;margin-top:8px}
+.card .serves{font-size:12px;color:var(--ink2)}
+
+/* bars */
+.bar{height:6px;background:var(--bar);border-radius:3px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:3px}
+
+/* shopping */
+.group{margin-bottom:14px}
+.group h3{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-family:"Instrument Sans",sans-serif;font-weight:600;color:var(--ink2);padding:0 0 6px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.item{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.item input{width:20px;height:20px;accent-color:var(--accent);margin:0}
+.item .n{font-size:15px}
+.item .h{font-size:12px;color:var(--ink2)}
+.item .q{font-weight:600;font-size:15px;white-space:nowrap}
+.item.done .n{text-decoration:line-through;color:var(--ink3)}
+.item.done .q{color:var(--ink3)}
+
+/* settings */
+.field{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.field label{display:block;font-weight:600;margin-bottom:4px}
+.field p{margin:0 0 8px;font-size:13px;color:var(--ink2)}
+.field input[type=range]{width:100%;accent-color:var(--accent)}
+.field input[type=text],.field select{width:100%;font:inherit;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);color:var(--ink)}
+.seg{display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:3px}
+.seg button{flex:1;padding:8px;border-radius:8px;font-weight:600;font-size:13px;color:var(--ink2)}
+.seg button.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.rule{font-size:13px;color:var(--ink2);line-height:1.5}
+.rule b{color:var(--ink)}
+
+/* tabs */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom));display:flex;z-index:10}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:11px;font-weight:600;color:var(--ink3);border-radius:10px}
+nav button.on{color:var(--accent)}
+nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.view{display:none}.view.on{display:block}
+
+/* sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(10,20,18,.5);z-index:20;display:none}
+.sheet-bg.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:90vh;overflow-y:auto;background:var(--surface);border-radius:20px 20px 0 0;z-index:21;box-shadow:var(--shadow);transform:translateY(100%);transition:transform .25s ease;padding:0 16px calc(24px + env(safe-area-inset-bottom))}
+.sheet.on{transform:none}
+.sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:10px auto 14px}
+.sheet h2{font-size:24px;line-height:1.15;margin-bottom:6px}
+.sheet h4{margin:16px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink2)}
+.ingl{display:grid;grid-template-columns:1fr auto auto;gap:4px 12px;font-size:14px}
+.ingl .hd{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em}
+.ingl .p{color:var(--ink2)}
+.ingl .b{font-weight:600}
+.ingl .role{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.role.prot{background:var(--accent)} .role.veg{background:var(--soja)} .role.st{background:var(--oeufs)} .role.x{background:var(--ink3)}
+ol.steps{padding-left:20px;margin:0;font-size:14px}
+ol.steps li{margin-bottom:6px}
+.tip{background:var(--accent-soft);border-radius:10px;padding:10px 12px;font-size:13px;margin-top:12px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:30}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.sheet{transition:none}}
+#printdoc{display:none}
+@media print{
+  @page{margin:14mm}
+  body{padding:0;background:#fff;color:#111;font-size:11pt}
+  body>*:not(#printdoc){display:none!important}
+  #printdoc{display:block;max-width:none;color:#111}
+  .pd-cover h1{font-size:26pt;margin:0 0 2mm} .pd-cover .sub{color:#555;margin:0 0 6mm}
+  .pd-week{width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:6mm}
+  .pd-week th,.pd-week td{border:1px solid #bbb;padding:2mm 2.5mm;text-align:left;vertical-align:top}
+  .pd-week th{background:#eef2f0;font-weight:600;width:22mm}
+  .pd-week .n{display:inline-block;min-width:5mm;font-weight:700;color:#0E6E5C;margin-right:1.5mm}
+  .pd-rules{font-size:9.5pt;color:#444;line-height:1.5}
+  .pd-recipe{page-break-before:always}
+  .pd-recipe .eyebrow{color:#0E6E5C;font-size:9pt;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+  .pd-recipe h2{font-size:19pt;margin:1mm 0 2mm;font-family:Fraunces,Georgia,serif;font-weight:500}
+  .pd-meta{font-size:10pt;color:#555;margin-bottom:3mm}
+  .pd-macros{display:flex;gap:2mm;margin-bottom:4mm}
+  .pd-macros div{border:1px solid #ccc;border-radius:2mm;padding:1.5mm 3mm;font-size:9.5pt;text-align:center;flex:1}
+  .pd-macros b{display:block;font-size:12pt}
+  .pd-recipe h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1.5mm;font-family:"Instrument Sans",sans-serif;font-weight:600}
+  .pd-ing{width:100%;border-collapse:collapse;font-size:10.5pt}
+  .pd-ing td{padding:1.2mm 1mm;border-bottom:1px solid #e3e3e3}
+  .pd-ing td.q{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .pd-ing td.b{font-weight:600}
+  .pd-ing tr.hd td{font-size:8.5pt;color:#777;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #999}
+  .pd-steps{padding-left:5mm;margin:0;font-size:10.5pt;line-height:1.45} .pd-steps li{margin-bottom:1.5mm}
+  .pd-tip{border-left:3px solid #0E6E5C;padding:1.5mm 3mm;margin-top:4mm;font-size:10pt;background:#f2f7f5}
+  .pd-shop{page-break-before:always} .pd-shop h2{font-size:19pt;margin:0 0 3mm;font-family:Fraunces,Georgia,serif;font-weight:500}
+  .pd-shop h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1mm;border-bottom:1px solid #999;padding-bottom:1mm}
+  .pd-shop ul{list-style:none;padding:0;margin:0;columns:2;column-gap:8mm;font-size:10pt}
+  .pd-shop li{padding:1mm 0;border-bottom:1px solid #eee;break-inside:avoid;display:flex;justify-content:space-between;gap:3mm}
+  .pd-shop li span:first-child::before{content:"☐ ";color:#999}
+  .pd-shop li em{display:block;font-style:normal;color:#777;font-size:8.5pt}
+  .pd-foot{margin-top:6mm;font-size:8.5pt;color:#888}
+}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="row">
+    <div>
+      <div class="eyebrow">Pescétarien · 14 repas</div>
+      <h1>Marée <em>basse</em></h1>
+    </div>
+    <div><button class="btn primary" id="gen">↻ Générer</button></div>
+  </div>
+</header>
+
+<!-- SEMAINE -->
+<section class="view on" id="v-week">
+  <div class="stats" id="stats"></div>
+  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 40 g de protéines, un féculent, 50 g de glucides nets et 750 kcal maximum.</p>
+  <div class="week" id="week"></div>
+  <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+    <button class="btn primary" id="pdf" style="flex:1">📄 Exporter en PDF</button>
+    <button class="btn" id="share" style="flex:1">Partager le texte</button>
+  </div>
+  <p class="note" style="margin-top:10px">Le PDF contient la semaine, les 7 recettes détaillées et la liste de courses. Sur iPhone : l'aperçu d'impression s'ouvre → bouton <b>Partager</b> (ou pincer l'aperçu) → envoyer le PDF par Messages, WhatsApp ou Mail.</p>
+  <p class="note">🔒 Verrouillez une recette pour la garder lors de la prochaine génération. Touchez une recette pour la voir en détail.</p>
+</section>
+
+<!-- RECETTES -->
+<section class="view" id="v-recipes">
+  <p class="note">Macros <b>par portion</b> (1 personne, 1 repas). Glucides nets = glucides − fibres.</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<!-- COURSES -->
+<section class="view" id="v-shop">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <p class="note" style="margin:0">Quantités pour <b>7 recettes × 4 portions</b>.</p>
+    <button class="btn small" id="uncheck">Tout décocher</button>
+  </div>
+  <div id="shop"></div>
+  <div class="tip">Légumineuses et poissons en boîte : poids <b>égouttés</b> (légumineuses : 1 boîte de 400 g ≈ 250 g ; thon 160 g ≈ 112 g ; sardines 120 g ≈ 88 g ; maquereau 169 g ≈ 120 g). Seules les lentilles corail sont sèches. Saumon et colin : rayon surgelés, à décongeler la veille au réfrigérateur. Féculents : poids <b>secs</b> à acheter, poids cuits dans les recettes.</div>
+  <div style="display:flex;gap:8px;margin-top:14px">
+    <button class="btn" id="copyshop">Copier la liste</button>
+    <button class="btn" id="copymenu">Copier le menu</button>
+  </div>
+</section>
+
+<!-- RÉGLAGES -->
+<section class="view" id="v-set">
+  <div class="field">
+    <label>Recettes à base de légumineuses : <span id="legN" class="num"></span> / 7</label>
+    <p>Lentilles, pois chiches, haricots — plus de fibres et de protéines végétales, un peu plus de glucides (à IG bas). Achetées en conserve, sauf les lentilles corail.</p>
+    <input type="range" min="0" max="7" step="1" id="legumes">
+  </div>
+  <div class="field">
+    <label>Recettes avec poêlée de légumes surgelée : <span id="poeleeN" class="num"></span> / 7</label>
+    <p>Un sachet de poêlée (sans pommes de terre) remplace les 200 g de légumes par portion — 800 g par recette, soit 4 repas. Gain de temps et de courses.</p>
+    <input type="range" min="0" max="5" step="1" id="poeleeQ">
+  </div>
+  <div class="field">
+    <label>Féculent à chaque repas</label>
+    <p>Portion cuite par personne, choisie parmi les féculents les moins riches en glucides. Elle est réduite automatiquement (jusqu'à 40 g) quand le repas dépasserait <b>50 g de glucides nets</b> — typiquement sur les recettes aux légumineuses.</p>
+    <div class="seg" id="starchQ">
+      <button data-v="50">50 g</button><button data-v="80">80 g</button><button data-v="100">100 g</button><button data-v="120">120 g</button>
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-weight:500"><input type="checkbox" id="starchLeg" style="width:18px;height:18px;accent-color:var(--accent)"> Aussi avec les recettes aux légumineuses (recommandé)</label>
+    <div id="starchList" style="margin-top:10px"></div>
+  </div>
+  <div class="field">
+    <label>Sources de protéines</label>
+    <p>« Économe » réutilise volontiers la même source (un seul poisson acheté en plus grande quantité, une seule boîte de conserve ouverte deux fois) ; « Variées » évite les répétitions.</p>
+    <div class="seg" id="protMode">
+      <button data-v="eco">Économe</button>
+      <button data-v="varied">Variées</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Priorité</label>
+    <p>« Glucides mini » tire vers les recettes les plus pauvres en glucides ; « Variété » alterne davantage les familles.</p>
+    <div class="seg" id="prio">
+      <button data-v="carbs">Glucides mini</button>
+      <button data-v="variety">Variété</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Ingrédients à éviter</label>
+    <p>Séparés par des virgules (ex. aubergine, maquereau). Les recettes qui en contiennent sont écartées.</p>
+    <input type="text" id="avoid" placeholder="aubergine, endives…">
+  </div>
+  <div class="field">
+    <label>Semaine commence le</label>
+    <select id="start">
+      <option value="0">Lundi</option><option value="1">Mardi</option><option value="2">Mercredi</option><option value="3">Jeudi</option><option value="4">Vendredi</option><option value="5">Samedi</option><option value="6">Dimanche</option>
+    </select>
+  </div>
+  <div class="field rule">
+    <b>Règles fixes du générateur</b><br>
+    · 200 g de légumes, ≈ 40 g de protéines et 750 kcal maximum par personne et par repas<br>
+    · Pescétarien : filets de colin et pavés de saumon surgelés, thon / maquereau / sardines en boîte, œufs, tofu, légumineuses<br>
+    · Un féculent à chaque repas, parmi les moins riches en glucides et à IG bas ; 50 g de glucides nets maximum par repas<br>
+    · Une même source protéique au plus 3 fois dans la semaine<br>
+    · Les recettes de la semaine précédente sont évitées quand c'est possible<br>
+    · Sans épinards
+  </div>
+  <button class="btn" id="reset" style="width:100%">Réinitialiser l'application</button>
+</section>
+</div>
+
+<nav>
+  <button data-v="week" class="on"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Semaine</button>
+  <button data-v="recipes"><svg viewBox="0 0 24 24"><path d="M4 4h12a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3z"/><path d="M4 17a3 3 0 0 1 3-3h12M8 8h7"/></svg>Recettes</button>
+  <button data-v="shop"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h11L21 7H6.5"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>Courses</button>
+  <button data-v="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Réglages</button>
+</nav>
+
+<div id="printdoc"></div>
+<div class="sheet-bg" id="sbg"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- Ingrédients : par 100 g — kcal, protéines, glucides totaux, lipides, fibres ---------- */
+const ING = {
+  saumon:{n:"Pavés de saumon (surgelés)",cat:"Poisson surgelé",v:[208,20,0,13,0]},
+  colin:{n:"Filets de colin (surgelés)",cat:"Poisson surgelé",v:[86,18,0,1,0]},
+  thon:{n:"Thon au naturel en boîte (égoutté)",cat:"Poisson en conserve",v:[116,26,0,1,0],can:112,canName:"boîte de 160 g"},
+  maquereau:{n:"Filets de maquereau en boîte (égouttés)",cat:"Poisson en conserve",v:[180,22,0,10,0],can:120,canName:"boîte de 169 g"},
+  sardines:{n:"Sardines à l'huile en boîte (égouttées)",cat:"Poisson en conserve",v:[208,25,0,12,0],can:88,canName:"boîte de 120 g"},
+  oeufs:{n:"Œufs",cat:"Crèmerie & œufs",v:[143,13,1,10,0],unit:60,uname:"œuf"},
+  feta:{n:"Feta",cat:"Crèmerie & œufs",v:[264,14,4,21,0]},
+  parmesan:{n:"Parmesan",cat:"Crèmerie & œufs",v:[392,32,0,29,0]},
+  chevre:{n:"Chèvre frais",cat:"Crèmerie & œufs",v:[200,12,3,16,0]},
+  creme:{n:"Crème entière 30 %",cat:"Crèmerie & œufs",v:[300,2,3,30,0]},
+  yaourt:{n:"Yaourt grec",cat:"Crèmerie & œufs",v:[97,9,4,5,0]},
+  beurre:{n:"Beurre demi-sel",cat:"Crèmerie & œufs",v:[717,0.9,0.1,81,0]},
+  tofu:{n:"Tofu ferme",cat:"Légumineuses & soja",v:[145,15,2,8,0.5]},
+  lentvertes:{n:"Lentilles vertes en conserve (égouttées)",cat:"Légumineuses & soja",v:[116,9,20,0.4,8],can:250,canName:"boîte de 400 g"},
+  lentcorail:{n:"Lentilles corail sèches",cat:"Légumineuses & soja",v:[110,9,18,0.4,6],dry:2.5},
+  poischiches:{n:"Pois chiches en conserve (égouttés)",cat:"Légumineuses & soja",v:[164,9,27,2.6,7.6],can:250,canName:"boîte de 400 g"},
+  hblancs:{n:"Haricots blancs en conserve (égouttés)",cat:"Légumineuses & soja",v:[127,8.5,23,0.5,6.5],can:250,canName:"boîte de 400 g"},
+  hrouges:{n:"Haricots rouges en conserve (égouttés)",cat:"Légumineuses & soja",v:[127,9,22,0.5,7],can:250,canName:"boîte de 400 g"},
+  /* féculents — valeurs pour 100 g CUITS ; dry = poids cuit / poids sec */
+  boulgour:{n:"Boulgour",cat:"Féculents",v:[83,3.1,18.6,0.2,4.5],dry:3,gi:"IG 45",starch:true},
+  sarrasin:{n:"Sarrasin (kasha)",cat:"Féculents",v:[92,3.4,20,0.6,2.7],dry:3,gi:"IG 50",starch:true},
+  patesLent:{n:"Pâtes de lentilles corail",cat:"Féculents",v:[130,11,22,1,4],dry:2.3,gi:"IG 30",starch:true},
+  quinoa:{n:"Quinoa",cat:"Féculents",v:[120,4.4,21,1.9,2.8],dry:3,gi:"IG 53",starch:true},
+  patatedouce:{n:"Patate douce",cat:"Féculents",v:[86,1.6,20,0.1,3],dry:1,gi:"IG 46 (vapeur)",starch:true},
+  patesCompl:{n:"Pâtes complètes",cat:"Féculents",v:[124,5,23,1,4.5],dry:2.3,gi:"IG 50",starch:true},
+  orge:{n:"Orge perlé",cat:"Féculents",v:[123,2.3,28,0.4,3.8],dry:3,gi:"IG 28",starch:true},
+  riz:{n:"Riz basmati",cat:"Féculents",v:[130,2.7,28,0.3,0.4],dry:3,gi:"IG 55",starch:true},
+  pdt:{n:"Pommes de terre (vapeur)",cat:"Féculents",v:[77,2,17,0.1,2],dry:1,gi:"IG 65 — élevé",starch:true},
+  poelee:{n:"Poêlée de légumes surgelée (sans pommes de terre)",cat:"Légumes surgelés",v:[50,2,6.5,1.8,3],bag:1000},
+  courgette:{n:"Courgettes",cat:"Légumes",v:[17,1.2,3.1,0.3,1]},
+  brocoli:{n:"Brocoli",cat:"Légumes",v:[34,2.8,7,0.4,2.6]},
+  choufleur:{n:"Chou-fleur",cat:"Légumes",v:[25,1.9,5,0.3,2]},
+  poireau:{n:"Poireaux",cat:"Légumes",v:[31,1.5,6,0.3,2]},
+  poivron:{n:"Poivrons",cat:"Légumes",v:[31,1,6,0.3,2]},
+  aubergine:{n:"Aubergines",cat:"Légumes",v:[25,1,6,0.2,3]},
+  tomate:{n:"Tomates",cat:"Légumes",v:[18,0.9,3.9,0.2,1.2]},
+  tomcerise:{n:"Tomates cerises",cat:"Légumes",v:[18,0.9,3.9,0.2,1.2]},
+  tomconc:{n:"Tomates concassées (boîte)",cat:"Épicerie",v:[32,1.6,7,0.2,1.5]},
+  champignons:{n:"Champignons de Paris",cat:"Légumes",v:[22,3,3,0.3,1]},
+  hverts:{n:"Haricots verts",cat:"Légumes",v:[31,1.8,7,0.2,3.4]},
+  asperges:{n:"Asperges vertes",cat:"Légumes",v:[20,2.2,4,0.1,2]},
+  concombre:{n:"Concombre",cat:"Légumes",v:[15,0.7,3.6,0.1,0.5]},
+  roquette:{n:"Roquette",cat:"Légumes",v:[25,2.6,3.7,0.7,1.6]},
+  endives:{n:"Endives",cat:"Légumes",v:[17,0.9,3,0.1,3]},
+  oignon:{n:"Oignons",cat:"Légumes",v:[40,1.1,9,0.1,1.7]},
+  echalote:{n:"Échalotes",cat:"Légumes",v:[72,2.5,17,0.1,3]},
+  ail:{n:"Ail",cat:"Légumes",v:[149,6,33,0.5,2]},
+  gingembre:{n:"Gingembre frais",cat:"Légumes",v:[80,1.8,18,0.8,2]},
+  citron:{n:"Citron",cat:"Légumes",v:[29,1.1,9,0.3,2.8]},
+  citronvert:{n:"Citron vert",cat:"Légumes",v:[30,0.7,10,0.2,2.8]},
+  huile:{n:"Huile d'olive",cat:"Épicerie",v:[884,0,0,100,0]},
+  huilesesame:{n:"Huile de sésame",cat:"Épicerie",v:[884,0,0,100,0]},
+  soja:{n:"Sauce soja",cat:"Épicerie",v:[53,8,5,0,0]},
+  lcoco:{n:"Lait de coco",cat:"Épicerie",v:[180,1.7,3,18,0]},
+  olives:{n:"Olives noires",cat:"Épicerie",v:[145,1,6,13,3]},
+  tahini:{n:"Tahini",cat:"Épicerie",v:[595,17,21,54,9]},
+  sesame:{n:"Graines de sésame",cat:"Épicerie",v:[573,18,23,50,12]},
+  amandes:{n:"Amandes effilées",cat:"Épicerie",v:[579,21,22,50,12]},
+  moutarde:{n:"Moutarde",cat:"Épicerie",v:[66,4,6,4,3]},
+  capres:{n:"Câpres",cat:"Épicerie",v:[23,2,5,0.9,3]},
+  currypate:{n:"Pâte de curry vert",cat:"Épicerie",v:[100,2,8,6,2]},
+  vinblanc:{n:"Vin blanc sec",cat:"Épicerie",v:[82,0,2,0,0]},
+  vinaigre:{n:"Vinaigre de cidre",cat:"Épicerie",v:[20,0,1,0,0]},
+  balsamique:{n:"Vinaigre balsamique",cat:"Épicerie",v:[88,0.5,17,0,0]},
+  levure:{n:"Levure maltée",cat:"Épicerie",v:[325,45,35,4,20]},
+  epices:{n:"Épices & herbes (cumin, paprika, curry, thym…)",cat:"Épicerie",v:[0,0,0,0,0]},
+  herbes:{n:"Herbes fraîches (persil, coriandre, aneth, basilic)",cat:"Légumes",v:[0,0,0,0,0]},
+};
+
+/* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (150 g), v = légume (200 g), x = autre ---------- */
+const R = [
+{id:"saumon-brocoli",name:"Saumon rôti, brocoli et poireaux fondants au citron",tag:"poisson",main:"saumon",time:30,starch:"sarrasin",
+ ing:[["saumon",180,"p"],["brocoli",120,"v"],["poireau",80,"v"],["huile",6,"x"],["beurre",5,"x"],["citron",15,"x"],["ail",3,"x"],["herbes",3,"x"]],
+ steps:["Four à 200 °C. Émincer les poireaux, les faire fondre 10 min à la poêle avec le beurre demi-sel et un fond d'eau.","Détailler le brocoli en fleurettes, l'étaler sur une plaque avec l'huile, l'ail et du sel. Enfourner 12 min.","Poser les pavés de saumon sur la plaque, zeste et jus de citron, poivre. Cuire 10–12 min de plus.","Servir saumon, brocoli et poireaux avec l'aneth. Réserver la moitié pour le dîner du lendemain."],
+ reheat:"Réchauffer doucement (poêle couverte, feu doux, ou four 150 °C 10 min). Le saumon se mange aussi tiède, effeuillé sur les légumes."},
+{id:"curry-corail",name:"Curry de lentilles corail, colin et chou-fleur au lait de coco",tag:"legumineuses",main:"lentcorail",time:30,starch:"quinoa",
+ ing:[["lentcorail",130,"p"],["colin",140,"p"],["choufleur",130,"v"],["tomconc",70,"v"],["lcoco",40,"x"],["oignon",30,"x"],["gingembre",5,"x"],["ail",3,"x"],["huile",5,"x"],["epices",4,"x"],["herbes",3,"x"]],
+ steps:["Faire revenir l'oignon, l'ail et le gingembre hachés dans l'huile 3 min. Ajouter curry, curcuma, cumin ; 30 s.","Ajouter les lentilles corail sèches (≈ 60 g par portion), les tomates et 1,5 fois leur volume d'eau. Mijoter 12 min.","Ajouter le chou-fleur en petites fleurettes et le lait de coco ; cuire 6 min, puis le colin en gros cubes 6 min de plus, sans remuer trop.","Saler, jus de citron, coriandre. Se bonifie en refroidissant."],
+ reheat:"Casserole feu doux avec un filet d'eau, ou micro-ondes 3 min couvert."},
+{id:"colin-papillote",name:"Colin en papillote, poireaux, tomates cerises et olives",tag:"poisson",main:"cabillaud",time:30,starch:"quinoa",
+ ing:[["colin",200,"p"],["poireau",120,"v"],["tomcerise",80,"v"],["olives",15,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"]],
+ steps:["Four à 200 °C. Émincer finement les poireaux, les faire fondre 8 min à la poêle avec la moitié de l'huile et un fond d'eau.","Sur 4 grandes feuilles de papier cuisson : poireaux, tomates cerises coupées en deux, olives, thym.","Poser le colin, huile, rondelles de citron, sel, poivre. Fermer les papillotes.","Enfourner 15–18 min. Servir 2 papillotes, garder 2 fermées au frais pour le lendemain."],
+ reheat:"Réenfourner les papillotes fermées 12 min à 160 °C : le poisson reste moelleux."},
+{id:"chili-sin-carne",name:"Chili aux haricots rouges et thon, poivrons et courgettes",tag:"legumineuses",main:"hrouges",time:35,starch:"quinoa",
+ ing:[["hrouges",150,"p"],["thon",90,"p"],["poivron",100,"v"],["courgette",60,"v"],["tomconc",40,"v"],["oignon",30,"x"],["ail",3,"x"],["huile",6,"x"],["epices",4,"x"],["yaourt",30,"x"],["herbes",3,"x"]],
+ steps:["Faire revenir oignon et ail, puis poivrons et courgettes en dés, 8 min.","Ajouter cumin, paprika fumé, origan, une pointe de piment ; puis tomates et haricots rouges égouttés.","Mijoter 20 min à découvert pour épaissir. Ajouter le thon égoutté émietté, 2 min. Saler.","Servir avec une cuillère de yaourt grec et de la coriandre."],
+ reheat:"Casserole feu doux 5 min ou micro-ondes. Encore meilleur le lendemain."},
+{id:"saumon-brocoli-wok",name:"Saumon sauté au gingembre, courgettes et brocoli au sésame",tag:"poisson",main:"saumon",time:20,starch:"sarrasin",
+ ing:[["saumon",180,"p"],["courgette",100,"v"],["brocoli",100,"v"],["ail",4,"x"],["gingembre",5,"x"],["huilesesame",5,"x"],["soja",10,"x"],["sesame",5,"x"],["citronvert",10,"x"]],
+ steps:["Décongeler le saumon (la veille au frais), le couper en gros cubes, l'éponger.","Courgettes en demi-rondelles, brocoli en petites fleurettes (blanchi 3 min à l'eau bouillante, égoutté).","Wok très chaud : huile de sésame, saumon 2 min sans remuer puis 1 min ; réserver. Ail, gingembre, courgettes et brocoli 4 min à feu vif.","Remettre le saumon, sauce soja, jus de citron vert, sésame grillé."],
+ reheat:"Poêle chaude 2–3 min, ou tiède/froid en salade avec un trait de citron vert."},
+{id:"tofu-brocoli",name:"Tofu croustillant, brocoli et champignons sauce soja-gingembre",tag:"soja",main:"tofu",time:25,starch:"sarrasin",
+ ing:[["tofu",220,"p"],["brocoli",110,"v"],["champignons",90,"v"],["huile",8,"x"],["soja",12,"x"],["gingembre",5,"x"],["ail",3,"x"],["sesame",4,"x"],["vinaigre",5,"x"]],
+ steps:["Presser le tofu 10 min dans un torchon, le couper en cubes. Poêler dans l'huile jusqu'à dorure sur toutes les faces ; réserver.","Dans la même poêle : champignons émincés 4 min à feu vif, puis brocoli en fleurettes avec 3 cl d'eau, couvert, 5 min.","Ajouter ail et gingembre râpés, sauce soja, vinaigre ; remettre le tofu, enrober 1 min.","Parsemer de sésame."],
+ reheat:"Poêle chaude 3 min pour que le tofu retrouve du croustillant."},
+{id:"frittata-feta",name:"Frittata aux courgettes, poivrons et feta",tag:"oeufs",main:"oeufs",time:30,starch:"patatedouce",
+ ing:[["oeufs",180,"p"],["feta",60,"p"],["parmesan",15,"p"],["courgette",120,"v"],["poivron",80,"v"],["oignon",20,"x"],["huile",6,"x"],["herbes",3,"x"]],
+ steps:["Four à 180 °C. Faire revenir oignon, courgettes et poivrons en petits dés 8 min dans une poêle allant au four.","Battre les œufs (2 par portion) avec sel, poivre et basilic ; verser sur les légumes.","Émietter la feta dessus. Cuire 2 min sur le feu puis 15 min au four.","Découper en 4 parts."],
+ reheat:"Excellente froide ou tiède ; sinon 10 min au four à 150 °C."},
+{id:"dahl-courgettes",name:"Dahl de lentilles vertes, tofu et courgettes",tag:"legumineuses",main:"lentvertes",time:40,starch:"boulgour",
+ ing:[["lentvertes",130,"p"],["tofu",160,"p"],["courgette",120,"v"],["tomconc",80,"v"],["oignon",30,"x"],["ail",3,"x"],["gingembre",4,"x"],["huile",6,"x"],["epices",4,"x"],["citron",10,"x"]],
+ steps:["Égoutter et rincer les lentilles vertes en conserve.","Faire revenir oignon, ail, gingembre, puis cumin, coriandre moulue, garam masala.","Ajouter les courgettes en dés et les tomates, 8 min ; puis les lentilles égouttées et le tofu en dés, 5 min.","Saler, jus de citron."],
+ reheat:"Casserole feu doux avec un filet d'eau."},
+{id:"maquereau-poelee",name:"Maquereau en boîte et poêlée de légumes à la moutarde",tag:"poisson",main:"maquereau",time:15,starch:"patatedouce",poelee:true,
+ ing:[["maquereau",170,"p"],["poelee",200,"v"],["moutarde",10,"x"],["huile",6,"x"],["vinaigre",5,"x"],["herbes",3,"x"]],
+ steps:["Cuire la poêlée surgelée à la poêle dans l'huile, 10–12 min à feu vif, sans couvrir.","Égoutter les filets de maquereau, les badigeonner de moutarde.","Les poser sur les légumes, couvrir 2 min pour les tiédir.","Vinaigre de cidre, poivre, persil."],
+ reheat:"Poêle 4 min ; maquereau ajouté à la fin."},
+{id:"poischiches-aubergine",name:"Salade tiède de pois chiches et thon, aubergines rôties au tahini",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
+ ing:[["poischiches",150,"p"],["thon",90,"p"],["aubergine",130,"v"],["tomate",70,"v"],["tahini",15,"x"],["citron",15,"x"],["huile",8,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",4,"x"]],
+ steps:["Four à 220 °C. Aubergines en cubes, huile, cumin, sel : rôtir 25 min.","Mélanger tahini, jus de citron, ail écrasé et 2 c. à s. d'eau pour une sauce nappante.","Pois chiches égouttés, thon émietté, tomates en dés, aubergines tièdes, sauce tahini, persil.","Poivrer, ajuster le citron."],
+ reheat:"Se mange froid ou tiède (2 min au micro-ondes) — pas besoin de recuire."},
+{id:"tofu-laque-hverts",name:"Tofu laqué soja-sésame, haricots verts et champignons",tag:"soja",main:"tofu",time:25,starch:"boulgour",
+ ing:[["tofu",220,"p"],["hverts",120,"v"],["champignons",80,"v"],["soja",12,"x"],["balsamique",5,"x"],["huile",8,"x"],["ail",3,"x"],["sesame",4,"x"]],
+ steps:["Cuire les haricots verts 6 min à l'eau bouillante salée ; égoutter.","Presser le tofu, le couper en tranches épaisses, le dorer dans l'huile 3 min par face.","Ajouter ail, sauce soja, balsamique et 2 c. à s. d'eau ; laisser laquer 2 min.","Sauter les champignons à feu vif, réunir le tout, sésame."],
+ reheat:"Poêle chaude 3 min."},
+{id:"thon-ratatouille",name:"Thon en boîte et ratatouille express",tag:"poisson",main:"thon",time:30,starch:"quinoa",
+ ing:[["thon",150,"p"],["courgette",70,"v"],["aubergine",70,"v"],["poivron",60,"v"],["ail",3,"x"],["huile",10,"x"],["epices",2,"x"]],
+ steps:["Courgettes, aubergines, poivrons en petits dés ; les sauter séparément à feu vif dans un peu d'huile, puis réunir avec l'ail et les herbes de Provence. Mijoter 15 min couvert.","Égoutter le thon, l'émietter grossièrement.","Le mêler à la ratatouille hors du feu avec un filet d'huile d'olive et du basilic.","Servir tiède ou froid."],
+ reheat:"Ratatouille réchauffée à la poêle, thon ajouté au dernier moment. Très bon froid aussi."},
+{id:"shakshuka-verte",name:"Shakshuka verte : poireaux, courgettes, œufs et feta",tag:"oeufs",main:"oeufs",time:25,starch:"boulgour",
+ ing:[["oeufs",180,"p"],["feta",80,"p"],["poireau",100,"v"],["courgette",100,"v"],["huile",6,"x"],["ail",3,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",4,"x"]],
+ steps:["Faire fondre poireaux émincés et ail dans l'huile 8 min ; ajouter les courgettes râpées, cumin, coriandre moulue ; 6 min.","Creuser des nids, casser 2 œufs par portion. Couvrir et cuire 6–8 min : blanc pris, jaune coulant.","Feta émiettée, zeste de citron, persil.","Pour le dîner du lendemain : garder la base de légumes, cuire les œufs à la minute."],
+ reheat:"Réchauffer la base à la poêle, y cuire 2 œufs frais couvert 6 min."},
+{id:"colin-creme-poireaux",name:"Colin à la crème, poireaux et champignons au vin blanc",tag:"poisson",main:"colin",time:25,starch:"quinoa",
+ ing:[["colin",200,"p"],["poireau",110,"v"],["champignons",90,"v"],["creme",30,"x"],["vinblanc",30,"x"],["echalote",15,"x"],["beurre",5,"x"],["herbes",3,"x"]],
+ steps:["Faire fondre échalote et poireaux émincés dans le beurre demi-sel 8 min ; ajouter les champignons émincés, 4 min à feu vif.","Verser le vin blanc, réduire 2 min.","Poser les filets de colin sur les légumes, saler, couvrir : 8–10 min à feu doux.","Crème, poivre, persil ou aneth."],
+ reheat:"Casserole couverte, feu doux 5 min, sans bouillir."},
+{id:"minestrone-hblancs",name:"Minestrone de haricots blancs, courgettes, poireaux et colin au parmesan",tag:"legumineuses",main:"hblancs",time:35,starch:"patesLent",
+ ing:[["hblancs",150,"p"],["colin",120,"p"],["courgette",90,"v"],["poireau",60,"v"],["tomconc",50,"v"],["parmesan",10,"x"],["huile",6,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",2,"x"]],
+ steps:["Faire suer oignon, ail et poireau émincé dans l'huile 6 min.","Ajouter tomates, romarin, haricots blancs égouttés et 25 cl d'eau par portion. Mijoter 15 min.","Ajouter les courgettes en dés ; 6 min. Puis le colin en gros cubes, 6 min à frémissement.","Saler, poivrer, servir avec parmesan râpé et un filet d'huile."],
+ reheat:"Casserole feu doux. Ajouter un peu d'eau si trop épais."},
+{id:"truite-asperges",name:"Colin au four, asperges et courgettes rôties aux amandes",tag:"poisson",main:"truite",time:25,starch:"quinoa",
+ ing:[["colin",200,"p"],["asperges",130,"v"],["courgette",70,"v"],["amandes",8,"x"],["beurre",6,"x"],["citron",15,"x"],["huile",4,"x"]],
+ steps:["Four à 200 °C. Asperges épluchées et courgettes en bâtonnets, huile, sel : 10 min.","Poser les filets de colin, noisettes de beurre demi-sel, zeste de citron ; 12 min de plus.","Griller les amandes effilées à sec 2 min.","Jus de citron, amandes, poivre."],
+ reheat:"Four 150 °C 10 min, ou colin froid effeuillé sur légumes tièdes."},
+{id:"tofu-brouille",name:"Tofu brouillé au curcuma, champignons et poivrons",tag:"soja",main:"tofu",time:20,starch:"patatedouce",
+ ing:[["tofu",220,"p"],["champignons",110,"v"],["poivron",90,"v"],["huile",8,"x"],["oignon",30,"x"],["ail",3,"x"],["epices",3,"x"],["levure",5,"x"]],
+ steps:["Émietter le tofu à la fourchette.","Sauter oignon et poivrons en dés 4 min, puis les champignons à feu vif 5 min.","Ajouter le tofu, curcuma, paprika, ail, levure maltée ; 5 min en remuant.","Saler, poivrer généreusement."],
+ reheat:"Poêle 3 min ou micro-ondes 2 min."},
+{id:"sardines-roquette",name:"Sardines en boîte, courgettes, tomates et roquette",tag:"poisson",main:"sardines",time:20,starch:"boulgour",
+ ing:[["sardines",150,"p"],["courgette",90,"v"],["tomate",70,"v"],["roquette",40,"v"],["huile",8,"x"],["citron",15,"x"],["ail",3,"x"],["capres",5,"x"]],
+ steps:["Courgettes en rubans à l'économe, grillées 2 min à la poêle ou crues.","Égoutter les sardines ; les passer 2 min sous le gril du four pour les tiédir (facultatif).","Tomates en quartiers, roquette, câpres, ail, huile, jus de citron.","Servir les sardines sur la salade tiède."],
+ reheat:"Salade froide ; ouvrir les boîtes de sardines au moment de servir."},
+{id:"curry-vert-colin",name:"Curry vert de colin, aubergine et haricots verts",tag:"poisson",main:"colin",time:25,starch:"quinoa",
+ ing:[["colin",200,"p"],["aubergine",100,"v"],["hverts",100,"v"],["lcoco",50,"x"],["currypate",10,"x"],["huile",5,"x"],["citronvert",10,"x"],["herbes",4,"x"]],
+ steps:["Faire revenir la pâte de curry vert dans l'huile 1 min ; ajouter le lait de coco et 10 cl d'eau par portion.","Aubergine en cubes : 10 min dans la sauce. Haricots verts en tronçons : 6 min de plus.","Colin en gros cubes : 6 min à frémissement, sans remuer.","Jus de citron vert, basilic thaï ou coriandre."],
+ reheat:"Casserole feu doux jusqu'à frémissement, pas plus."},
+{id:"colin-puree-choufleur",name:"Colin rôti, purée de chou-fleur et brocoli",tag:"poisson",main:"lieu",time:35,starch:"boulgour",
+ ing:[["colin",200,"p"],["choufleur",110,"v"],["brocoli",90,"v"],["beurre",8,"x"],["creme",15,"x"],["huile",4,"x"],["epices",1,"x"]],
+ steps:["Chou-fleur en fleurettes, cuit 15 min à l'eau ; bien égoutter, mixer avec crème, beurre demi-sel, muscade, sel.","Brocoli en fleurettes, rôti 15 min à 210 °C avec l'huile.","Colin salé, poêlé 3–4 min par face dans une noix de beurre.","Dresser sur la purée."],
+ reheat:"Purée et brocoli au micro-ondes ; poisson 5 min au four à 150 °C."},
+{id:"wok-tofu",name:"Wok de tofu au gingembre et poêlée de légumes",tag:"soja",main:"tofu",time:20,starch:"sarrasin",poelee:true,
+ ing:[["tofu",220,"p"],["poelee",200,"v"],["soja",12,"x"],["huilesesame",6,"x"],["gingembre",5,"x"],["ail",3,"x"],["vinaigre",5,"x"],["sesame",4,"x"]],
+ steps:["Tofu en cubes, doré 6 min dans l'huile de sésame ; réserver.","Wok chaud : poêlée surgelée 10 min à feu vif en remuant.","Gingembre et ail râpés, 1 min ; sauce soja, vinaigre, tofu.","Sésame grillé, servir aussitôt."],
+ reheat:"Wok ou poêle chaude 3 min."},
+{id:"cabillaud-basquaise",name:"Colin à la basquaise, poivrons et tomates",tag:"poisson",main:"cabillaud",time:30,starch:"patesCompl",
+ ing:[["colin",200,"p"],["poivron",120,"v"],["tomate",80,"v"],["oignon",30,"x"],["ail",4,"x"],["huile",8,"x"],["epices",2,"x"]],
+ steps:["Faire fondre oignon et poivrons en lanières dans l'huile 12 min ; ajouter ail, tomates concassées au couteau, piment d'Espelette ; 8 min.","Poser les pavés de colin sur la piperade, saler, couvrir.","Cuire 8–10 min à feu doux jusqu'à ce que le poisson se détache en feuillets.","Poivrer, huile d'olive."],
+ reheat:"Casserole couverte feu doux 6 min : la piperade protège le poisson."},
+{id:"lentilles-oeuf-mollet",name:"Salade tiède de lentilles, haricots verts, œufs mollets et feta",tag:"legumineuses",main:"lentvertes",time:30,starch:"quinoa",
+ ing:[["lentvertes",140,"p"],["oeufs",120,"p"],["feta",50,"p"],["hverts",120,"v"],["concombre",40,"v"],["endives",40,"v"],["moutarde",8,"x"],["huile",8,"x"],["vinaigre",6,"x"],["echalote",15,"x"]],
+ steps:["Égoutter et rincer les lentilles en conserve ; cuire les haricots verts 6 min à l'eau bouillante.","Vinaigrette : moutarde, vinaigre de cidre, huile, échalote ciselée, sel, poivre.","Œufs mollets : 6 min dans l'eau bouillante, puis eau glacée, écaler.","Mélanger lentilles tièdes, haricots, concombre en dés, endives émincées et feta émiettée ; œufs mollets ouverts dessus."],
+ reheat:"Se mange froid ou tiède ; refaire les œufs mollets à la minute (6 min)."},
+{id:"tofu-provencale",name:"Tofu à la provençale, courgettes, tomates, olives et feta",tag:"soja",main:"tofu",time:25,starch:"patesCompl",
+ ing:[["tofu",220,"p"],["feta",40,"p"],["courgette",110,"v"],["tomate",90,"v"],["olives",12,"x"],["huile",6,"x"],["ail",4,"x"],["epices",2,"x"],["herbes",3,"x"]],
+ steps:["Tofu en cubes, doré dans l'huile 6 min.","Ajouter courgettes en dés, 5 min ; puis tomates, ail, olives, herbes de Provence.","Mijoter 10 min à couvert, puis 3 min à découvert.","Feta émiettée et basilic frais au moment de servir."],
+ reheat:"Casserole ou micro-ondes 3 min, feta ajoutée après."},
+{id:"gratin-choufleur-oeufs",name:"Gratin de chou-fleur et brocoli aux œufs et parmesan",tag:"oeufs",main:"oeufs",time:35,starch:"patatedouce",
+ ing:[["oeufs",150,"p"],["parmesan",45,"p"],["choufleur",120,"v"],["brocoli",80,"v"],["creme",30,"x"],["epices",1,"x"],["beurre",3,"x"]],
+ steps:["Four à 190 °C. Chou-fleur et brocoli en fleurettes, blanchis 5 min ; bien égoutter.","Battre les œufs avec la crème, muscade, sel, poivre et la moitié du parmesan.","Légumes dans un plat beurré (demi-sel), verser l'appareil, parmesan restant.","Cuire 25 min jusqu'à dorure."],
+ reheat:"Four 160 °C 12 min, ou micro-ondes."},
+{id:"hblancs-poireaux-oeuf",name:"Haricots blancs à la tomate, poireaux, thon et œuf poché",tag:"legumineuses",main:"hblancs",time:30,starch:"boulgour",
+ ing:[["hblancs",130,"p"],["thon",80,"p"],["oeufs",60,"p"],["poireau",100,"v"],["tomconc",100,"v"],["huile",6,"x"],["ail",4,"x"],["epices",3,"x"],["herbes",3,"x"]],
+ steps:["Poireaux émincés fondus dans l'huile 10 min avec l'ail.","Tomates concassées, paprika fumé, haricots blancs égouttés ; mijoter 12 min. Ajouter le thon émietté en fin de cuisson.","Œufs pochés : 3 min dans une eau frémissante vinaigrée (1 par portion).","Servir les haricots avec l'œuf dessus et le persil."],
+ reheat:"Haricots à la casserole ; pocher un œuf frais à la minute."},
+{id:"poischiches-choufleur-rotis",name:"Pois chiches et chou-fleur rôtis, œufs durs et yaourt au citron",tag:"legumineuses",main:"poischiches",time:35,starch:"boulgour",
+ ing:[["poischiches",140,"p"],["oeufs",120,"p"],["feta",40,"p"],["choufleur",140,"v"],["concombre",60,"v"],["yaourt",30,"x"],["huile",5,"x"],["epices",4,"x"],["citron",15,"x"],["ail",2,"x"],["herbes",3,"x"]],
+ steps:["Four à 220 °C. Pois chiches bien séchés et chou-fleur en fleurettes, huile, cumin, paprika, coriandre moulue, sel.","Rôtir 25–30 min en remuant à mi-cuisson, jusqu'à ce que les pois chiches croustillent.","Œufs durs : 9 min, écaler, couper en quartiers. Sauce : yaourt grec, jus et zeste de citron, ail, sel.","Concombre en dés, œufs et feta émiettée dessus, menthe ou coriandre."],
+ reheat:"Repasser 8 min au four à 200 °C pour retrouver le croustillant ; sauce à part."},
+{id:"maquereau-poivrons",name:"Maquereau en boîte, poivrons et courgettes sautés à l'ail et au citron",tag:"poisson",main:"maquereau",time:20,starch:"quinoa",
+ ing:[["maquereau",170,"p"],["poivron",100,"v"],["courgette",100,"v"],["ail",5,"x"],["huile",8,"x"],["citron",15,"x"],["epices",2,"x"],["herbes",4,"x"],["capres",5,"x"]],
+ steps:["Poivrons et courgettes en lanières, sautés 7 min à feu vif dans l'huile avec l'ail ; piment d'Espelette.","Égoutter les filets de maquereau, les casser en gros morceaux.","Les poser sur les légumes hors du feu, câpres, jus et zeste de citron, persil.","Servir tiède."],
+ reheat:"Légumes réchauffés à la poêle, maquereau ajouté au dernier moment ; ou froid en salade."},
+{id:"colin-endives",name:"Colin poêlé, endives braisées et champignons",tag:"poisson",main:"dorade",time:35,starch:"patatedouce",
+ ing:[["colin",200,"p"],["endives",120,"v"],["champignons",80,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["epices",1,"x"]],
+ steps:["Endives coupées en deux, dorées dans le beurre demi-sel, puis braisées 15 min couvertes avec un jus de citron et 5 cl d'eau.","Champignons en quartiers, sautés 6 min à feu vif dans une noix de beurre.","Pavés de colin salés, poêlés 3–4 min par face dans un peu d'huile.","Poivre, zeste de citron."],
+ reheat:"Légumes à la poêle ; poisson 5 min au four à 150 °C."},
+{id:"chevre-courgettes-oeufs",name:"Œufs cocotte au chèvre frais, courgettes et champignons",tag:"oeufs",main:"oeufs",time:25,starch:"boulgour",
+ ing:[["oeufs",180,"p"],["chevre",100,"p"],["courgette",110,"v"],["champignons",90,"v"],["huile",6,"x"],["ail",3,"x"],["herbes",3,"x"],["epices",1,"x"]],
+ steps:["Four à 180 °C. Courgettes râpées et champignons émincés sautés 8 min avec l'ail ; bien faire évaporer.","Répartir dans des ramequins (ou un plat), chèvre frais en morceaux.","Casser 2 œufs par portion, sel, poivre, thym. Cuire 12–14 min au bain-marie : blanc pris, jaune coulant.","Pour le lendemain : garder la base, cuire les œufs à la minute."],
+ reheat:"Base réchauffée, 2 œufs frais cuits dessus au four ou couvert à la poêle 6 min."},
+{id:"colin-poelee",name:"Colin au beurre demi-sel, citron et poêlée de légumes",tag:"poisson",main:"colin",time:15,starch:"quinoa",poelee:true,
+ ing:[["colin",200,"p"],["poelee",200,"v"],["beurre",8,"x"],["huile",4,"x"],["citron",15,"x"],["herbes",3,"x"]],
+ steps:["Poêlée surgelée dans l'huile, 10–12 min à feu vif.","Filets de colin décongelés, épongés, salés : 3–4 min par face dans le beurre demi-sel.","Jus et zeste de citron sur le poisson.","Servir avec les légumes, persil."],
+ reheat:"Légumes à la poêle ; poisson 5 min au four à 150 °C."},
+{id:"saumon-poelee",name:"Pavé de saumon, poêlée de légumes et yaourt citron-aneth",tag:"poisson",main:"saumon",time:20,starch:"sarrasin",poelee:true,
+ ing:[["saumon",180,"p"],["poelee",200,"v"],["yaourt",40,"x"],["citron",15,"x"],["huile",4,"x"],["herbes",4,"x"]],
+ steps:["Four à 200 °C : pavés de saumon décongelés, salés, 12–14 min.","Poêlée surgelée dans l'huile, 10–12 min à feu vif.","Sauce : yaourt grec, jus et zeste de citron, aneth, sel, poivre.","Dresser saumon et légumes, sauce à part."],
+ reheat:"Légumes à la poêle ; saumon tiède ou froid effeuillé, sauce fraîche."},
+{id:"omelette-poelee",name:"Omelette à la feta et poêlée de légumes",tag:"oeufs",main:"oeufs",time:15,starch:"patatedouce",poelee:true,
+ ing:[["oeufs",180,"p"],["feta",80,"p"],["poelee",200,"v"],["huile",6,"x"],["herbes",3,"x"]],
+ steps:["Poêlée surgelée dans l'huile, 10 min à feu vif.","Battre les œufs (3 par portion) avec sel, poivre, herbes.","Verser sur les légumes, feta émiettée ; cuire 4–5 min à feu moyen, couvert, jusqu'à ce que le dessus soit pris.","Plier ou couper en parts."],
+ reheat:"Tiède ou froid ; ou refaire une omelette minute sur la moitié de légumes gardée."},
+{id:"poischiches-thon-poelee",name:"Pois chiches, thon et poêlée de légumes aux épices",tag:"legumineuses",main:"poischiches",time:15,starch:"boulgour",poelee:true,
+ ing:[["poischiches",150,"p"],["thon",90,"p"],["poelee",200,"v"],["huile",6,"x"],["epices",3,"x"],["citron",10,"x"],["herbes",3,"x"]],
+ steps:["Poêlée surgelée dans l'huile, 10 min à feu vif, avec cumin et paprika fumé.","Ajouter les pois chiches égouttés, 3 min.","Thon égoutté émietté hors du feu, jus de citron, coriandre ou persil.","Servir tiède ou froid."],
+ reheat:"Poêle 3 min ou micro-ondes ; très bon froid."},
+];
+
+/* ---------- utilitaires ---------- */
+const DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
+const TAGS={poisson:"Poisson",mer:"Fruits de mer",oeufs:"Œufs",soja:"Tofu",legumineuses:"Légumineuses"};
+const $=s=>document.querySelector(s);
+const byId=Object.fromEntries(R.map(r=>[r.id,r]));
+const STARCH=Object.keys(ING).filter(k=>ING[k].starch);
+function starchFor(r){
+  const q=S.set.starchQ;if(!q)return null;
+  if(r.tag==="legumineuses"&&!S.set.starchLeg)return null;
+  const ok=STARCH.filter(k=>S.set.starchOk.includes(k));if(!ok.length)return null;
+  let k=ok.includes(r.starch)?r.starch:ok.slice().sort((a,b)=>(ING[a].v[2]-ING[a].v[4])-(ING[b].v[2]-ING[b].v[4]))[0];
+  const per=(ING[k].v[2]-ING[k].v[4])/100;const room=S.set.carbMax-r.m.net;
+  let g=per>0?Math.floor(Math.min(q,room/per)/10)*10:q;g=Math.max(40,Math.min(q,g));
+  return [k,g,"s"];
+}
+function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[0]];const g=st[1];const raw=it.dry>1?Math.round(g/it.dry/5)*5:g;const raw4=it.dry>1?Math.round(g*4/it.dry/5)*5:g*4;return{k:st[0],n:it.n,cooked:g,cooked4:g*4,raw,raw4,same:!(it.dry>1)};}
+function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
+function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}m.net=Math.max(0,m.c-m.fi);return m;}
+R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<36||r.m.p>48||r.m.kcal>750)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
+const rnd=n=>Math.floor(Math.random()*n);
+
+/* ---------- état ---------- */
+const DEF={recipes:[],locked:[],prev:[],checked:{},set:{legumes:3,prio:"carbs",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:50,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+let S;
+try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
+function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
+
+/* ---------- génération ---------- */
+function contains(r,words){return words.some(w=>r.ing.some(i=>ING[i[0]].n.toLowerCase().includes(w))||r.name.toLowerCase().includes(w));}
+function generate(){
+  const avoid=S.set.avoid.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const pool=R.filter(r=>!contains(r,avoid));
+  const chosen=new Array(7).fill(null);
+  S.locked.forEach((l,i)=>{if(l&&S.recipes[i]&&byId[S.recipes[i]])chosen[i]=byId[S.recipes[i]];});
+  const prev=new Set(S.recipes);
+  const used=new Set(chosen.filter(Boolean).map(r=>r.id));
+  const mainCount={};chosen.filter(Boolean).forEach(r=>mainCount[r.main]=(mainCount[r.main]||0)+1);
+  const tagCount={};chosen.filter(Boolean).forEach(r=>tagCount[r.tag]=(tagCount[r.tag]||0)+1);
+  let needLeg=S.set.legumes-(tagCount.legumineuses||0);
+  let needPoe=S.set.poelee-chosen.filter(r=>r&&r.poelee).length;
+  const free=chosen.map((c,i)=>c?null:i).filter(i=>i!==null);
+  for(const idx of free){
+    const wantLeg=needLeg>0,wantPoe=needPoe>0;
+    let cands=pool.filter(r=>!used.has(r.id)&&(wantLeg?r.tag==="legumineuses":r.tag!=="legumineuses")&&(!!r.poelee===wantPoe));
+    if(!cands.length)cands=pool.filter(r=>!used.has(r.id)&&(!!r.poelee===wantPoe));
+    if(!cands.length)cands=pool.filter(r=>!used.has(r.id)&&(wantLeg?r.tag==="legumineuses":r.tag!=="legumineuses"));
+    if(!cands.length)cands=pool.filter(r=>!used.has(r.id));
+    if(!cands.length)break;
+    const scored=cands.map(r=>{let s=Math.random()*10;
+      const mc=mainCount[r.main]||0;
+      if(mc>=3)s-=60;else if(S.set.protMode==="eco"){if(mc>0)s+=10;}else if(mc>0)s-=25;
+      if(prev.has(r.id))s-=8;
+      s-=(tagCount[r.tag]||0)*(S.set.prio==="variety"?12:6);
+      if(S.set.prio==="carbs")s-=r.m.net*1.2;
+      if(M(r).kcal>750)s-=40;if(M(r).net>S.set.carbMax)s-=30;
+      return[s,r];}).sort((a,b)=>b[0]-a[0]);
+    const r=scored[0][1];
+    chosen[idx]=r;used.add(r.id);mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
+  }
+  /* mélanger les non verrouillées entre elles pour varier l'ordre des familles */
+  const order=free.slice();for(let i=order.length-1;i>0;i--){const j=rnd(i+1);[order[i],order[j]]=[order[j],order[i]];}
+  const vals=free.map(i=>chosen[i]);order.forEach((slot,k)=>chosen[slot]=vals[k]);
+  S.prev=S.recipes.slice();S.recipes=chosen.map(r=>r?r.id:null);S.checked={};save();render();
+}
+function reroll(i){
+  const avoid=S.set.avoid.split(",").map(s=>s.trim().toLowerCase()).filter(Boolean);
+  const cur=byId[S.recipes[i]];const used=new Set(S.recipes);const mc={};S.recipes.forEach((id,k)=>{if(k!==i&&byId[id])mc[byId[id].main]=(mc[byId[id].main]||0)+1;});
+  let c=R.filter(r=>!used.has(r.id)&&!contains(r,avoid)&&r.tag===cur.tag&&!!r.poelee===!!cur.poelee&&(mc[r.main]||0)<3);
+  if(!c.length)c=R.filter(r=>!used.has(r.id)&&!contains(r,avoid)&&!!r.poelee===!!cur.poelee&&(mc[r.main]||0)<3);
+  if(!c.length)c=R.filter(r=>!used.has(r.id)&&!contains(r,avoid)&&(mc[r.main]||0)<3);
+  if(!c.length)c=R.filter(r=>!used.has(r.id)&&!contains(r,avoid));
+  if(!c.length){toast("Aucune autre recette disponible");return;}
+  S.recipes[i]=c[rnd(c.length)].id;S.checked={};save();render();toast("Recette remplacée");
+}
+
+/* ---------- rendu ---------- */
+function M(r){return macros(r,eff(r));}
+function fmt(n,d=0){return n.toLocaleString("fr-FR",{maximumFractionDigits:d,minimumFractionDigits:d});}
+function recipes(){return S.recipes.map(id=>byId[id]).filter(Boolean);}
+function render(){renderStats();renderWeek();renderCards();renderShop();renderSettings();}
+function renderStats(){
+  const rs=recipes();const el=$("#stats");
+  if(!rs.length){el.innerHTML="";return;}
+  const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
+  const leg=rs.filter(r=>r.tag==="legumineuses").length;
+  el.innerHTML=`<div class="stat"><b class="num">${fmt(avg("kcal"))}</b><span>kcal / repas</span></div>
+  <div class="stat"><b class="num">${fmt(avg("p"))} g</b><span>protéines</span></div>
+  <div class="stat g"><b class="num">${fmt(avg("net"))} g</b><span>gluc. nets</span></div>
+  <div class="stat"><b class="num">${fmt(avg("fi"))} g</b><span>fibres</span></div>`;
+  $("#stats").insertAdjacentHTML("beforeend","");
+}
+function renderWeek(){
+  const w=$("#week");const rs=S.recipes;
+  if(!rs.length||rs.every(x=>!x)){w.innerHTML=`<div class="field" style="text-align:center"><p style="margin:0 0 10px">Aucun menu pour l'instant.</p><button class="btn primary" onclick="generate()">Générer la semaine</button></div>`;return;}
+  let h="";
+  for(let d=0;d<7;d++){
+    const dayName=DAYS[(d+S.set.start)%7];
+    const midi=byId[rs[d]];const soirIdx=(d+6)%7;const soir=byId[rs[soirIdx]];
+    h+=`<div class="day"><div class="dn">${dayName.slice(0,3)}<small>${d===0?"jour 1":""}</small></div><div class="slots">`;
+    h+=slot(midi,d,"Midi",false);
+    h+=slot(soir,soirIdx,"Soir",d===0);
+    h+=`</div></div>`;
+  }
+  w.innerHTML=h;
+}
+function slot(r,i,when,fromPrev){
+  if(!r)return`<div class="slot rest"><span class="rn" style="background:var(--line)">–</span><div><div class="when">${when}</div><div class="name">—</div></div></div>`;
+  const lock=S.locked[i];
+  return`<div class="slot t-${r.tag}${fromPrev?" rest":""}"><button class="rn" onclick="openSheet('${r.id}',${i})" aria-label="Voir la recette">${i+1}</button>
+  <button style="text-align:left" onclick="openSheet('${r.id}',${i})"><div class="when">${when}${fromPrev?" · reste de la recette 7 (semaine précédente)":when==="Soir"?" · reste du midi de la veille":""}</div><div class="name">${r.name}</div></button>
+  <button class="lock${lock?" on":""}" onclick="toggleLock(${i})" aria-label="Verrouiller">${lock?"🔒":"🔓"}</button></div>`;
+}
+function toggleLock(i){S.locked[i]=!S.locked[i];save();render();}
+function macroHtml(r,max){
+  const m=M(r);return`<div class="macros">
+  <div${m.kcal>750?' style="color:var(--legume)"':''}><b class="num">${fmt(m.kcal)}</b><span>kcal</span></div>
+  <div><b class="num">${fmt(m.p)} g</b><span>prot.</span></div>
+  <div class="${m.net<=25?"low":""}"${m.net>S.set.carbMax?' style="color:var(--legume)"':''}><b class="num">${fmt(m.net)} g</b><span>gluc. nets</span></div>
+  <div><b class="num">${fmt(m.fi)} g</b><span>fibres</span></div>
+  <div><b class="num">${fmt(m.f)} g</b><span>lipides</span></div></div>`;
+}
+function renderCards(){
+  const rs=recipes();const c=$("#cards");
+  if(!rs.length){c.innerHTML=`<p class="note">Générez d'abord une semaine.</p>`;return;}
+  c.innerHTML=rs.map((r,i)=>{const d1=DAYS[(i+S.set.start)%7],d2=DAYS[(i+1+S.set.start)%7];
+  return`<div class="card t-${r.tag}"><button class="rn" onclick="openSheet('${r.id}',${i})">${i+1}</button><div>
+  <h3><button style="text-align:left" onclick="openSheet('${r.id}',${i})">${r.name}</button></h3>
+  <div class="serves">${d1} midi → ${d2} soir · ${r.time} min · 4 portions</div>
+  <div class="meta"><span class="chip tag">${TAGS[r.tag]}</span><span class="chip">${r.poelee?"poêlée surgelée":r.veg+" g légumes"}</span><span class="chip">${r.prot} g source protéique</span>${(si=>si?`<span class="chip">+ ${si.cooked} g cuit ${si.n.toLowerCase()}${si.same?"":" ("+si.raw+" g cru)"}</span>`:"")(starchInfo(r))}</div>
+  ${macroHtml(r)}
+  <div class="actions"><button class="btn small" onclick="openSheet('${r.id}',${i})">Recette</button><button class="btn small" onclick="reroll(${i})">↻ Remplacer</button><button class="btn small" onclick="toggleLock(${i})">${S.locked[i]?"🔒 Verrouillée":"🔓 Verrouiller"}</button></div>
+  </div></div>`;}).join("");
+}
+function shopData(){
+  const tot={};recipes().forEach(r=>eff(r).forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].starch&&ING[k].dry?g*4/ING[k].dry:g*4);}));
+  const cats=["Poisson surgelé","Poisson en conserve","Légumes surgelés","Légumes","Légumineuses & soja","Féculents","Crèmerie & œufs","Épicerie"];
+  return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
+}
+function qty(it){
+  if(it.unit)return`${Math.ceil(it.g/it.unit)} ${it.uname}${Math.ceil(it.g/it.unit)>1?"s":""}`;
+  if(it.v[0]===0)return"";
+  if(it.g>=1000)return`${fmt(it.g/1000,2).replace(/[,.]?0+$/,"")} kg`;
+  return`${fmt(Math.round(it.g/5)*5)} g`;
+}
+function hint(it){
+  if(it.bag){const n=Math.ceil(it.g/it.bag);return`${n} sachet${n>1?"s":""} de 1 kg · choisir sans pommes de terre ni féculents`;}
+  if(it.can){const n=Math.ceil(it.g/it.can);return`${n} ${it.canName.replace("boîte",n>1?"boîtes":"boîte")} (≈ ${it.can} g égouttés chacune)`;}
+  if(it.starch&&it.dry>1)return`poids sec · ${it.gi}`;
+  if(it.starch)return it.gi;
+  if(it.dry)return`poids sec (≈ ${fmt(Math.round(it.g*it.dry/10)*10)} g cuites)`;
+  if(it.k==="tofu")return`${Math.ceil(it.g/200)} bloc${Math.ceil(it.g/200)>1?"s":""} de 200 g`;
+    if(it.k==="tomconc")return`${Math.ceil(it.g/400)} boîte${Math.ceil(it.g/400)>1?"s":""} de 400 g`;
+    if(it.k==="lcoco")return`${Math.ceil(it.g/400)} brique${Math.ceil(it.g/400)>1?"s":""} de 400 ml`;
+  if(it.k==="oeufs")return`${it.g} g`;
+  return"";
+}
+function renderShop(){
+  const s=$("#shop");const data=shopData();
+  if(!data.length){s.innerHTML=`<p class="note">Générez d'abord une semaine.</p>`;return;}
+  s.innerHTML=data.map(c=>`<div class="group"><h3>${c.cat}</h3>${c.items.map(it=>{const on=S.checked[it.k];return`<label class="item${on?" done":""}"><input type="checkbox" ${on?"checked":""} onchange="check('${it.k}',this.checked)"><div><div class="n">${it.n}</div>${hint(it)?`<div class="h">${hint(it)}</div>`:""}</div><div class="q num">${qty(it)}</div></label>`;}).join("")}</div>`).join("");
+}
+function check(k,v){S.checked[k]=v;save();renderShop();}
+function renderSettings(){
+  $("#legumes").value=S.set.legumes;$("#legN").textContent=S.set.legumes;$("#poeleeQ").value=S.set.poelee;$("#poeleeN").textContent=S.set.poelee;
+  $("#avoid").value=S.set.avoid;$("#start").value=S.set.start;
+  document.querySelectorAll("#prio button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.prio));
+  document.querySelectorAll("#starchQ button").forEach(b=>b.classList.toggle("on",+b.dataset.v===S.set.starchQ));
+  document.querySelectorAll("#protMode button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.protMode));
+  $("#starchLeg").checked=S.set.starchLeg;
+  $("#starchList").innerHTML=STARCH.slice().sort((a,b)=>(ING[a].v[2]-ING[a].v[4])-(ING[b].v[2]-ING[b].v[4])).map(k=>{const v=ING[k].v;const on=S.set.starchOk.includes(k);return`<label class="item${on?"":" done"}" style="grid-template-columns:24px 1fr auto"><input type="checkbox" ${on?"checked":""} onchange="starchOk('${k}',this.checked)"><div><div class="n">${ING[k].n}</div><div class="h">${ING[k].gi}</div></div><div class="q num" style="font-weight:500;font-size:13px">${fmt(v[2]-v[4],1)} g gluc. nets / 100 g cuit</div></label>`;}).join("");
+  S.locked=S.locked.slice(0,7);
+}
+
+/* ---------- fiche recette ---------- */
+function openSheet(id,i){
+  const r=byId[id];const m=r.m;
+  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${g/it.unit} ${it.uname}${g/it.unit>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${g*4/it.unit} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+    if(role==="s"){const si=starchInfo(r);return`<div><span class="role st"></span>${it.n} <span class="p">— féculent</span><br><span class="p">cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers. · "+si.raw4+" g pour 4"}</span></div><div class="p num">${si.cooked} g cuit</div><div class="b num">${si.cooked4} g cuit</div>`;}
+    const note=it.can?` <span class="p">(${Math.ceil(g*4/it.can)} boîte${Math.ceil(g*4/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*4/it.dry/5)*5} g secs)</span>`:"";
+    return`<div><span class="role ${role==="p"?"prot":role==="v"?"veg":"x"}"></span>${it.n}${note}</div><div class="p num">${per}</div><div class="b num">${b}</div>`;}).join("");
+  const d1=DAYS[(i+S.set.start)%7],d2=DAYS[(i+1+S.set.start)%7];
+  $("#sheet").innerHTML=`<div class="grab"></div>
+  <div class="eyebrow">Recette ${i+1} · ${d1} midi → ${d2} soir</div>
+  <h2>${r.name}</h2>
+  <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px"><span class="chip tag t-${r.tag}">${TAGS[r.tag]}</span><span class="chip">${r.time} min</span><span class="chip">4 portions</span></div>
+  ${macroHtml(r)}
+  <h4>Ingrédients</h4>
+  <div class="ingl"><div class="hd">par portion / pour 4</div><div class="hd">1 pers.</div><div class="hd">4 portions</div>${rows}</div>
+  <p class="note" style="margin-top:8px"><span class="role prot"></span>sources protéiques ${r.prot} g · <span class="role veg"></span>légumes ${r.veg} g · <span class="role st"></span>féculent · <span class="role x"></span>assaisonnement · sel et poivre</p>
+  <h4>Préparation (pour 4 portions)</h4>
+  <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
+  ${(si=>si?`<div class="tip" style="background:var(--oeufs-soft)"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${si.n.toLowerCase()} <b>cuit</b> par personne${si.same?" (poids cru ≈ poids cuit)":` — soit ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
+  <div class="tip"><b>Le lendemain soir :</b> ${r.reheat}</div>
+  <div style="display:flex;gap:8px;margin-top:14px"><button class="btn" onclick="reroll(${i});closeSheet()">↻ Remplacer</button><button class="btn" onclick="toggleLock(${i});closeSheet()">${S.locked[i]?"🔓 Déverrouiller":"🔒 Verrouiller"}</button><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
+  $("#sbg").classList.add("on");$("#sheet").classList.add("on");
+}
+function closeSheet(){$("#sbg").classList.remove("on");$("#sheet").classList.remove("on");}
+$("#sbg").onclick=closeSheet;
+
+/* ---------- copier / toast ---------- */
+let tt;function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("on"),1800);}
+function copy(txt,msg){if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>toast(msg),()=>toast("Copie impossible"));}else toast("Copie impossible");}
+$("#copyshop").onclick=()=>{const t=shopData().map(c=>`${c.cat.toUpperCase()}\n`+c.items.map(it=>`☐ ${it.n} — ${qty(it)}${hint(it)?" ("+hint(it)+")":""}`).join("\n")).join("\n\n");copy("Courses de la semaine\n\n"+t,"Liste copiée");};
+$("#copymenu").onclick=()=>{const rs=recipes();let t="Menu de la semaine (pescétarien, glucides bas)\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const midi=rs[d],soir=rs[(d+6)%7];const sx=r=>{const st=r&&starchFor(r);return st?` + ${st[1]} g ${ING[st[0]].n.toLowerCase()}`:"";};t+=`${dn}\n  Midi : ${midi?midi.name+sx(midi):"—"}\n  Soir : ${soir?soir.name+sx(soir):"—"}${d===0?" (reste sem. préc.)":""}\n`;}copy(t,"Menu copié");};
+$("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
+
+/* ---------- export PDF (impression) & partage ---------- */
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+function ingRows(r){const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const per=it.unit?`${g/it.unit} ${it.uname}${g/it.unit>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${g*4/it.unit} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*4} g`;
+  if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.raw4+" g pour 4"}`,per:`${si.cooked} g cuit`,b:`${si.cooked4} g cuit`};}
+  const note=it.can?` (${Math.ceil(g*4/it.can)} ${it.canName.replace("boîte",Math.ceil(g*4/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*4/it.dry/5)*5} g secs)`:"";
+  const lab=role==="p"?"Protéines":role==="v"?"Légumes":"Assaisonnement";
+  return{lab,txt:it.n+note,per,b};});}
+function buildPrint(){
+  const rs=recipes();if(!rs.length)return"";
+  const day=i=>DAYS[(i+S.set.start)%7];
+  let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois pour 4 portions : déjeuner du jour, puis dîner du lendemain.</p>
+  <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
+  for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td><span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}</td></tr>`;}
+  const avg=k=>rs.reduce((a,r)=>a+M(r)[k],0)/rs.length;
+  h+=`</table><p class="pd-rules">Moyenne par portion : ${fmt(avg("kcal"))} kcal · ${fmt(avg("p"))} g de protéines · ${fmt(avg("net"))} g de glucides nets · ${fmt(avg("fi"))} g de fibres. Règles : 200 g de légumes, ≈ 40 g de protéines, un féculent à IG bas, 50 g de glucides nets et 750 kcal maximum par personne et par repas.</p></div>`;
+  rs.forEach((r,i)=>{const m=M(r);const rows=ingRows(r);
+    h+=`<section class="pd-recipe"><div class="eyebrow">Recette ${i+1} · ${day(i)} midi → ${day(i+1)} soir</div><h2>${esc(r.name)}</h2>
+    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${r.poelee?" · poêlée surgelée":""}</div>
+    <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.net)} g</b>gluc. nets</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
+    <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par portion / pour 4</td><td class="q">1 pers.</td><td class="q">4 portions</td></tr>`;
+    let last="";rows.forEach(x=>{h+=`<tr><td>${x.lab!==last?`<small style="color:#777">${x.lab} · </small>`:""}${esc(x.txt)}</td><td class="q">${x.per}</td><td class="q b">${x.b}</td></tr>`;last=x.lab;});
+    h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
+    ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit par personne${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
+    <div class="pd-tip"><b>Le lendemain soir :</b> ${esc(r.reheat)}</div></section>`;});
+  h+=`<section class="pd-shop"><h2>Liste de courses</h2>`;
+  shopData().forEach(c=>{h+=`<h3>${c.cat}</h3><ul>${c.items.map(it=>`<li><span>${esc(it.n)}${hint(it)?`<em>${esc(hint(it))}</em>`:""}</span><span>${qty(it)}</span></li>`).join("")}</ul>`;});
+  h+=`</section><p class="pd-foot">Marée basse — menu généré le ${new Date().toLocaleDateString("fr-FR")}. Légumineuses et poissons en boîte : poids égouttés. Féculents : poids sec à acheter, poids cuit dans les recettes.</p>`;
+  return h;
+}
+function exportPDF(){
+  if(!recipes().length){toast("Générez d'abord une semaine");return;}
+  $("#printdoc").innerHTML=buildPrint();closeSheet();
+  setTimeout(()=>window.print(),150);
+}
+function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const midi=rs[d],soir=rs[(d+6)%7];t+=`${dn}\n  Midi : ${midi?midi.name:"—"}\n  Soir : ${soir?soir.name:"—"}${d===0?" (reste sem. préc.)":""}\n`;}
+  t+="\n— Recettes —\n";rs.forEach((r,i)=>{t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions)\n`;ingRows(r).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  Lendemain : ${r.reheat}\n`;});return t;}
+$("#pdf").onclick=exportPDF;
+$("#share").onclick=async()=>{const t=menuText();if(navigator.share){try{await navigator.share({title:"Menu de la semaine",text:t});}catch(e){}}else copy(t,"Menu et recettes copiés");};
+
+/* ---------- événements ---------- */
+$("#gen").onclick=()=>{generate();showView("week");toast("Nouvelle semaine générée");};
+$("#legumes").oninput=e=>{S.set.legumes=+e.target.value;$("#legN").textContent=S.set.legumes;save();};
+$("#poeleeQ").oninput=e=>{S.set.poelee=+e.target.value;$("#poeleeN").textContent=S.set.poelee;save();};
+$("#avoid").onchange=e=>{S.set.avoid=e.target.value;save();};
+$("#start").onchange=e=>{S.set.start=+e.target.value;save();render();};
+document.querySelectorAll("#prio button").forEach(b=>b.onclick=()=>{S.set.prio=b.dataset.v;save();renderSettings();});
+document.querySelectorAll("#starchQ button").forEach(b=>b.onclick=()=>{S.set.starchQ=+b.dataset.v;save();render();});
+document.querySelectorAll("#protMode button").forEach(b=>b.onclick=()=>{S.set.protMode=b.dataset.v;save();renderSettings();});
+$("#starchLeg").onchange=e=>{S.set.starchLeg=e.target.checked;save();render();};
+function starchOk(k,v){S.set.starchOk=STARCH.filter(x=>x===k?v:S.set.starchOk.includes(x));save();render();}
+$("#reset").onclick=()=>{S=JSON.parse(JSON.stringify(DEF));save();generate();showView("week");toast("Application réinitialisée");};
+function showView(v){S.view=v;save();document.querySelectorAll(".view").forEach(el=>el.classList.toggle("on",el.id==="v-"+v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));window.scrollTo(0,0);}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>showView(b.dataset.v));
+
+/* ---------- démarrage ---------- */
+if(!S.recipes.length||S.recipes.every(x=>!x))generate();else render();
+showView(S.view||"week");
+</script>
+
+</body></html>
