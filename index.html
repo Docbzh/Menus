@@ -399,6 +399,7 @@ const ING = {
   pomme:{n:"Pomme",cat:"Fruits",v:[52,0.3,13.8,0.2,2.4]},
   amandesentieres:{n:"Amandes entières",cat:"Épicerie",v:[579,21,22,50,12]},
   chocolatnoir:{n:"Chocolat noir 70 %+",cat:"Épicerie",v:[598,7.8,45.9,42.6,10.9]},
+  wheyvanille:{n:"Whey protéine saveur vanille",cat:"Compléments",v:[390,75,10,6,0]},
 };
 
 /* ---------- Recettes : quantités PAR PORTION (1 personne) ; roles : p = protéine (~60 g de protéines visées), v = légume (200 g), x = autre ---------- */
@@ -668,8 +669,8 @@ const rnd=n=>Math.floor(Math.random()*n);
 
 /* ---------- repas fixes quotidiens : identiques chaque jour, en plus de la rotation ---------- */
 const FIXED_MEALS=[
-{name:"Petit-déjeuner",text:"1 œuf + 150 g de fromage blanc 0 % + 1 c. à café de graines de chia (≈ 5 g) + ½ pomme (≈ 90 g)",
- ing:[["oeufs",60],["fromageblanc0",150],["chia",5],["pomme",90]]},
+{name:"Petit-déjeuner",text:"1 shaker de whey vanille (≈ 30 g) + 150 g de fromage blanc 0 % + 1 c. à café de graines de chia (≈ 5 g) + ½ pomme (≈ 90 g)",
+ ing:[["wheyvanille",30],["fromageblanc0",150],["chia",5],["pomme",90]]},
 {name:"En-cas de l'après-midi",text:"120 g de fromage blanc 0 % + 6 à 8 amandes (≈ 8 g) + 1 pomme",
  ing:[["fromageblanc0",120],["amandesentieres",8],["pomme",180]]},
 {name:"En-cas du soir",text:"300 g de fromage blanc 0 % + 1 pomme + 2 à 3 carrés de chocolat noir 70 %+ (≈ 25 g) + une petite poignée d'amandes (8 g)",
@@ -836,7 +837,7 @@ function shopData(){
   });
   currentSpecial().ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
   FIXED_MEALS.forEach(m=>m.ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*7/ING[k].dry:g*7);}));
-  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Viande","Légumes surgelés","Légumes","Fruits","Légumineuses & soja","Féculents","Boulangerie","Crèmerie & œufs","Épicerie"];
+  const cats=["Poisson surgelé","Poisson fumé","Poisson en conserve","Viande","Légumes surgelés","Légumes","Fruits","Légumineuses & soja","Féculents","Boulangerie","Crèmerie & œufs","Épicerie","Compléments"];
   return cats.map(c=>({cat:c,items:Object.entries(tot).filter(([k])=>ING[k].cat===c).map(([k,g])=>({k,g,...ING[k]})).sort((a,b)=>b.g-a.g)})).filter(c=>c.items.length);
 }
 function qty(it){
@@ -855,6 +856,7 @@ function hint(it){
     if(it.k==="tomconc")return`${Math.ceil(it.g/400)} boîte${Math.ceil(it.g/400)>1?"s":""} de 400 g`;
     if(it.k==="lcoco")return`${Math.ceil(it.g/400)} brique${Math.ceil(it.g/400)>1?"s":""} de 400 ml`;
   if(it.k==="oeufs")return`${it.g} g`;
+  if(it.k==="wheyvanille")return`≈ ${Math.ceil(it.g/30)} mesure${Math.ceil(it.g/30)>1?"s":""} de 30 g`;
   return"";
 }
 function renderShop(){
