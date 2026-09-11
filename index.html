@@ -750,9 +750,20 @@ function render(){renderStats();renderFixed();renderWeek();renderCards();renderS
 function macroLine(m){return`${fmt(m.kcal)} kcal · ${fmt(m.p)} g prot. · ${fmt(m.c)} g gluc. · ${fmt(m.fi)} g fibres`;}
 function renderFixed(){
   const el=$("#fixed");
-  el.innerHTML=`<label>🥣 Repas fixes quotidiens <span style="font-weight:400;color:var(--ink2)">(identiques chaque jour, en plus des 2 repas ci-dessous)</span></label>
-  ${FIXED_MEALS.map(m=>`<p style="margin:0 0 4px"><b>${m.name}</b> — ${m.text}<br><span style="color:var(--ink2);font-size:13px">${macroLine(m.m)}</span></p>`).join("")}
-  <p style="margin:8px 0 0"><b>Total repas fixes / jour</b> — <span style="color:var(--accent);font-weight:600">${macroLine(FIXED_TOTAL)}</span></p>`;
+  el.innerHTML=`<label>🥣 Repas fixes quotidiens</label>
+  <p style="margin:0 0 10px;font-size:13px;color:var(--ink2)">Identiques chaque jour, en plus des 2 repas de la rotation ci-dessous.</p>
+  <div style="display:flex;flex-direction:column;gap:8px">
+  ${FIXED_MEALS.map(m=>`<div style="background:var(--surface2);border-radius:12px;padding:10px 12px">
+    <div style="font-weight:600;margin-bottom:3px">${m.name}</div>
+    <div style="font-size:13px;color:var(--ink2);margin-bottom:8px;line-height:1.4">${m.text}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">
+      <span class="chip">${fmt(m.m.kcal)} kcal</span><span class="chip">${fmt(m.m.p)} g prot.</span><span class="chip">${fmt(m.m.c)} g gluc.</span><span class="chip">${fmt(m.m.fi)} g fibres</span>
+    </div></div>`).join("")}
+  </div>
+  <div class="tip" style="background:var(--accent-soft);margin-top:10px">
+    <b>Total repas fixes / jour</b><br>
+    <span style="font-size:15px;font-weight:600;color:var(--accent)">${fmt(FIXED_TOTAL.kcal)} kcal · ${fmt(FIXED_TOTAL.p)} g prot. · ${fmt(FIXED_TOTAL.c)} g gluc. · ${fmt(FIXED_TOTAL.fi)} g fibres</span>
+  </div>`;
 }
 function renderStats(){
   const rs=recipes();const el=$("#stats");
