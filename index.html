@@ -387,6 +387,8 @@ const ING = {
   epices:{n:"Épices & herbes (cumin, paprika, curry, thym…)",cat:"Épicerie",v:[0,0,0,0,0]},
   herbes:{n:"Herbes fraîches (persil, coriandre, aneth, basilic)",cat:"Légumes",v:[0,0,0,0,0]},
   galette:{n:"Galette de sarrasin toute prête (pré-cuite)",cat:"Boulangerie",v:[220,6.5,43,2,4],unit:90,uname:"galette"},
+  wrap:{n:"Wrap de blé tout prêt",cat:"Boulangerie",v:[300,8,50,7,3],unit:60,uname:"wrap"},
+  avocat:{n:"Avocat",cat:"Légumes",v:[160,2,8.5,15,7]},
   saumonfume:{n:"Saumon fumé",cat:"Poisson fumé",v:[117,18,0,4.5,0]},
   emmental:{n:"Emmental râpé",cat:"Crèmerie & œufs",v:[380,28,0,30,0]},
   cheddar:{n:"Cheddar",cat:"Crèmerie & œufs",v:[404,25,1,33,0]},
@@ -676,6 +678,26 @@ const R = [
  ing:[["oeufs",260,"p"],["chevre",130,"p"],["poivron",120,"v"],["oignon",80,"v"],["huile",6,"x"],["herbes",3,"x"]],
  steps:["Faire fondre l'oignon et le poivron émincés dans l'huile 15 min à feu doux, jusqu'à ce qu'ils soient bien tendres.","Battre les œufs avec sel, poivre ; verser sur les légumes dans la poêle.","Cuire à feu doux 8–10 min à couvert jusqu'à ce que le dessus soit presque pris ; parsemer de chèvre émietté.","Terminer 2 min sous le gril du four ou en retournant la tortilla ; découper en parts, herbes fraîches."],
  reheat:"Excellente froide ou tiède ; sinon 8 min au four à 150 °C."},
+{id:"wrap-thon-crudites-citron",name:"Wrap au thon, crudités et sauce citron-yaourt",tag:"poisson",main:"thon",time:15,noStarch:true,
+ ing:[["wrap",60,"x"],["thon",210,"p"],["tomate",100,"v"],["concombre",60,"v"],["roquette",40,"v"],["yaourt",20,"x"],["citron",6,"x"],["herbes",3,"x"]],
+ steps:["Égoutter le thon, l'émietter ; mélanger avec le yaourt, le jus de citron, sel et poivre.","Tomates et concombre en petits dés.","Réchauffer le wrap 20 s à la poêle sèche ou au micro-ondes pour l'assouplir.","Garnir de roquette, crudités et thon au yaourt ; rouler bien serré, couper en deux."],
+ reheat:"Se mange froid ; préparer un wrap frais au dernier moment si possible, ou emballer serré dans du film."},
+{id:"wrap-saumonfume-avocat-roquette",name:"Wrap au saumon fumé, avocat, feta et roquette",tag:"poisson",main:"saumonfume",time:15,noStarch:true,
+ ing:[["wrap",60,"x"],["saumonfume",250,"p"],["feta",50,"p"],["avocat",50,"x"],["tomate",100,"v"],["roquette",100,"v"],["citron",8,"x"],["herbes",3,"x"]],
+ steps:["Écraser grossièrement l'avocat à la fourchette avec le jus de citron, sel et poivre.","Réchauffer le wrap 20 s à la poêle sèche ou au micro-ondes pour l'assouplir.","Tartiner d'avocat écrasé, garnir de roquette, tomates en dés, saumon fumé en lanières et feta émiettée.","Rouler bien serré, couper en deux."],
+ reheat:"Se mange froid ; préparer un wrap frais au dernier moment si possible, ou emballer serré dans du film."},
+{id:"wrap-tofu-croustillant-crudites",name:"Wrap au tofu croustillant, œuf dur et crudités, sauce yaourt",tag:"soja",main:"tofu",time:20,noStarch:true,
+ ing:[["wrap",60,"x"],["tofu",220,"p"],["oeufs",90,"p"],["tomate",80,"v"],["concombre",60,"v"],["roquette",60,"v"],["yaourt",20,"x"],["epices",3,"x"]],
+ steps:["Presser le tofu, le couper en tranches ou en bâtonnets, le dorer dans un filet d'huile 3 min par face jusqu'à ce qu'il soit croustillant.","Œuf dur : 9 min dans l'eau bouillante, écaler, couper en rondelles.","Sauce : yaourt, épices, sel.","Réchauffer le wrap 20 s ; garnir de roquette, crudités, tofu croustillant et œuf dur, sauce yaourt ; rouler bien serré."],
+ reheat:"Réchauffer le tofu séparément à la poêle pour qu'il reste croustillant ; garnir le wrap juste avant de servir."},
+{id:"wrap-oeufs-brouilles-feta-roquette",name:"Wrap aux œufs brouillés, feta et roquette",tag:"oeufs",main:"oeufs",time:15,noStarch:true,
+ ing:[["wrap",60,"x"],["oeufs",260,"p"],["feta",75,"p"],["tomate",100,"v"],["roquette",60,"v"],["concombre",40,"v"],["herbes",3,"x"]],
+ steps:["Battre les œufs avec sel et poivre ; les cuire à feu doux en remuant sans cesse pour des œufs brouillés crémeux.","Tomates et concombre en petits dés.","Réchauffer le wrap 20 s à la poêle sèche ou au micro-ondes pour l'assouplir.","Garnir de roquette, crudités, œufs brouillés et feta émiettée ; rouler bien serré, couper en deux."],
+ reheat:"Refaire des œufs brouillés frais à la minute (2–3 min) ; garnir le wrap juste avant de servir."},
+{id:"wrap-houmous-poischiches-thon",name:"Wrap façon houmous de pois chiches, thon et crudités",tag:"legumineuses",main:"poischiches",time:15,noStarch:true,
+ ing:[["wrap",60,"x"],["poischiches",70,"p"],["thon",190,"p"],["tomate",80,"v"],["concombre",60,"v"],["roquette",60,"v"],["citron",6,"x"],["epices",3,"x"],["huile",4,"x"]],
+ steps:["Écraser les pois chiches égouttés à la fourchette (ou au mixeur pour un houmous plus lisse) avec l'huile, le jus de citron, le cumin et un peu d'eau si besoin.","Égoutter le thon, l'émietter.","Réchauffer le wrap 20 s à la poêle sèche ou au micro-ondes pour l'assouplir.","Tartiner de houmous de pois chiches, garnir de roquette, crudités et thon émietté ; rouler bien serré, couper en deux."],
+ reheat:"Se mange froid ; préparer un wrap frais au dernier moment si possible, ou emballer serré dans du film."},
 ];
 
 /* ---------- utilitaires ---------- */
@@ -957,6 +979,7 @@ function hint(it){
   if(it.k==="oeufs")return`${it.g} g`;
   if(it.k==="wheyvanille")return`≈ ${Math.ceil(it.g/30)} mesure${Math.ceil(it.g/30)>1?"s":""} de 30 g`;
   if(it.k==="galette")return`toutes prêtes (pré-cuites, rayon frais) — vendues par paquet de 4 ou 6 selon la marque, à ajuster à l'achat`;
+  if(it.k==="wrap")return`vendus par paquet de 8 ou 10 selon la marque, à ajuster à l'achat`;
   return"";
 }
 function renderShop(){
