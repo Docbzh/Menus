@@ -389,6 +389,9 @@ const ING = {
   galette:{n:"Galette de sarrasin toute prête (pré-cuite)",cat:"Boulangerie",v:[220,6.5,43,2,4],unit:90,uname:"galette"},
   wrap:{n:"Wrap de blé tout prêt",cat:"Boulangerie",v:[300,8,50,7,3],unit:60,uname:"wrap"},
   avocat:{n:"Avocat",cat:"Légumes",v:[160,2,8.5,15,7]},
+  patepizza:{n:"Pâte à pizza",cat:"Boulangerie",v:[266,9,49,3,2]},
+  mozzarella:{n:"Mozzarella râpée",cat:"Crèmerie & œufs",v:[280,22,2,21,0]},
+  paindemie:{n:"Pain de mie",cat:"Boulangerie",v:[280,8,50,4,2.5]},
   saumonfume:{n:"Saumon fumé",cat:"Poisson fumé",v:[117,18,0,4.5,0]},
   emmental:{n:"Emmental râpé",cat:"Crèmerie & œufs",v:[380,28,0,30,0]},
   cheddar:{n:"Cheddar",cat:"Crèmerie & œufs",v:[404,25,1,33,0]},
@@ -783,6 +786,18 @@ const SATURDAY_SPECIALS=[
  ing:[["colin",250,"p"],["riz",180,"x"],["lcoco",60,"x"],["currypate",12,"x"],["oeufs",60,"p"],["soja",8,"x"],["citronvert",8,"x"],["hverts",150,"v"],["poireau",50,"v"]],
  steps:["Cuire le riz basmati selon les indications du paquet.","Faire revenir la pâte de curry vert dans un filet d'huile 1 min, ajouter le lait de coco et un peu d'eau, porter à frémissement.","Ajouter les haricots verts et le poireau émincé, cuire 6–8 min.","Ajouter le colin en gros cubes, cuire 6–8 min à frémissement doux, sans trop remuer.","Pendant ce temps, cuire un œuf mollet (6 min à l'eau bouillante, puis écaler) et le faire mariner 10 min dans un mélange sauce soja-citron vert.","Servir le curry sur le riz, avec l'œuf mariné coupé en deux par-dessus."],
  note:"Un curry parfumé et réconfortant, avec la petite touche gourmande de l'œuf mariné façon ramen."},
+{id:"special-pizza-thon-mozzarella",name:"Pizza maison au thon, mozzarella et olives",tag:"poisson",time:30,noStarch:true,
+ ing:[["patepizza",150,"x"],["thon",150,"p"],["mozzarella",100,"p"],["tomconc",80,"x"],["olives",15,"x"],["huile",5,"x"],["epices",2,"x"],["roquette",150,"v"],["tomcerise",50,"v"]],
+ steps:["Four à 240 °C (ou le plus chaud possible), plaque ou pierre à pizza à préchauffer si possible.","Étaler la pâte à pizza, la piquer à la fourchette. Étaler la sauce tomate, origan.","Égoutter le thon, l'émietter, le répartir sur la pizza ; mozzarella râpée, olives, un filet d'huile.","Enfourner 10–12 min jusqu'à ce que le bord soit bien doré et le fromage fondu. Servir avec la roquette et les tomates cerises assaisonnées à part."],
+ note:"La vraie pizza-plaisir du samedi soir — prête en 30 min montre en main, aussi bonne qu'au comptoir de la pizzeria."},
+{id:"special-croque-saumonfume",name:"Croque-monsieur géant au saumon fumé, béchamel et emmental",tag:"poisson",time:20,noStarch:true,
+ ing:[["paindemie",90,"x"],["saumonfume",170,"p"],["emmental",90,"p"],["creme",30,"x"],["beurre",10,"x"],["roquette",150,"v"],["tomcerise",50,"v"]],
+ steps:["Béchamel express : faire fondre la moitié du beurre, ajouter la crème, chauffer 1 min à feu doux jusqu'à épaississement léger ; poivrer.","Beurrer les tranches de pain de mie sur une face. Garnir de béchamel, saumon fumé et la moitié de l'emmental ; refermer.","Beurrer le dessus, parsemer du reste d'emmental.","Cuire à la poêle à couvert 3–4 min par face (ou au four à 200 °C 10 min) jusqu'à doré et fondant. Servir avec la roquette et les tomates cerises."],
+ note:"Le croque ultime, généreux et fondant — le comfort food par excellence pour un samedi soir cocooning."},
+{id:"special-fishandchips-colin",name:"Fish and chips maison, colin croustillant et frites de patate douce",tag:"poisson",time:35,noStarch:true,
+ ing:[["colin",280,"p"],["chapelure",25,"x"],["patatedouce",220,"x"],["yaourt",30,"x"],["moutarde",6,"x"],["citron",8,"x"],["huile",8,"x"],["roquette",150,"v"],["tomcerise",50,"v"]],
+ steps:["Four à 210 °C. Couper la patate douce en frites, huile, sel ; étaler sur une plaque, cuire 25 min en retournant à mi-cuisson.","Couper le colin en larges filets, les rouler dans la chapelure en pressant bien pour la faire adhérer.","Poêler les filets panés dans l'huile 3–4 min par face, jusqu'à ce que la panure soit bien dorée et croustillante.","Sauce : yaourt, moutarde, jus de citron, sel. Servir le colin croustillant avec les frites de patate douce, la roquette et les tomates cerises, sauce à part."],
+ note:"Le fish and chips du pub anglais, en version maison et un peu plus légère — croustillant garanti."},
 ];
 SATURDAY_SPECIALS.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);});
 const bySpecialId=Object.fromEntries(SATURDAY_SPECIALS.map(r=>[r.id,r]));
