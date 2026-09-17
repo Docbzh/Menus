@@ -1145,8 +1145,11 @@ function buildPrint(){
 }
 function exportPDF(){
   if(!recipes().length){toast("Générez d'abord une semaine");return;}
-  $("#printdoc").innerHTML=buildPrint();closeSheet();
-  setTimeout(()=>window.print(),150);
+  try{
+    $("#printdoc").innerHTML=buildPrint();
+    closeSheet();
+    window.print();
+  }catch(e){toast("Erreur export PDF : "+e.message);}
 }
 function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const ck=i=>S.chicken[i]?" [+ poulet pour vous]":"";t+=`${dn}\n  Midi : ${midi?midi.name+ck(d):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+ck((d+6)%7):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
   t+="\n— Recettes —\n";rs.forEach((r,i)=>{const half=!!S.chicken[i];t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions${half?" : 2 pescétariennes + 2 poulet":""})\n`;ingRows(r,role=>(half&&role==="p")?2:4).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);if(half)t+=`  🍗 Poulet pour vous : légumes/féculent restent pour 4 ; ne cuisinez la source protéique que pour 2 (Julia) et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.\n`;t+=`  Lendemain : ${r.reheat}\n`;});
