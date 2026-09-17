@@ -194,7 +194,41 @@ ol.steps li{margin-bottom:6px}
   .pd-shop li em{display:block;font-style:normal;color:#777;font-size:8.5pt}
   .pd-foot{margin-top:6mm;font-size:8.5pt;color:#888}
 }
+/* même styles, actifs en permanence (hors media print) pour la capture html2canvas → PDF */
+#printdoc.pdf-capture{display:block;position:fixed;left:-9999px;top:0;width:210mm;background:#fff;color:#111;font:11pt "Instrument Sans",-apple-system,Arial,sans-serif;padding:14mm;z-index:-1}
+#printdoc.pdf-capture .pd-cover h1{font-size:26pt;margin:0 0 2mm;font-family:Fraunces,Georgia,serif;font-weight:500}
+#printdoc.pdf-capture .pd-cover .sub{color:#555;margin:0 0 6mm}
+#printdoc.pdf-capture .pd-week{width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:6mm}
+#printdoc.pdf-capture .pd-week th,#printdoc.pdf-capture .pd-week td{border:1px solid #bbb;padding:2mm 2.5mm;text-align:left;vertical-align:top}
+#printdoc.pdf-capture .pd-week th{background:#eef2f0;font-weight:600;width:22mm}
+#printdoc.pdf-capture .pd-week .n{display:inline-block;min-width:5mm;font-weight:700;color:#0E6E5C;margin-right:1.5mm}
+#printdoc.pdf-capture .pd-rules{font-size:9.5pt;color:#444;line-height:1.5}
+#printdoc.pdf-capture .pd-recipe{page-break-before:always}
+#printdoc.pdf-capture .pd-recipe .eyebrow{color:#0E6E5C;font-size:9pt;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+#printdoc.pdf-capture .pd-recipe h2{font-size:19pt;margin:1mm 0 2mm;font-family:Fraunces,Georgia,serif;font-weight:500}
+#printdoc.pdf-capture .pd-meta{font-size:10pt;color:#555;margin-bottom:3mm}
+#printdoc.pdf-capture .pd-macros{display:flex;gap:2mm;margin-bottom:4mm}
+#printdoc.pdf-capture .pd-macros div{border:1px solid #ccc;border-radius:2mm;padding:1.5mm 3mm;font-size:9.5pt;text-align:center;flex:1}
+#printdoc.pdf-capture .pd-macros b{display:block;font-size:12pt}
+#printdoc.pdf-capture .pd-recipe h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1.5mm;font-family:"Instrument Sans",sans-serif;font-weight:600}
+#printdoc.pdf-capture .pd-ing{width:100%;border-collapse:collapse;font-size:10.5pt}
+#printdoc.pdf-capture .pd-ing td{padding:1.2mm 1mm;border-bottom:1px solid #e3e3e3}
+#printdoc.pdf-capture .pd-ing td.q{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+#printdoc.pdf-capture .pd-ing td.b{font-weight:600}
+#printdoc.pdf-capture .pd-ing tr.hd td{font-size:8.5pt;color:#777;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #999}
+#printdoc.pdf-capture .pd-steps{padding-left:5mm;margin:0;font-size:10.5pt;line-height:1.45}
+#printdoc.pdf-capture .pd-steps li{margin-bottom:1.5mm}
+#printdoc.pdf-capture .pd-tip{border-left:3px solid #0E6E5C;padding:1.5mm 3mm;margin-top:4mm;font-size:10pt;background:#f2f7f5}
+#printdoc.pdf-capture .pd-shop{page-break-before:always}
+#printdoc.pdf-capture .pd-shop h2{font-size:19pt;margin:0 0 3mm;font-family:Fraunces,Georgia,serif;font-weight:500}
+#printdoc.pdf-capture .pd-shop h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1mm;border-bottom:1px solid #999;padding-bottom:1mm}
+#printdoc.pdf-capture .pd-shop ul{list-style:none;padding:0;margin:0;columns:2;column-gap:8mm;font-size:10pt}
+#printdoc.pdf-capture .pd-shop li{padding:1mm 0;border-bottom:1px solid #eee;break-inside:avoid;display:flex;justify-content:space-between;gap:3mm}
+#printdoc.pdf-capture .pd-shop li span:first-child::before{content:"☐ ";color:#999}
+#printdoc.pdf-capture .pd-shop li em{display:block;font-style:normal;color:#777;font-size:8.5pt}
+#printdoc.pdf-capture .pd-foot{margin-top:6mm;font-size:8.5pt;color:#888}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <div class="wrap">
 <header>
@@ -1143,54 +1177,34 @@ function buildPrint(){
   h+=`</section><p class="pd-foot">Marée basse — menu généré le ${new Date().toLocaleDateString("fr-FR")}. Légumineuses et poissons en boîte : poids égouttés. Féculents : poids sec à acheter, poids cuit dans les recettes.</p>`;
   return h;
 }
-const PD_CSS=`body{margin:0;padding:14mm;background:#fff;color:#111;font:11pt "Instrument Sans",-apple-system,Arial,sans-serif}
-h1,h2{font-family:Fraunces,Georgia,serif;font-weight:500;margin:0}
-.pd-cover h1{font-size:26pt;margin:0 0 2mm} .pd-cover .sub{color:#555;margin:0 0 6mm}
-.pd-week{width:100%;border-collapse:collapse;font-size:10.5pt;margin-bottom:6mm}
-.pd-week th,.pd-week td{border:1px solid #bbb;padding:2mm 2.5mm;text-align:left;vertical-align:top}
-.pd-week th{background:#eef2f0;font-weight:600;width:22mm}
-.pd-week .n{display:inline-block;min-width:5mm;font-weight:700;color:#0E6E5C;margin-right:1.5mm}
-.pd-rules{font-size:9.5pt;color:#444;line-height:1.5}
-.pd-recipe{page-break-before:always}
-.pd-recipe .eyebrow{color:#0E6E5C;font-size:9pt;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
-.pd-recipe h2{font-size:19pt;margin:1mm 0 2mm}
-.pd-meta{font-size:10pt;color:#555;margin-bottom:3mm}
-.pd-macros{display:flex;gap:2mm;margin-bottom:4mm}
-.pd-macros div{border:1px solid #ccc;border-radius:2mm;padding:1.5mm 3mm;font-size:9.5pt;text-align:center;flex:1}
-.pd-macros b{display:block;font-size:12pt}
-.pd-recipe h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1.5mm;font-family:"Instrument Sans",sans-serif;font-weight:600}
-.pd-ing{width:100%;border-collapse:collapse;font-size:10.5pt}
-.pd-ing td{padding:1.2mm 1mm;border-bottom:1px solid #e3e3e3}
-.pd-ing td.q{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-.pd-ing td.b{font-weight:600}
-.pd-ing tr.hd td{font-size:8.5pt;color:#777;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid #999}
-.pd-steps{padding-left:5mm;margin:0;font-size:10.5pt;line-height:1.45} .pd-steps li{margin-bottom:1.5mm}
-.pd-tip{border-left:3px solid #0E6E5C;padding:1.5mm 3mm;margin-top:4mm;font-size:10pt;background:#f2f7f5}
-.pd-shop{page-break-before:always} .pd-shop h2{font-size:19pt;margin:0 0 3mm}
-.pd-shop h3{font-size:9.5pt;text-transform:uppercase;letter-spacing:.1em;color:#555;margin:4mm 0 1mm;border-bottom:1px solid #999;padding-bottom:1mm}
-.pd-shop ul{list-style:none;padding:0;margin:0;columns:2;column-gap:8mm;font-size:10pt}
-.pd-shop li{padding:1mm 0;border-bottom:1px solid #eee;break-inside:avoid;display:flex;justify-content:space-between;gap:3mm}
-.pd-shop li span:first-child::before{content:"☐ ";color:#999}
-.pd-shop li em{display:block;font-style:normal;color:#777;font-size:8.5pt}
-.pd-foot{margin-top:6mm;font-size:8.5pt;color:#888}
-.pd-howto{margin:0 0 8mm;padding:4mm;background:#D8EDE6;border-radius:3mm;font-size:10.5pt;color:#16302C}`;
-function exportPDF(){
+async function exportPDF(){
   if(!recipes().length){toast("Générez d'abord une semaine");return;}
+  if(typeof html2pdf==="undefined"){toast("Bibliothèque PDF indisponible (pas de connexion ?) — réessayez, ou utilisez « Partager le texte »");return;}
+  const pd=$("#printdoc");
+  pd.innerHTML=buildPrint();
+  pd.classList.add("pdf-capture");
+  toast("Génération du PDF…");
+  const opts={margin:10,filename:"menu-semaine-maree-basse.pdf",html2canvas:{scale:2,useCORS:true},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}};
   try{
-    const html=buildPrint();
-    const standalone=window.navigator.standalone||(window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches);
-    if(standalone){
-      const w=window.open("","_blank");
-      if(!w){toast("Autorisez les fenêtres pop-up pour exporter en PDF");return;}
-      w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Menu de la semaine — Marée basse</title><style>${PD_CSS}</style></head><body><p class="pd-howto">Pour l'enregistrer en PDF : appuyez sur le bouton <b>Partager</b> de Safari (en haut ou en bas de l'écran), puis <b>Imprimer</b>, puis pincez l'aperçu pour l'agrandir et appuyez sur <b>Partager</b> → <b>Enregistrer en PDF</b>.</p>${html}</body></html>`);
-      w.document.close();
-      closeSheet();
-      return;
+    const worker=html2pdf().set(opts).from(pd);
+    let shared=false;
+    if(navigator.canShare){
+      try{
+        const blob=await worker.output("blob");
+        const file=new File([blob],"menu-semaine-maree-basse.pdf",{type:"application/pdf"});
+        if(navigator.canShare({files:[file]})){
+          await navigator.share({files:[file],title:"Menu de la semaine"});
+          shared=true;
+        }
+      }catch(e){/* annulé ou non supporté : on retombe sur le téléchargement direct */}
     }
-    $("#printdoc").innerHTML=html;
+    if(!shared)await worker.save();
     closeSheet();
-    window.print();
-  }catch(e){toast("Erreur export PDF : "+e.message);}
+  }catch(e){
+    toast("Erreur export PDF : "+e.message);
+  }finally{
+    pd.classList.remove("pdf-capture");
+  }
 }
 function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const ck=i=>S.chicken[i]?" [+ poulet pour vous]":"";t+=`${dn}\n  Midi : ${midi?midi.name+ck(d):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+ck((d+6)%7):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
   t+="\n— Recettes —\n";rs.forEach((r,i)=>{const half=!!S.chicken[i];t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions${half?" : 2 pescétariennes + 2 poulet":""})\n`;ingRows(r,role=>(half&&role==="p")?2:4).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);if(half)t+=`  🍗 Poulet pour vous : légumes/féculent restent pour 4 ; ne cuisinez la source protéique que pour 2 (Julia) et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.\n`;t+=`  Lendemain : ${r.reheat}\n`;});
