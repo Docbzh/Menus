@@ -299,6 +299,7 @@ ol.steps li{margin-bottom:6px}
     · Une même source protéique au plus 3 fois dans la semaine<br>
     · Les recettes de la semaine précédente sont évitées quand c'est possible<br>
     · Chaque recette a une vraie sauce (crème, yaourt, vinaigrette, tomate mijotée…), pas juste un filet d'huile et du citron<br>
+    · Une recette de galette et une recette de wrap chaque semaine, en alternant sur l'ensemble des recettes disponibles<br>
     · Sans épinards
   </div>
   <button class="btn" id="reset" style="width:100%">Réinitialiser l'application</button>
@@ -737,6 +738,8 @@ const DAYS=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"];
 const TAGS={poisson:"Poisson",mer:"Fruits de mer",oeufs:"Œufs",soja:"Tofu",legumineuses:"Légumineuses"};
 const $=s=>document.querySelector(s);
 const byId=Object.fromEntries(R.map(r=>[r.id,r]));
+const GALETTE_IDS=R.filter(r=>r.id.startsWith("galette-")).map(r=>r.id);
+const WRAP_IDS=R.filter(r=>r.id.startsWith("wrap-")).map(r=>r.id);
 const STARCH=Object.keys(ING).filter(k=>ING[k].starch);
 function starchFor(r){
   if(r.noStarch)return null;
@@ -834,7 +837,7 @@ FIXED_MEALS.forEach(m=>m.m=macros(null,m.ing));
 const FIXED_TOTAL=FIXED_MEALS.reduce((t,m)=>({kcal:t.kcal+m.m.kcal,p:t.p+m.m.p,c:t.c+m.m.c,f:t.f+m.m.f,fi:t.fi+m.m.fi}),{kcal:0,p:0,c:0,f:0,fi:0});
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
 let S;
 try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons","galette-lentilles-corail":"galette-sardine-tomate-chevre"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
@@ -854,6 +857,21 @@ function generate(){
   let needLeg=S.set.legumes-(tagCount.legumineuses||0);
   let needPoe=S.set.poelee-chosen.filter(r=>r&&r.poelee).length;
   const free=chosen.map((c,i)=>c?null:i).filter(i=>i!==null);
+  function forceFormat(ids,idxKey){
+    if(!ids.length||!free.length||chosen.some(r=>r&&ids.includes(r.id)))return;
+    for(let tries=0;tries<ids.length;tries++){
+      const id=ids[S[idxKey]%ids.length];S[idxKey]=(S[idxKey]+1)%ids.length;
+      if(used.has(id))continue;
+      const r=byId[id];if(!r||contains(r,avoid))continue;
+      const pos=rnd(free.length);const slot=free.splice(pos,1)[0];
+      chosen[slot]=r;used.add(id);
+      mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;
+      if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
+      return;
+    }
+  }
+  forceFormat(GALETTE_IDS,"galetteIdx");
+  forceFormat(WRAP_IDS,"wrapIdx");
   for(const idx of free){
     const wantLeg=needLeg>0,wantPoe=needPoe>0;
     let cands=pool.filter(r=>!used.has(r.id)&&(wantLeg?r.tag==="legumineuses":r.tag!=="legumineuses")&&(!!r.poelee===wantPoe));
