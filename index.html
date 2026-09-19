@@ -228,7 +228,8 @@ ol.steps li{margin-bottom:6px}
 #printdoc.pdf-capture .pd-shop li em{display:block;font-style:normal;color:#777;font-size:8.5pt}
 #printdoc.pdf-capture .pd-foot{margin-top:6mm;font-size:8.5pt;color:#888}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <div class="wrap">
 <header>
@@ -1179,18 +1180,42 @@ function buildPrint(){
 }
 async function exportPDF(){
   if(!recipes().length){toast("Générez d'abord une semaine");return;}
-  if(typeof html2pdf==="undefined"){toast("Bibliothèque PDF indisponible (pas de connexion ?) — réessayez, ou utilisez « Partager le texte »");return;}
+  if(typeof html2canvas==="undefined"||typeof window.jspdf==="undefined"){toast("Bibliothèque PDF indisponible (pas de connexion ?) — réessayez, ou utilisez « Partager le texte »");return;}
   const pd=$("#printdoc");
   pd.innerHTML=buildPrint();
   pd.classList.add("pdf-capture");
   toast("Génération du PDF…");
-  const opts={margin:10,filename:"menu-semaine-maree-basse.pdf",html2canvas:{scale:2,useCORS:true},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}};
   try{
-    const worker=html2pdf().set(opts).from(pd);
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({unit:"mm",format:"a4",orientation:"portrait"});
+    const pageW=doc.internal.pageSize.getWidth();
+    const pageH=doc.internal.pageSize.getHeight();
+    /* une section = une page logique (cover, chaque recette, courses) ; capturées séparément
+       pour rester sous les limites de taille de canvas des navigateurs mobiles sur un document
+       aussi long, puis chacune re-découpée sur plusieurs pages PDF si elle dépasse une page A4. */
+    const sections=pd.querySelectorAll(".pd-cover, .pd-recipe, .pd-shop");
+    let first=true;
+    for(const section of sections){
+      const canvas=await html2canvas(section,{scale:2,useCORS:true,backgroundColor:"#ffffff"});
+      const imgData=canvas.toDataURL("image/jpeg",0.92);
+      const imgW=pageW;
+      const imgH=canvas.height*imgW/canvas.width;
+      let heightLeft=imgH,position=0;
+      if(!first)doc.addPage();
+      first=false;
+      doc.addImage(imgData,"JPEG",0,position,imgW,imgH);
+      heightLeft-=pageH;
+      while(heightLeft>0){
+        position=heightLeft-imgH;
+        doc.addPage();
+        doc.addImage(imgData,"JPEG",0,position,imgW,imgH);
+        heightLeft-=pageH;
+      }
+    }
+    const blob=doc.output("blob");
     let shared=false;
     if(navigator.canShare){
       try{
-        const blob=await worker.output("blob");
         const file=new File([blob],"menu-semaine-maree-basse.pdf",{type:"application/pdf"});
         if(navigator.canShare({files:[file]})){
           await navigator.share({files:[file],title:"Menu de la semaine"});
@@ -1198,7 +1223,11 @@ async function exportPDF(){
         }
       }catch(e){/* annulé ou non supporté : on retombe sur le téléchargement direct */}
     }
-    if(!shared)await worker.save();
+    if(!shared){
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement("a");a.href=url;a.download="menu-semaine-maree-basse.pdf";document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),15000);
+    }
     closeSheet();
   }catch(e){
     toast("Erreur export PDF : "+e.message);
