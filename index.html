@@ -245,7 +245,7 @@ ol.steps li{margin-bottom:6px}
 <!-- SEMAINE -->
 <section class="view on" id="v-week">
   <div class="stats" id="stats"></div>
-  <p class="note">Chaque recette est cuisinée une fois pour 4 portions : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion : 200 g de légumes, ≈ 60 g de protéines, un féculent, 60 g de glucides et 950 kcal maximum.</p>
+  <p class="note">Chaque recette est cuisinée une fois : <b>2 personnes au déjeuner</b>, puis <b>2 au dîner du lendemain</b>. Par portion (votre cible) : 200 g de légumes, ≈ 60 g de protéines, un féculent, 60 g de glucides et 950 kcal maximum. Julia mange une part réduite de la même recette (réglable dans Réglages).</p>
   <div class="field" id="fixed"></div>
   <div class="week" id="week"></div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
@@ -267,7 +267,7 @@ ol.steps li{margin-bottom:6px}
 <!-- COURSES -->
 <section class="view" id="v-shop">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <p class="note" style="margin:0">Quantités pour <b>7 recettes × 4 portions</b>.</p>
+    <p class="note" style="margin:0">Quantités pour <b>7 recettes</b>, ajustées à vos deux portions (Julia à <span id="shopJuliaPct"></span>% des vôtres, réglable dans Réglages).</p>
     <button class="btn small" id="uncheck">Tout décocher</button>
   </div>
   <div id="shop"></div>
@@ -280,6 +280,11 @@ ol.steps li{margin-bottom:6px}
 
 <!-- RÉGLAGES -->
 <section class="view" id="v-set">
+  <div class="field">
+    <label>Portion de Julia : <span id="juliaN" class="num"></span>% de la vôtre</label>
+    <p>Julia mange moins que vous (ex. objectif ≈ 1700 kcal/j contre 2300). Ce réglage réduit sa part dans chaque recette de la rotation — légumes, féculent, sauce et protéine — et la liste de courses en tient compte. Les quantités affichées pour vous restent inchangées.</p>
+    <input type="range" min="50" max="100" step="1" id="juliaRatio">
+  </div>
   <div class="field">
     <label>Recettes à base de légumineuses : <span id="legN" class="num"></span> / 7</label>
     <p>Lentilles, pois chiches, haricots — plus de fibres et de protéines végétales, un peu plus de glucides (à IG bas). Achetées en conserve, sauf les lentilles corail.</p>
@@ -792,8 +797,13 @@ function starchFor(r){
   let g=per>0?Math.floor(Math.min(q,room/per)/10)*10:q;g=Math.max(40,Math.min(q,g));
   return [k,g,"s"];
 }
-function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[0]];const g=st[1];const raw=it.dry>1?Math.round(g/it.dry/5)*5:g;const raw4=it.dry>1?Math.round(g*4/it.dry/5)*5:g*4;return{k:st[0],n:it.n,cooked:g,cooked4:g*4,raw,raw4,same:!(it.dry>1)};}
+function starchInfo(r){const st=starchFor(r);if(!st)return null;const it=ING[st[0]];const g=st[1];const mult=portMult("s",false);const raw=it.dry>1?Math.round(g/it.dry/5)*5:g;const rawT=it.dry>1?Math.round(g*mult/it.dry/5)*5:Math.round(g*mult);return{k:st[0],n:it.n,cooked:g,cookedT:Math.round(g*mult),raw,rawT,same:!(it.dry>1)};}
 function eff(r){const st=starchFor(r);return st?r.ing.concat([st]):r.ing;}
+/* Julia mange moins que vous (objectif ≈ 1700 kcal contre 2300) : S.set.juliaRatio est sa part
+   d'une portion pleine. En mode "poulet pour vous", vous ne mangez plus la source protéique de la
+   recette (réservée à Julia, au ratio) et complétez avec du poulet cuisiné à part (non affecté par le ratio). */
+function portMult(role,half){return (half&&role==="p")?2*S.set.juliaRatio:2+2*S.set.juliaRatio;}
+function juliaPct(){return Math.round(S.set.juliaRatio*100);}
 function macros(r,ing){let m={kcal:0,p:0,c:0,f:0,fi:0};for(const [k,g] of (ing||r.ing)){const v=ING[k].v;m.kcal+=v[0]*g/100;m.p+=v[1]*g/100;m.c+=v[2]*g/100;m.f+=v[3]*g/100;m.fi+=v[4]*g/100;}return m;}
 R.forEach(r=>{r.m=macros(r);r.veg=r.ing.filter(i=>i[2]==="v").reduce((a,i)=>a+i[1],0);r.prot=r.ing.filter(i=>i[2]==="p").reduce((a,i)=>a+i[1],0);if(r.veg!==200||r.m.p<50||r.m.p>65||r.m.kcal>950)console.warn("Hors cible",r.id,r.veg,Math.round(r.m.p),Math.round(r.m.kcal));});
 
@@ -878,7 +888,7 @@ FIXED_MEALS.forEach(m=>m.m=macros(null,m.ing));
 const FIXED_TOTAL=FIXED_MEALS.reduce((t,m)=>({kcal:t.kcal+m.m.kcal,p:t.p+m.m.p,c:t.c+m.m.c,f:t.f+m.m.f,fi:t.fi+m.m.fi}),{kcal:0,p:0,c:0,f:0,fi:0});
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2},view:"week"};
+const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2,juliaRatio:0.74},view:"week"};
 let S;
 try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons","galette-lentilles-corail":"galette-sardine-tomate-chevre"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
@@ -1056,7 +1066,7 @@ function renderCards(){
 function shopData(){
   const tot={};
   S.recipes.forEach((id,i)=>{const r=byId[id];if(!r)return;const half=!!S.chicken[i];
-    eff(r).forEach(([k,g,role])=>{if(g<=0)return;const mult=(half&&role==="p")?2:4;tot[k]=(tot[k]||0)+(ING[k].dry?g*mult/ING[k].dry:g*mult);});
+    eff(r).forEach(([k,g,role])=>{if(g<=0)return;const mult=portMult(role,half);tot[k]=(tot[k]||0)+(ING[k].dry?g*mult/ING[k].dry:g*mult);});
     if(half)tot.poulet=(tot.poulet||0)+CHICKEN_G*2;
   });
   currentSpecial().ing.forEach(([k,g])=>{if(g>0)tot[k]=(tot[k]||0)+(ING[k].dry?g*2/ING[k].dry:g*2);});
@@ -1086,12 +1096,14 @@ function hint(it){
   return"";
 }
 function renderShop(){
+  const el=$("#shopJuliaPct");if(el)el.textContent=juliaPct();
   const s=$("#shop");const data=shopData();
   if(!data.length){s.innerHTML=`<p class="note">Générez d'abord une semaine.</p>`;return;}
   s.innerHTML=data.map(c=>`<div class="group"><h3>${c.cat}</h3>${c.items.map(it=>{const on=S.checked[it.k];return`<label class="item${on?" done":""}"><input type="checkbox" ${on?"checked":""} onchange="check('${it.k}',this.checked)"><div><div class="n">${it.n}</div>${hint(it)?`<div class="h">${hint(it)}</div>`:""}</div><div class="q num">${qty(it)}</div></label>`;}).join("")}</div>`).join("");
 }
 function check(k,v){S.checked[k]=v;save();renderShop();}
 function renderSettings(){
+  $("#juliaRatio").value=juliaPct();$("#juliaN").textContent=juliaPct();
   $("#legumes").value=S.set.legumes;$("#legN").textContent=S.set.legumes;$("#poeleeQ").value=S.set.poelee;$("#poeleeN").textContent=S.set.poelee;
   $("#avoid").value=S.set.avoid;$("#start").value=S.set.start;
   document.querySelectorAll("#prio button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.prio));
@@ -1104,24 +1116,25 @@ function renderSettings(){
 
 /* ---------- fiche recette ---------- */
 function openSheet(id,i){
-  const r=byId[id];const m=r.m;const half=!!S.chicken[i];const mult=role=>(half&&role==="p")?2:4;
-  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const bm=mult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*bm/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*bm} g`;
-    if(role==="s"){const si=starchInfo(r);return`<div><span class="role st"></span>${it.n} <span class="p">— féculent</span><br><span class="p">cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers. · "+si.raw4+" g pour 4"}</span></div><div class="p num">${si.cooked} g cuit</div><div class="b num">${si.cooked4} g cuit</div>`;}
-    const note=(it.can?` <span class="p">(${Math.ceil(g*bm/it.can)} boîte${Math.ceil(g*bm/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*bm/it.dry/5)*5} g secs)</span>`:"")+(half&&role==="p"?` <span class="p">(pour Julia seulement, 2 portions)</span>`:"");
+  const r=byId[id];const m=r.m;const half=!!S.chicken[i];const mult=role=>portMult(role,half);const pct=juliaPct();
+  const ordR={p:0,v:1,s:2,x:3};const rows=eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ordR[a[2]]-ordR[b[2]]).map(([k,g,role])=>{const it=ING[k];const bm=mult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*bm/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${Math.round(g*bm)} g`;
+    if(role==="s"){const si=starchInfo(r);return`<div><span class="role st"></span>${it.n} <span class="p">— féculent</span><br><span class="p">cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers. · "+si.rawT+" g au total"}</span></div><div class="p num">${si.cooked} g cuit</div><div class="b num">${si.cookedT} g cuit</div>`;}
+    const note=(it.can?` <span class="p">(${Math.ceil(g*bm/it.can)} boîte${Math.ceil(g*bm/it.can)>1?"s":""})</span>`:it.dry&&it.dry>1?` <span class="p">(≈ ${Math.round(g*bm/it.dry/5)*5} g secs)</span>`:"")+(half&&role==="p"?` <span class="p">(pour Julia seulement, portion réduite)</span>`:"");
     return`<div><span class="role ${role==="p"?"prot":role==="v"?"veg":"x"}"></span>${it.n}${note}</div><div class="p num">${per}</div><div class="b num">${b}</div>`;}).join("");
   const d1=DAYS[(i+S.set.start)%7],d2=DAYS[(i+1+S.set.start)%7];
   $("#sheet").innerHTML=`<div class="grab"></div>
   <div class="eyebrow">Recette ${i+1} · ${d1} midi → ${d2} soir</div>
   <h2>${r.name}</h2>
-  <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px"><span class="chip tag t-${r.tag}">${TAGS[r.tag]}</span><span class="chip">${r.time} min</span><span class="chip">4 portions</span></div>
+  <div class="meta" style="display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px"><span class="chip tag t-${r.tag}">${TAGS[r.tag]}</span><span class="chip">${r.time} min</span><span class="chip">Vous + Julia (~${pct}%)</span></div>
   ${macroHtml(r)}
   <h4>Ingrédients</h4>
-  <div class="ingl"><div class="hd">par portion / pour 4</div><div class="hd">1 pers.</div><div class="hd">4 portions</div>${rows}</div>
+  <div class="ingl"><div class="hd">par portion / total</div><div class="hd">Vous (1 pers.)</div><div class="hd">Total (vous + Julia)</div>${rows}</div>
   <p class="note" style="margin-top:8px"><span class="role prot"></span>sources protéiques ${r.prot} g · <span class="role veg"></span>légumes ${r.veg} g · <span class="role st"></span>féculent · <span class="role x"></span>assaisonnement · sel et poivre</p>
-  ${half?`<div class="tip" style="background:var(--legume-soft)">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité pour 4 (Julia + vous, aux 2 repas). Ne cuisinez la source protéique de la recette qu'en quantité pour 2 (pour Julia), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
-  <h4>Préparation (pour 4 portions)</h4>
+  <p class="note">Julia mange ≈ ${pct}% de votre portion (réglable dans Réglages) : les quantités totales ci-dessus en tiennent déjà compte.</p>
+  ${half?`<div class="tip" style="background:var(--legume-soft)">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité totale pour vous deux (indiquée ci-dessus). Ne cuisinez la source protéique de la recette qu'en quantité pour Julia (déjà réduite dans le tableau), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
+  <h4>Préparation (pour vous deux)</h4>
   <ol class="steps">${r.steps.map(s=>`<li>${s}</li>`).join("")}</ol>
-  ${(si=>si?`<div class="tip" style="background:var(--oeufs-soft)"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${si.n.toLowerCase()} <b>cuit</b> par personne${si.same?" (poids cru ≈ poids cuit)":` — soit ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
+  ${(si=>si?`<div class="tip" style="background:var(--oeufs-soft)"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${si.n.toLowerCase()} <b>cuit</b> pour vous${si.same?" (poids cru ≈ poids cuit)":` — soit ${si.raw} g cru`} ; Julia : ≈ ${Math.round(si.cooked*S.set.juliaRatio)} g cuit. (${si.rawT} g cru à cuire au total.)</div>`:"")(starchInfo(r))}
   <div class="tip"><b>Le lendemain soir :</b> ${r.reheat}</div>
   <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap"><button class="btn" onclick="reroll(${i});closeSheet()">↻ Remplacer</button><button class="btn" onclick="toggleLock(${i});closeSheet()">${S.locked[i]?"🔓 Déverrouiller":"🔒 Verrouiller"}</button><button class="btn" onclick="toggleChicken(${i});closeSheet()">${half?"🐟 Tout pescétarien":"🍗 Poulet pour moi"}</button><button class="btn primary" onclick="closeSheet()" style="margin-left:auto">Fermer</button></div>`;
   $("#sbg").classList.add("on");$("#sheet").classList.add("on");
@@ -1140,15 +1153,15 @@ $("#uncheck").onclick=()=>{S.checked={};save();renderShop();};
 
 /* ---------- export PDF (impression) & partage ---------- */
 function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;");}
-function ingRows(r,mult=4){const getMult=typeof mult==="function"?mult:()=>mult;const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const m=getMult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*m/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${g*m} g`;
-  if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.raw4+" g pour 4"}`,per:`${si.cooked} g cuit`,b:`${si.cooked4} g cuit`};}
-  const note=(it.can?` (${Math.ceil(g*m/it.can)} ${it.canName.replace("boîte",Math.ceil(g*m/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*m/it.dry/5)*5} g secs)`:"")+(role==="p"&&getMult("p")<4?" (pour Julia seulement, 2 portions)":"");
+function ingRows(r,mult=4,half=false){const getMult=typeof mult==="function"?mult:()=>mult;const ord={p:0,v:1,s:2,x:3};return eff(r).filter(x=>x[1]>0).slice().sort((a,b)=>ord[a[2]]-ord[b[2]]).map(([k,g,role])=>{const it=ING[k];const m=getMult(role);const per=it.unit?`${Math.round(g/it.unit)} ${it.uname}${Math.round(g/it.unit)>1?"s":""}`:it.v[0]===0?"q.s.":`${g} g`;const b=it.unit?`${Math.round(g*m/it.unit)} ${it.uname}s`:it.v[0]===0?"q.s.":`${Math.round(g*m)} g`;
+  if(role==="s"){const si=starchInfo(r);return{lab:"Féculent",txt:`${it.n} — cru à cuire : ${si.same?"≈ idem":si.raw+" g / pers., "+si.rawT+" g au total"}`,per:`${si.cooked} g cuit`,b:`${si.cookedT} g cuit`};}
+  const note=(it.can?` (${Math.ceil(g*m/it.can)} ${it.canName.replace("boîte",Math.ceil(g*m/it.can)>1?"boîtes":"boîte")})`:it.bag?" (surgelée)":it.dry&&it.dry>1?` (≈ ${Math.round(g*m/it.dry/5)*5} g secs)`:"")+(role==="p"&&half?" (pour Julia seulement, portion réduite)":"");
   const lab=role==="p"?"Protéines":role==="v"?"Légumes":"Assaisonnement";
   return{lab,txt:it.n+note,per,b};});}
 function buildPrint(){
   const rs=recipes();if(!rs.length)return"";
   const day=i=>DAYS[(i+S.set.start)%7];
-  let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois pour 4 portions : déjeuner du jour, puis dîner du lendemain. Exception le samedi soir : place à la recette spéciale de la page dédiée, cuisinée fraîche pour 2 uniquement — les 2 portions du vendredi qui auraient normalement servi ce soir-là sont donc en plus (à congeler, ou en repas bonus).</p>
+  let h=`<div class="pd-cover"><div class="eyebrow">Marée basse · menu de la semaine</div><h1>Menu pescétarien — 7 recettes, 14 repas</h1><p class="sub">Pour 2 personnes. Chaque recette est cuisinée une fois : déjeuner du jour, puis dîner du lendemain. Quantités ajustées à vous deux : Julia mange ≈ ${juliaPct()}% de votre portion (réglable dans Réglages). Exception le samedi soir : place à la recette spéciale de la page dédiée, cuisinée fraîche pour 2 uniquement — les 2 portions du vendredi qui auraient normalement servi ce soir-là sont donc en plus (à congeler, ou en repas bonus).</p>
   <table class="pd-week"><tr><th></th><th>Midi</th><th>Soir</th></tr>`;
   for(let d=0;d<7;d++){const midi=rs[d],soir=rs[(d+6)%7];const isSat=day(d)==="Samedi";
     h+=`<tr><th>${day(d)}</th><td><span class="n">${d+1}</span>${esc(midi.name)}</td><td>${isSat?`★ ${esc(currentSpecial().name)} <small>(spécial, pour 2)</small>`:`<span class="n">${(d+6)%7+1}</span>${esc(soir.name)}${d===0?" <small>(semaine précédente)</small>":""}`}</td></tr>`;}
@@ -1160,15 +1173,15 @@ function buildPrint(){
   ${FIXED_MEALS.map(m=>`<tr><td class="b">${esc(m.name)}</td><td>${esc(m.text)}<br><small style="color:#777">${macroLine(m.m)}</small></td></tr>`).join("")}
   </table>
   <div class="pd-tip"><b>Total repas fixes / jour :</b> ${macroLine(FIXED_TOTAL)}. À ajouter aux 2 repas de la rotation pour estimer le total journalier.</div></section>`;
-  rs.forEach((r,i)=>{const m=M(r);const half=!!S.chicken[i];const rows=ingRows(r,role=>(half&&role==="p")?2:4);
+  rs.forEach((r,i)=>{const m=M(r);const half=!!S.chicken[i];const rows=ingRows(r,role=>portMult(role,half),half);
     h+=`<section class="pd-recipe"><div class="eyebrow">Recette ${i+1} · ${day(i)} midi → ${day(i+1)} soir</div><h2>${esc(r.name)}</h2>
-    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · 4 portions${half?" (2 pescétariennes + 2 poulet)":""}${r.poelee?" · poêlée surgelée":""}</div>
+    <div class="pd-meta">${TAGS[r.tag]} · ${r.time} min · vous + Julia (~${juliaPct()}%)${half?" (vous : poulet, Julia : recette)":""}${r.poelee?" · poêlée surgelée":""}</div>
     <div class="pd-macros"><div><b>${fmt(m.kcal)}</b>kcal</div><div><b>${fmt(m.p)} g</b>protéines</div><div><b>${fmt(m.c)} g</b>glucides</div><div><b>${fmt(m.fi)} g</b>fibres</div><div><b>${fmt(m.f)} g</b>lipides</div></div>
-    <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par portion / pour 4</td><td class="q">1 pers.</td><td class="q">4 portions</td></tr>`;
+    <h3>Ingrédients</h3><table class="pd-ing"><tr class="hd"><td>Par portion / total</td><td class="q">Vous</td><td class="q">Total (vous + Julia)</td></tr>`;
     let last="";rows.forEach(x=>{h+=`<tr><td>${x.lab!==last?`<small style="color:#777">${x.lab} · </small>`:""}${esc(x.txt)}</td><td class="q">${x.per}</td><td class="q b">${x.b}</td></tr>`;last=x.lab;});
-    h+=`</table><h3>Préparation (pour 4 portions)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
-    ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit par personne${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru, ${si.raw4} g cru à cuire pour les 4 portions`}.</div>`:"")(starchInfo(r))}
-    ${half?`<div class="pd-tip" style="border-color:#B5602E;background:#f6e4d6">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité pour 4. Ne cuisinez la source protéique qu'en quantité pour 2 (Julia), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
+    h+=`</table><h3>Préparation (pour vous deux)</h3><ol class="pd-steps">${r.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol>
+    ${(si=>si?`<div class="pd-tip" style="border-color:#B08A1E;background:#fbf6e6"><b>Pesée à l'assiette :</b> ${si.cooked} g de ${esc(si.n.toLowerCase())} cuit pour vous${si.same?" (poids cru ≈ poids cuit)":` — ${si.raw} g cru`} ; Julia : ≈ ${Math.round(si.cooked*S.set.juliaRatio)} g cuit (${si.rawT} g cru à cuire au total).</div>`:"")(starchInfo(r))}
+    ${half?`<div class="pd-tip" style="border-color:#B5602E;background:#f6e4d6">🍗 <b>Poulet pour vous :</b> légumes et féculent restent en quantité totale pour vous deux. Ne cuisinez la source protéique qu'en quantité pour Julia (déjà réduite dans le tableau), et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.</div>`:""}
     <div class="pd-tip"><b>Le lendemain soir :</b> ${esc(r.reheat)}</div></section>`;});
   (()=>{const r=currentSpecial();const m=M(r);const rows=ingRows(r,2);
     h+=`<section class="pd-recipe"><div class="eyebrow">★ Spécial samedi soir · pour 2, usage unique</div><h2>${esc(r.name)}</h2>
@@ -1242,7 +1255,7 @@ async function exportPDF(){
   }
 }
 function menuText(){const rs=recipes();let t="Menu de la semaine — Marée basse\n\n";for(let d=0;d<7;d++){const dn=DAYS[(d+S.set.start)%7];const isSat=dn==="Samedi";const midi=rs[d],soir=rs[(d+6)%7];const ck=i=>S.chicken[i]?" [+ poulet pour vous]":"";t+=`${dn}\n  Midi : ${midi?midi.name+ck(d):"—"}\n  Soir : ${isSat?"★ "+currentSpecial().name+" (spécial, pour 2)":soir?soir.name+ck((d+6)%7):"—"}${d===0&&!isSat?" (reste sem. préc.)":""}\n`;}
-  t+="\n— Recettes —\n";rs.forEach((r,i)=>{const half=!!S.chicken[i];t+=`\n${i+1}. ${r.name} (${r.time} min, 4 portions${half?" : 2 pescétariennes + 2 poulet":""})\n`;ingRows(r,role=>(half&&role==="p")?2:4).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);if(half)t+=`  🍗 Poulet pour vous : légumes/féculent restent pour 4 ; ne cuisinez la source protéique que pour 2 (Julia) et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.\n`;t+=`  Lendemain : ${r.reheat}\n`;});
+  t+="\n— Recettes —\n";rs.forEach((r,i)=>{const half=!!S.chicken[i];t+=`\n${i+1}. ${r.name} (${r.time} min, vous + Julia ~${juliaPct()}%${half?" : vous poulet + Julia recette":""})\n`;ingRows(r,role=>portMult(role,half),half).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);const si=starchInfo(r);if(si)t+=`  Assiette : ${si.cooked} g de ${si.n.toLowerCase()} cuit / pers. (vous), ≈ ${Math.round(si.cooked*S.set.juliaRatio)} g pour Julia.\n`;r.steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);if(half)t+=`  🍗 Poulet pour vous : légumes/féculent restent en quantité totale pour vous deux ; ne cuisinez la source protéique que pour Julia (déjà réduite ci-dessus) et complétez vos 2 portions avec ${CHICKEN_G} g de filet de poulet cru chacune (${CHICKEN_G*2} g au total), cuisiné à part.\n`;t+=`  Lendemain : ${r.reheat}\n`;});
   t+=`\n★ ${currentSpecial().name} (${currentSpecial().time} min, 2 portions — samedi soir uniquement)\n`;ingRows(currentSpecial(),2).forEach(x=>t+=`  • ${x.txt} : ${x.b}\n`);currentSpecial().steps.forEach((st,k)=>t+=`  ${k+1}) ${st}\n`);t+=`  ${currentSpecial().note}\n`;
   t+=`\n— Repas fixes quotidiens (identiques chaque jour, pour 1 personne, en plus des 2 repas ci-dessus) —\n`;FIXED_MEALS.forEach(m=>t+=`${m.name} : ${m.text}\n  ${macroLine(m.m)}\n`);t+=`Total repas fixes / jour : ${macroLine(FIXED_TOTAL)}\n`;
   return t;}
@@ -1251,6 +1264,7 @@ $("#share").onclick=async()=>{const t=menuText();if(navigator.share){try{await n
 
 /* ---------- événements ---------- */
 $("#gen").onclick=()=>{generate();showView("week");toast("Nouvelle semaine générée");};
+$("#juliaRatio").oninput=e=>{S.set.juliaRatio=(+e.target.value)/100;$("#juliaN").textContent=e.target.value;save();render();};
 $("#legumes").oninput=e=>{S.set.legumes=+e.target.value;$("#legN").textContent=S.set.legumes;save();};
 $("#poeleeQ").oninput=e=>{S.set.poelee=+e.target.value;$("#poeleeN").textContent=S.set.poelee;save();};
 $("#avoid").onchange=e=>{S.set.avoid=e.target.value;save();};
