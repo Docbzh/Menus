@@ -286,9 +286,14 @@ ol.steps li{margin-bottom:6px}
     <input type="range" min="50" max="100" step="1" id="juliaRatio">
   </div>
   <div class="field">
-    <label>Recettes à base de légumineuses : <span id="legN" class="num"></span> / 7</label>
-    <p>Lentilles, pois chiches, haricots — plus de fibres et de protéines végétales, un peu plus de glucides (à IG bas). Achetées en conserve, sauf les lentilles corail.</p>
-    <input type="range" min="0" max="7" step="1" id="legumes">
+    <label>Recettes à base de poisson : <span id="poissonN" class="num"></span> / 7</label>
+    <p>Colin, saumon, thon, maquereau, sardines, saumon fumé — filets et pavés surgelés, boîtes, saumon fumé frais.</p>
+    <input type="range" min="0" max="7" step="1" id="poissonQ">
+  </div>
+  <div class="field">
+    <label>Recettes à base de tofu : <span id="tofuN" class="num"></span> / 7</label>
+    <p>Tofu ferme, mariné ou brouillé — source de protéines végétale, souvent accompagné d'œuf.</p>
+    <input type="range" min="0" max="7" step="1" id="tofuQ">
   </div>
   <div class="field">
     <label>Recettes avec poêlée de légumes surgelée : <span id="poeleeN" class="num"></span> / 7</label>
@@ -968,7 +973,7 @@ FIXED_MEALS.forEach(m=>m.m=macros(null,m.ing));
 const FIXED_TOTAL=FIXED_MEALS.reduce((t,m)=>({kcal:t.kcal+m.m.kcal,p:t.p+m.m.p,c:t.c+m.m.c,f:t.f+m.m.f,fi:t.fi+m.m.fi}),{kcal:0,p:0,c:0,f:0,fi:0});
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2,juliaRatio:0.65},view:"week"};
+const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{poisson:3,tofu:2,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2,juliaRatio:0.65},view:"week"};
 let S;
 try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons","galette-lentilles-corail":"galette-sardine-tomate-chevre"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}if(!S.set.juliaRatio1500){S.set.juliaRatio=0.65;S.set.juliaRatio1500=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
@@ -985,7 +990,8 @@ function generate(){
   const used=new Set(chosen.filter(Boolean).map(r=>r.id));
   const mainCount={};chosen.filter(Boolean).forEach(r=>mainCount[r.main]=(mainCount[r.main]||0)+1);
   const tagCount={};chosen.filter(Boolean).forEach(r=>tagCount[r.tag]=(tagCount[r.tag]||0)+1);
-  let needLeg=S.set.legumes-(tagCount.legumineuses||0);
+  let needPoisson=S.set.poisson-(tagCount.poisson||0);
+  let needTofu=S.set.tofu-(tagCount.soja||0);
   let needPoe=S.set.poelee-chosen.filter(r=>r&&r.poelee).length;
   const free=chosen.map((c,i)=>c?null:i).filter(i=>i!==null);
   function forceFormat(ids,idxKey){
@@ -997,17 +1003,18 @@ function generate(){
       const pos=rnd(free.length);const slot=free.splice(pos,1)[0];
       chosen[slot]=r;used.add(id);
       mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;
-      if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
+      if(r.tag==="poisson")needPoisson--;if(r.tag==="soja")needTofu--;if(r.poelee)needPoe--;
       return;
     }
   }
   forceFormat(GALETTE_IDS,"galetteIdx");
   forceFormat(WRAP_IDS,"wrapIdx");
   for(const idx of free){
-    const wantLeg=needLeg>0,wantPoe=needPoe>0;
-    let cands=pool.filter(r=>!used.has(r.id)&&(wantLeg?r.tag==="legumineuses":r.tag!=="legumineuses")&&(!!r.poelee===wantPoe));
+    const wantPoisson=needPoisson>0,wantTofu=!wantPoisson&&needTofu>0,wantPoe=needPoe>0;
+    const tagWanted=r=>wantPoisson?r.tag==="poisson":wantTofu?r.tag==="soja":(r.tag!=="poisson"&&r.tag!=="soja");
+    let cands=pool.filter(r=>!used.has(r.id)&&tagWanted(r)&&(!!r.poelee===wantPoe));
     if(!cands.length)cands=pool.filter(r=>!used.has(r.id)&&(!!r.poelee===wantPoe));
-    if(!cands.length)cands=pool.filter(r=>!used.has(r.id)&&(wantLeg?r.tag==="legumineuses":r.tag!=="legumineuses"));
+    if(!cands.length)cands=pool.filter(r=>!used.has(r.id)&&tagWanted(r));
     if(!cands.length)cands=pool.filter(r=>!used.has(r.id));
     if(!cands.length)break;
     const scored=cands.map(r=>{let s=Math.random()*10;
@@ -1019,7 +1026,7 @@ function generate(){
       if(M(r).kcal>950)s-=40;if(M(r).c>S.set.carbMax)s-=30;
       return[s,r];}).sort((a,b)=>b[0]-a[0]);
     const r=scored[0][1];
-    chosen[idx]=r;used.add(r.id);mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;if(r.tag==="legumineuses")needLeg--;if(r.poelee)needPoe--;
+    chosen[idx]=r;used.add(r.id);mainCount[r.main]=(mainCount[r.main]||0)+1;tagCount[r.tag]=(tagCount[r.tag]||0)+1;if(r.tag==="poisson")needPoisson--;if(r.tag==="soja")needTofu--;if(r.poelee)needPoe--;
   }
   /* mélanger les non verrouillées entre elles pour varier l'ordre des familles */
   const order=free.slice();for(let i=order.length-1;i>0;i--){const j=rnd(i+1);[order[i],order[j]]=[order[j],order[i]];}
@@ -1184,7 +1191,7 @@ function renderShop(){
 function check(k,v){S.checked[k]=v;save();renderShop();}
 function renderSettings(){
   $("#juliaRatio").value=juliaPct();$("#juliaN").textContent=juliaPct();
-  $("#legumes").value=S.set.legumes;$("#legN").textContent=S.set.legumes;$("#poeleeQ").value=S.set.poelee;$("#poeleeN").textContent=S.set.poelee;
+  $("#poissonQ").value=S.set.poisson;$("#poissonN").textContent=S.set.poisson;$("#tofuQ").value=S.set.tofu;$("#tofuN").textContent=S.set.tofu;$("#poeleeQ").value=S.set.poelee;$("#poeleeN").textContent=S.set.poelee;
   $("#avoid").value=S.set.avoid;$("#start").value=S.set.start;
   document.querySelectorAll("#prio button").forEach(b=>b.classList.toggle("on",b.dataset.v===S.set.prio));
   document.querySelectorAll("#starchQ button").forEach(b=>b.classList.toggle("on",+b.dataset.v===S.set.starchQ));
@@ -1345,7 +1352,8 @@ $("#share").onclick=async()=>{const t=menuText();if(navigator.share){try{await n
 /* ---------- événements ---------- */
 $("#gen").onclick=()=>{generate();showView("week");toast("Nouvelle semaine générée");};
 $("#juliaRatio").oninput=e=>{S.set.juliaRatio=(+e.target.value)/100;$("#juliaN").textContent=e.target.value;save();render();};
-$("#legumes").oninput=e=>{S.set.legumes=+e.target.value;$("#legN").textContent=S.set.legumes;save();};
+$("#poissonQ").oninput=e=>{S.set.poisson=+e.target.value;$("#poissonN").textContent=S.set.poisson;save();};
+$("#tofuQ").oninput=e=>{S.set.tofu=+e.target.value;$("#tofuN").textContent=S.set.tofu;save();};
 $("#poeleeQ").oninput=e=>{S.set.poelee=+e.target.value;$("#poeleeN").textContent=S.set.poelee;save();};
 $("#avoid").onchange=e=>{S.set.avoid=e.target.value;save();};
 $("#start").onchange=e=>{S.set.start=+e.target.value;save();render();};
