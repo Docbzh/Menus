@@ -282,7 +282,7 @@ ol.steps li{margin-bottom:6px}
 <section class="view" id="v-set">
   <div class="field">
     <label>Portion de Julia : <span id="juliaN" class="num"></span>% de la vôtre</label>
-    <p>Julia mange moins que vous (ex. objectif ≈ 1700 kcal/j contre 2300). Ce réglage réduit sa part dans chaque recette de la rotation — légumes, féculent, sauce et protéine — et la liste de courses en tient compte. Les quantités affichées pour vous restent inchangées.</p>
+    <p>Julia mange moins que vous (ex. objectif ≈ 1500 kcal/j contre 2300). Ce réglage réduit sa part dans chaque recette de la rotation — légumes, féculent, sauce et protéine — et la liste de courses en tient compte. Les quantités affichées pour vous restent inchangées.</p>
     <input type="range" min="50" max="100" step="1" id="juliaRatio">
   </div>
   <div class="field">
@@ -777,6 +777,86 @@ const R = [
  ing:[["wrap",120,"x"],["lentvertes",100,"p"],["thon",130,"p"],["feta",40,"p"],["concombre",100,"v"],["carotte",100,"v"],["olives",10,"x"],["citron",6,"x"],["herbes",3,"x"],["yaourt",25,"x"],["ail",3,"x"]],
  steps:["Égoutter et rincer les lentilles vertes en conserve.","Concombre et carotte en petits dés ; mélanger aux lentilles, jus de citron, olives concassées, sel, poivre.","Égoutter le thon, l'émietter, l'incorporer délicatement.","Réchauffer les 2 wraps 20 s ; garnir de la préparation et de feta émiettée ; rouler bien serrés, couper en deux.","Sauce : mélanger le yaourt avec l'ail écrasé pour une sauce façon tzatziki ; en napper la garniture avant de rouler les wraps."],
  reheat:"Se mange froid ; préparer un wrap frais au dernier moment si possible, ou emballer serré dans du film."},
+
+{id:"colin-potimarron-poireaux-moutarde",name:"Colin crémeux, potimarron et poireaux fondants, sauce moutarde",tag:"poisson",main:"colin",time:30,starch:"patesCompl",
+ ing:[["colin",320,"p"],["potimarron",110,"v"],["poireau",90,"v"],["creme",30,"x"],["moutarde",8,"x"],["beurre",6,"x"],["huile",4,"x"],["citron",10,"x"],["epices",2,"x"],["herbes",3,"x"]],
+ steps:["Éplucher et couper le potimarron en petits dés ; émincer les poireaux. Les faire fondre 10 min à la poêle avec le beurre et un fond d'eau.","Ajouter les pavés de colin sur les légumes, couvrir, cuire 8–10 min à feu doux jusqu'à ce que le poisson se détache en feuillets.","Réserver le poisson. Ajouter la crème et la moutarde dans la poêle, chauffer 2 min à feu doux pour lier la sauce.","Napper le colin et les légumes de sauce, jus de citron, persil."],
+ reheat:"Réchauffer doucement à la poêle à couvert, feu doux, 8–10 min, avec un filet d'eau si la sauce a épaissi."},
+
+{id:"saumon-panais-champignons-creme",name:"Saumon rôti, panais et champignons, sauce crème-citron",tag:"poisson",main:"saumon",time:25,starch:"sarrasin",
+ ing:[["saumon",260,"p"],["panais",100,"v"],["champignons",100,"v"],["creme",25,"x"],["huile",6,"x"],["beurre",5,"x"],["citron",12,"x"],["ail",3,"x"],["herbes",3,"x"]],
+ steps:["Éplucher le panais, le couper en bâtonnets. Faire sauter dans l'huile 10 min à feu moyen jusqu'à tendreté.","Ajouter les champignons émincés et l'ail, feu vif 5 min.","Poêler les pavés de saumon à part dans le beurre, 4 min par face.","Ajouter la crème dans la poêle des légumes, 2 min à feu doux pour une sauce onctueuse ; jus de citron, persil. Servir le saumon sur les légumes nappés de sauce."],
+ reheat:"Poêle à feu doux, couvert, 6–8 min ; ou micro-ondes 2–3 min."},
+
+{id:"thon-endives-champignons-creme-moutarde",name:"Thon mijoté, endives braisées et champignons, sauce crème-moutarde",tag:"poisson",main:"thon",time:25,starch:"quinoa",
+ ing:[["thon",220,"p"],["endives",110,"v"],["champignons",90,"v"],["creme",20,"x"],["moutarde",8,"x"],["beurre",6,"x"],["oignon",20,"x"],["epices",2,"x"],["herbes",3,"x"]],
+ steps:["Émincer l'oignon, le faire fondre 5 min dans le beurre. Ajouter les endives coupées en deux dans la longueur, feu doux 10 min à couvert, en retournant à mi-cuisson.","Ajouter les champignons émincés, feu vif 5 min.","Ajouter le thon égoutté émietté, 2 min pour réchauffer.","Crème et moutarde hors du feu pour lier une sauce onctueuse ; sel, poivre, persil."],
+ reheat:"Casserole feu doux 5 min à couvert, ou micro-ondes 3 min."},
+
+{id:"maquereau-choufleur-poireau-yaourt",name:"Maquereau poêlé, chou-fleur et poireaux fondants, sauce yaourt-moutarde",tag:"poisson",main:"maquereau",time:25,starch:"boulgour",
+ ing:[["maquereau",230,"p"],["choufleur",110,"v"],["poireau",90,"v"],["yaourt",30,"x"],["moutarde",8,"x"],["huile",5,"x"],["citron",10,"x"],["herbes",3,"x"]],
+ steps:["Détailler le chou-fleur en petites fleurettes, émincer les poireaux. Cuire le chou-fleur 8 min à la vapeur ou à l'eau bouillante salée ; égoutter.","Faire fondre les poireaux 8 min à la poêle avec l'huile et un fond d'eau.","Réunir chou-fleur et poireaux, émietter le maquereau égoutté par-dessus.","Sauce : mélanger le yaourt, la moutarde et le jus de citron ; en napper le plat, persil."],
+ reheat:"Se mange aussi froid ou tiède ; sinon réchauffer doucement au micro-ondes 2 min (légumes et poisson seuls, ajouter la sauce après)."},
+
+{id:"sardines-endives-carotte-creme",name:"Sardines marinées, endives et carottes fondantes, sauce crème-citron",tag:"poisson",main:"sardines",time:20,starch:"sarrasin",
+ ing:[["sardines",210,"p"],["endives",110,"v"],["carotte",90,"v"],["creme",25,"x"],["moutarde",6,"x"],["huile",4,"x"],["citron",8,"x"],["herbes",3,"x"]],
+ steps:["Couper les endives en deux dans la longueur, les carottes en rondelles. Les faire fondre 12 min à la poêle avec l'huile et un fond d'eau, à couvert, jusqu'à tendreté.","Émietter les sardines égouttées par-dessus en fin de cuisson, 2 min pour réchauffer.","Sauce : mélanger la crème et la moutarde, chauffer 1 min à feu doux ; en napper le plat, jus de citron, persil."],
+ reheat:"Poêle à feu doux, couvert, 5 min ; ou micro-ondes 2 min."},
+
+{id:"colin-brocoli-panais-beurre-blanc",name:"Colin au four, brocoli et panais rôtis, sauce beurre blanc citronnée",tag:"poisson",main:"colin",time:30,starch:"riz",
+ ing:[["colin",320,"p"],["brocoli",100,"v"],["panais",100,"v"],["beurre",15,"x"],["vinblanc",15,"x"],["echalote",10,"x"],["citron",10,"x"],["herbes",3,"x"]],
+ steps:["Four à 200 °C. Panais en bâtonnets et brocoli en fleurettes, huile, sel ; rôtir 18–20 min.","Pavés de colin sur une plaque, sel, poivre ; enfourner 12–14 min en même temps.","Sauce : faire réduire l'échalote ciselée avec le vin blanc 3 min à feu vif ; hors du feu, incorporer le beurre froid en morceaux en fouettant pour une sauce brillante.","Napper le colin et les légumes de sauce beurre blanc, zeste de citron, persil."],
+ reheat:"Four 150 °C 10 min, ou poêle couverte à feu doux ; refaire une sauce fraîche si besoin (beurre fondu, citron)."},
+
+{id:"saumonfume-oeufs-endives-carotte-creme",name:"Saumon fumé et œufs mollets, endives et carottes, sauce crème-citron",tag:"poisson",main:"saumonfume",time:15,starch:"boulgour",
+ ing:[["saumonfume",140,"p"],["oeufs",180,"p"],["endives",110,"v"],["carotte",90,"v"],["creme",25,"x"],["citron",8,"x"],["herbes",3,"x"]],
+ steps:["Cuire les œufs mollets : 6 min dans l'eau bouillante, puis eau glacée, écaler (3 par portion).","Couper les endives en lanières, tailler les carottes en fins bâtonnets.","Dresser endives et carottes, saumon fumé en lanières et œufs mollets coupés en deux.","Sauce : mélanger la crème, le jus de citron et le persil ciselé ; en napper le plat."],
+ reheat:"Se mange froid ou tiède ; conserver au frais, assembler la sauce au dernier moment."},
+
+{id:"dahl-lentcorail-potimarron-carotte-oeuf",name:"Dahl de lentilles corail, potimarron et carottes, œufs et feta",tag:"legumineuses",main:"lentcorail",time:25,starch:"riz",
+ ing:[["lentcorail",240,"p"],["oeufs",180,"p"],["feta",40,"p"],["potimarron",100,"v"],["carotte",100,"v"],["creme",15,"x"],["oignon",20,"x"],["ail",3,"x"],["epices",3,"x"],["herbes",3,"x"]],
+ steps:["Faire revenir l'oignon et l'ail dans un filet d'huile, ajouter cumin, curcuma et garam masala, 30 s.","Ajouter les lentilles corail sèches (≈ 95 g par portion) et 1,5 fois leur volume d'eau ; mijoter 10 min.","Ajouter le potimarron et les carottes en dés, 8 min de plus jusqu'à tendreté.","Œufs durs : 9 min à l'eau bouillante, écaler, couper en deux (3 par portion).","Crème hors du feu pour un dahl onctueux, feta émiettée, œufs sur le dessus."],
+ reheat:"Casserole feu doux avec un filet d'eau, ou micro-ondes 3 min couvert."},
+
+{id:"poischiches-thon-brocoli-carotte-tahini",name:"Pois chiches, brocoli et carottes rôtis, thon et sauce tahini-citron",tag:"legumineuses",main:"poischiches",time:30,starch:"boulgour",
+ ing:[["poischiches",150,"p"],["thon",150,"p"],["brocoli",110,"v"],["carotte",90,"v"],["tahini",15,"x"],["citron",10,"x"],["ail",3,"x"],["huile",5,"x"],["epices",3,"x"],["herbes",3,"x"]],
+ steps:["Four à 200 °C. Brocoli en fleurettes et carottes en bâtonnets, huile, cumin, sel ; rôtir 20 min.","Égoutter et rincer les pois chiches, les ajouter sur la plaque 5 min avant la fin pour les réchauffer et les dorer légèrement.","Thon égoutté émietté, ail.","Sauce : détendre le tahini avec un peu d'eau et le jus de citron jusqu'à consistance coulante ; en napper le plat, persil."],
+ reheat:"Se mange tiède ou froid ; réchauffer légumes et pois chiches au micro-ondes 2 min si besoin, sauce à ajouter après."},
+
+{id:"hblancs-oeufs-choufleur-poireau-parmesan",name:"Gratin de haricots blancs, chou-fleur et poireaux, œufs pochés et parmesan",tag:"legumineuses",main:"hblancs",time:30,starch:"patesCompl",
+ ing:[["hblancs",260,"p"],["oeufs",120,"p"],["parmesan",40,"p"],["choufleur",120,"v"],["poireau",80,"v"],["huile",6,"x"],["ail",3,"x"],["epices",2,"x"],["herbes",3,"x"]],
+ steps:["Détailler le chou-fleur en petites fleurettes, émincer les poireaux. Les faire fondre 10 min à la poêle avec l'huile et un fond d'eau.","Ajouter les haricots blancs égouttés et l'ail, 5 min à feu doux.","Œufs pochés : 3 min dans une eau frémissante vinaigrée (2 par portion).","Servir les haricots et légumes avec les œufs pochés dessus, parmesan râpé généreusement, persil."],
+ reheat:"Casserole feu doux 5 min ; cuire des œufs pochés frais à la minute pour chaque portion."},
+
+{id:"lentvertes-maquereau-panais-carotte-vinaigrette",name:"Salade tiède de lentilles vertes, panais rôti et maquereau, vinaigrette moutarde",tag:"legumineuses",main:"lentvertes",time:25,starch:"quinoa",
+ ing:[["lentvertes",200,"p"],["maquereau",150,"p"],["panais",110,"v"],["carotte",90,"v"],["moutarde",8,"x"],["vinaigre",10,"x"],["huile",6,"x"],["echalote",15,"x"],["herbes",3,"x"]],
+ steps:["Four à 200 °C. Panais et carottes en bâtonnets, huile, sel ; rôtir 20 min jusqu'à tendreté et légèrement dorés.","Égoutter et rincer les lentilles vertes, les tiédir 2 min au micro-ondes ou à la casserole avec un peu d'eau.","Vinaigrette : mélanger moutarde, vinaigre, huile et échalote ciselée.","Mélanger lentilles tièdes, panais et carottes rôtis, vinaigrette ; émietter le maquereau égoutté dessus, persil."],
+ reheat:"Se mange tiède ou froid ; conserver au frais, mélanger à nouveau avant de servir."},
+
+{id:"tofu-panais-brocoli-tahini-gingembre",name:"Tofu croustillant, panais et brocoli rôtis, sauce tahini-gingembre",tag:"soja",main:"tofu",time:20,starch:"riz",
+ ing:[["tofu",320,"p"],["panais",110,"v"],["brocoli",90,"v"],["tahini",20,"x"],["soja",10,"x"],["gingembre",6,"x"],["ail",3,"x"],["huilesesame",5,"x"],["citronvert",8,"x"]],
+ steps:["Presser le tofu 10 min dans un torchon, le couper en cubes. Dorer dans l'huile de sésame 6 min sur toutes les faces ; réserver.","Panais en bâtonnets, blanchi 5 min à l'eau bouillante ; brocoli en fleurettes, blanchi 3 min. Égoutter.","Sauter panais et brocoli à feu vif 4 min avec l'ail et le gingembre râpés.","Sauce : détendre le tahini avec la sauce soja, un peu d'eau et le jus de citron vert jusqu'à consistance coulante ; remettre le tofu, enrober de sauce."],
+ reheat:"Poêle chaude 2–3 min à feu vif, ou tiède en ajoutant un peu d'eau à la sauce qui aurait épaissi."},
+
+{id:"tofu-laque-poireau-carotte",name:"Tofu croustillant laqué soja-vinaigre, poireaux et carottes fondants",tag:"soja",main:"tofu",time:20,starch:"sarrasin",
+ ing:[["tofu",340,"p"],["poireau",100,"v"],["carotte",100,"v"],["soja",15,"x"],["balsamique",10,"x"],["ail",3,"x"],["gingembre",5,"x"],["huilesesame",5,"x"],["sesame",5,"x"]],
+ steps:["Presser le tofu 10 min, le couper en tranches épaisses. Dorer dans l'huile de sésame 3 min par face ; réserver.","Émincer les poireaux et les carottes en rubans ; les faire sauter 6 min à feu vif.","Ajouter ail et gingembre râpés, sauce soja, vinaigre balsamique et 2 c. à s. d'eau ; remettre le tofu, laisser laquer 2 min.","Sésame grillé par-dessus."],
+ reheat:"Poêle chaude 2–3 min à feu vif en remuant."},
+
+{id:"tofu-oeufs-endives-champignons-creme",name:"Tofu brouillé, endives et champignons fondants, sauce crème légère",tag:"soja",main:"tofu",time:15,starch:"patatedouce",
+ ing:[["tofu",300,"p"],["oeufs",60,"p"],["endives",90,"v"],["champignons",110,"v"],["creme",25,"x"],["ail",3,"x"],["huile",5,"x"],["levure",5,"x"],["herbes",3,"x"]],
+ steps:["Émietter le tofu à la fourchette. Battre l'œuf à part (1 par portion).","Couper les endives en lanières, émincer les champignons. Les sauter dans l'huile 6 min à feu vif avec l'ail.","Ajouter le tofu émietté et la levure maltée, 4 min en remuant.","Verser l'œuf battu, cuire 2 min en remuant comme des œufs brouillés ; saler, poivrer généreusement.","Ajouter la crème hors du feu en toute fin de cuisson pour une sauce onctueuse qui lie le tofu brouillé."],
+ reheat:"Poêle feu doux 4–5 min en remuant, avec un filet d'eau si besoin."},
+
+{id:"oeufs-cocotte-endives-carotte-parmesan",name:"Œufs cocotte, endives braisées et carottes, sauce crème-parmesan",tag:"oeufs",main:"oeufs",time:25,starch:"patesCompl",
+ ing:[["oeufs",240,"p"],["parmesan",70,"p"],["endives",100,"v"],["carotte",100,"v"],["creme",20,"x"],["huile",4,"x"],["herbes",3,"x"]],
+ steps:["Four à 180 °C. Endives émincées et carottes râpées, sautées 8 min dans l'huile jusqu'à tendreté.","Répartir dans des ramequins (ou un plat), parmesan râpé par-dessus.","Casser les œufs par-dessus (4 par portion), sel, poivre.","Cuire 12–14 min au bain-marie au four : blanc pris, jaune encore coulant.","Ajouter la crème sur les œufs avant cuisson pour une texture fondante, façon petit gratin."],
+ reheat:"Pour le lendemain : garder la base de légumes, casser des œufs frais et cuire à la minute."},
+
+{id:"frittata-hverts-champignons-parmesan",name:"Frittata haricots verts et champignons, parmesan, sauce yaourt-citron",tag:"oeufs",main:"oeufs",time:30,starch:"patesCompl",
+ ing:[["oeufs",240,"p"],["parmesan",45,"p"],["hverts",110,"v"],["champignons",90,"v"],["yaourt",30,"x"],["huile",5,"x"],["citron",8,"x"],["herbes",3,"x"]],
+ steps:["Cuire les haricots verts 6 min à l'eau bouillante salée ; égoutter.","Four à 180 °C. Faire revenir les champignons émincés 5 min dans l'huile avec les haricots verts.","Battre les œufs (4 par portion) avec le parmesan râpé, sel, poivre ; verser sur les légumes en poêle allant au four.","Cuire 2 min sur le feu puis 15 min au four.","Sauce : mélanger le yaourt avec le jus de citron et des herbes ciselées ; servir en filet sur les parts de frittata."],
+ reheat:"Se mange froid ou tiède ; sinon réchauffer une part au four 150 °C 8 min."},
 ];
 
 /* ---------- utilitaires ---------- */
@@ -888,9 +968,9 @@ FIXED_MEALS.forEach(m=>m.m=macros(null,m.ing));
 const FIXED_TOTAL=FIXED_MEALS.reduce((t,m)=>({kcal:t.kcal+m.m.kcal,p:t.p+m.m.p,c:t.c+m.m.c,f:t.f+m.m.f,fi:t.fi+m.m.fi}),{kcal:0,p:0,c:0,f:0,fi:0});
 
 /* ---------- état ---------- */
-const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2,juliaRatio:0.74},view:"week"};
+const DEF={recipes:[],locked:[],chicken:[],prev:[],checked:{},satSpecial:null,galetteIdx:0,wrapIdx:0,set:{legumes:3,prio:"variety",avoid:"",start:0,starchQ:80,starchLeg:true,carbMax:60,starchOk:["boulgour","sarrasin","patesLent","quinoa","patatedouce","patesCompl"],protMode:"eco",poelee:2,juliaRatio:0.65},view:"week"};
 let S;
-try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons","galette-lentilles-corail":"galette-sardine-tomate-chevre"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
+try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem("maree-basse")||"{}"));S.set=Object.assign({},DEF.set,S.set);const MIG={"wok-edamame":"wok-tofu","tempeh-hverts":"tofu-laque-hverts","tempeh-provencale":"tofu-provencale","maquereau-chourouge":"maquereau-poelee","lieu-celerirave":"colin-puree-choufleur","dorade-endives":"colin-endives","cabillaud-fenouil":"colin-papillote","dahl-blettes":"dahl-courgettes","crevettes-pakchoi":"saumon-brocoli-wok","saumon-pakchoi":"saumon-brocoli-wok","curry-vert-crevettes":"curry-vert-colin","moules-creme":"colin-creme-poireaux","calamars-poivrons":"maquereau-poivrons","galette-lentilles-corail":"galette-sardine-tomate-chevre"};S.recipes=(S.recipes||[]).map(id=>MIG[id]||id);if(!S.set.strat2){S.set.starchQ=80;S.set.starchLeg=true;S.set.strat2=true;}if(!S.set.patesComplAdded){S.set.starchOk=(S.set.starchOk||[]).concat(["patesCompl"]);S.set.patesComplAdded=true;}if(!S.set.prioVarietyDefault){S.set.prio="variety";S.set.prioVarietyDefault=true;}if(!S.set.carbTotalMode){S.set.carbMax=60;S.set.carbTotalMode=true;}if(!S.set.juliaRatio1500){S.set.juliaRatio=0.65;S.set.juliaRatio1500=true;}}catch(e){S=JSON.parse(JSON.stringify(DEF));}
 function save(){try{localStorage.setItem("maree-basse",JSON.stringify(S));}catch(e){}}
 
 /* ---------- génération ---------- */
